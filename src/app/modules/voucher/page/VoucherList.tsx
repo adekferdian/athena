@@ -226,7 +226,7 @@ const VoucherList: FC = (props: any) => {
           <div className='card-toolbar'>
             <Link
               to={{
-                pathname: `/gender/add/1`,
+                pathname: `/voucher/add`,
                 // state: categoryDetail,
               }}
               className='btn btn-sm btn-secondary fw-bold fs-6'

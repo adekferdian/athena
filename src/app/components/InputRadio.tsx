@@ -6,11 +6,16 @@ interface InputRadioProps extends React.HTMLProps<HTMLInputElement> {
   labelClass?: string
   description?: string
   descriptionClass?: string
+  wrapperClass?: string
+  onClick?(): void
 }
 
 const InputRadio = (props: InputRadioProps) => {
   return (
-    <div className='form-check form-check-custom form-check-solid'>
+    <div
+      className={`form-check form-check-custom form-check-solid ${props?.wrapperClass}`}
+      onClick={props?.onClick}
+    >
       <input className='form-check-input' type='radio' {...props} />
       <div className='d-flex flex-column align-items-start ms-3'>
         {props?.label && (
