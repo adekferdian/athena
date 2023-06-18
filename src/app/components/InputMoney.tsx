@@ -4,6 +4,7 @@ import {addThousandSeparator, isNumeric, trimNonNumeric} from '../utils/input-ut
 
 interface Props
   extends React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
+  label?: string
   containerClass?: string
   prefixClass?: string
   onChangeValue: (value: string, first?: boolean) => void
@@ -38,24 +39,27 @@ const InputMoney: React.FC<Props> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   return (
-    <div className={clsx('position-relative d-flex align-items-center w-100', containerClass)}>
-      <div
-        className={clsx(
-          'position-absolute ms-4 pe-none fs-5',
-          props.disabled ? 'text-gray-500' : 'text-gray-700',
-          prefixClass
-        )}
-        style={{fontWeight: 500}}
-      >
-        Rp
+    <div className="d-flex flex-column">
+      <label className='form-label fs-7'>{props.label}</label>
+      <div className={clsx('position-relative d-flex align-items-center w-100', containerClass)}>
+        <div
+          className={clsx(
+            prefixClass,
+            'position-absolute ms-4 pe-none fs-5',
+            props.disabled ? 'text-gray-500' : 'text-gray-700',
+          )}
+          style={{fontWeight: 500}}
+        >
+          Rp
+        </div>
+        <input
+          value={addThousandSeparator(value)}
+          className={className}
+          style={{paddingLeft: '35px'}}
+          {...props}
+          onChange={onChangeWrapper}
+        />
       </div>
-      <input
-        value={addThousandSeparator(value)}
-        className={className}
-        style={{paddingLeft: '35px'}}
-        {...props}
-        onChange={onChangeWrapper}
-      />
     </div>
   )
 }

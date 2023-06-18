@@ -5,7 +5,7 @@ const VoucherScreens = {
   },
   ADD_VOUCHER: {
     PATH: '/voucher/add/',
-    TITLE: 'Add Voucher',
+    TITLE: 'Create Campaign',
   },
   EDIT_VOUCHER: {
     PATH: '/voucher/edit/:id',

@@ -1,4 +1,4 @@
-import React, {HTMLProps} from 'react'
+import React, { HTMLProps } from 'react'
 import InlineSVG from 'react-inlinesvg/esm'
 import { KTSVG } from 'src/_metronic/helpers'
 
