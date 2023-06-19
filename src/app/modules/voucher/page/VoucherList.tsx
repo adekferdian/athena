@@ -17,20 +17,21 @@ import { Link } from 'react-router-dom'
 import DeleteVoucherModal from '../components/DeleteVoucherModal'
 import PreviewVoucherModal from '../components/PreviewVoucherModal'
 import VoucherScreens from '../Screens'
+import DateRangePicker from 'src/app/components/DateRangePicker'
 
 const values = [
-  { id: 1, text: "Active (16)" },
-  { id: 2, text: "Need Approval (2)" },
-  { id: 3, text: "Revision Required (1)" },
-  { id: 4, text: "Inactive (8)" },
-  { id: 5, text: "Draft (3)" }
+  { id: 1, text: "Active (3)" },
+  { id: 2, text: "Need Approval ()" },
+  { id: 3, text: "Revision Required ()" },
+  { id: 4, text: "Inactive (2)" },
+  { id: 5, text: "Draft ()" }
 ];
 
 const VoucherList: FC = (props: any) => {
   const { addPageToasts } = useHeaderToast()
   const history = useHistory()
 
-  const [activeId, setActiveId] = useState();
+  const [activeId, setActiveId] = useState(1);
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [handleDeleteData, setHandleDeleteData] = useState<any>(null)
   const [showPreviewModal, setShowPreviewModal] = useState(false)
@@ -62,7 +63,7 @@ const VoucherList: FC = (props: any) => {
                   quota_user: 1,
                   total_used: 0,
                   transaction_type: 'All Transaction',
-                  status: 1,
+                  status: 2,
                 } as Voucher,
                 {
                   id: 1,
@@ -86,7 +87,7 @@ const VoucherList: FC = (props: any) => {
                   quota_user: 1,
                   total_used: 0,
                   transaction_type: 'All Transaction',
-                  status: 1,
+                  status: 2,
                 } as Voucher,
                 {
                   id: 1,
@@ -110,7 +111,19 @@ const VoucherList: FC = (props: any) => {
                   quota_user: 1,
                   total_used: 0,
                   transaction_type: 'All Transaction',
-                  status: 1,
+                  status: 3,
+                } as Voucher,
+                {
+                  id: 1,
+                  campaign_name: 'Diskon 30% April Mop',
+                  code: 'edot10',
+                  platform: 'FOOD',
+                  periode: '1 Nov 2022 - 31 Des 2022',
+                  total_quota: 50,
+                  quota_user: 1,
+                  total_used: 0,
+                  transaction_type: 'All Transaction',
+                  status: 4,
                 } as Voucher,
               ],
               total_item: 5,
@@ -279,7 +292,9 @@ const VoucherList: FC = (props: any) => {
                     }))
                   }
                 >
-                  <option value={''}>Choose</option>
+                  <option value={''}>All</option>
+                  <option value={''}>FOOD</option>
+                  <option value={''}>SHOP</option>
                   {/* {filterRole.map((data: any, index: any) => {
                     return (
                       <option key={index} value={data.value}>
@@ -290,33 +305,10 @@ const VoucherList: FC = (props: any) => {
                 </select>
               </div>
             </div>
-            <div className='w-lg-auto w-100 d-flex align-items-center'>
+            <div className='w-lg-auto w-200 d-flex align-items-center'>
               <span className='me-5 ms-lg-4 flex-shrink-0'>Periode</span>
-              <div className='position-relative w-lg-200px w-100'>
-                <InlineSVG
-                  src={'/media/icons/efood/IconChevronDown.svg'}
-                  className='position-absolute translate-middle-y top-50 me-4 end-0 pe-none'
-                />
-                <select
-                  className='form-control form-control-lg form-control-solid pe-13'
-                  autoComplete='off'
-                  value={state.query.role_id}
-                  onChange={(e) =>
-                    setQuery((prev) => ({
-                      ...prev,
-                      role_id: e.target.value,
-                    }))
-                  }
-                >
-                  <option value={''}>Choose</option>
-                  {/* {filterRole.map((data: any, index: any) => {
-                    return (
-                      <option key={index} value={data.value}>
-                        {data.label}
-                      </option>
-                    )
-                  })} */}
-                </select>
+              <div className='position-relative w-lg-250px w-200'>
+                <DateRangePicker className='' onChange={() => { }} format='DD MMM YYYY' />
               </div>
             </div>
           </div>
@@ -334,7 +326,7 @@ const VoucherList: FC = (props: any) => {
                     <th>PERIODE</th>
                     <th>TOTAL QUOTA</th>
                     <th>QUOTA @USER</th>
-                    <th>TOTAL USER</th>
+                    <th>TOTAL USED</th>
                     <th>TRANSACTION TYPE</th>
                     <th>STATUS</th>
                     <th>ACTION</th>
@@ -353,58 +345,105 @@ const VoucherList: FC = (props: any) => {
                     </tr>
                   ) : (
                     state.data.map((value, index) => (
-                      <tr key={index}>
-                        <td className='align-middle'>
-                          {(state.page - 1) * state.limit + index + 1}
-                        </td>
-                        <td className='align-middle'>{value.campaign_name}</td>
-                        <td className='align-middle'>{value.campaign_name}</td>
-                        <td className='align-middle'>{value.campaign_name}</td>
-                        <td className='align-middle'>
-                          {' '}
-                          {value.status === 1 ? 'inactive' : 'active'}
-                        </td>
-                        <td className='align-middle'>{value.campaign_name}</td>
-                        <td className='align-middle'>{value.campaign_name}</td>
-                        <td className='align-middle'>{value.campaign_name}</td>
-                        <td className='align-middle'>{value.campaign_name}</td>
-                        <td className='align-middle'>{value.campaign_name}</td>
-                        <td className='align-middle' style={{ minWidth: 125 }}>
-                          <div
-                            className='d-inline'
-                            data-bs-toggle="modal"
-                            data-bs-target="#kt_modal_scrollable_2"
-                            style={{ cursor: 'pointer' }}
-                          >
-                            <InlineSVG src={'/media/icons/eye.svg'} />
-                          </div>
-                          &nbsp;&nbsp;
-                          {/* {hasAccess({access: 'update'}) ? ( */}
-                          <button
-                            type='button'
-                            className='btn-transparent me-3'
-                            onClick={() =>
-                              // dispatch(AdminRedux.actions.getDetailAdmin('', ''))
-                              history.push(`/voucher/edit/${value.id}`)
+                      value.status === 1 && activeId === 1 ||
+                        value.status === 2 && activeId === 2 ||
+                        value.status === 3 && activeId === 3 ||
+                        value.status === 4 && activeId === 4
+                        ?
+                        <tr key={index}>
+                          <td className='align-middle'>
+                            {(state.page - 1) * state.limit + index + 1}
+                          </td>
+                          <td className='align-middle'>{value.campaign_name}</td>
+                          <td className='align-middle'>{value.code}</td>
+                          <td className='align-middle'>{value.platform}</td>
+                          <td className='align-middle'>{value.periode}</td>
+                          <td className='align-middle'>{value.total_quota}</td>
+                          <td className='align-middle'>{value.quota_user}</td>
+                          <td className='align-middle'>{value.total_used}</td>
+                          <td className='align-middle'>{value.transaction_type}</td>
+                          <td className='align-middle'>
+                            {' '}
+                            <div className='d-flex p-1 status-badge' style={{ width: value.status === 3 || value.status === 2 ? 100 : 50, backgroundColor: value.status === 1 ? '#DCFCE7' : value.status === 2 ? '#FFFBDF' : value.status === 3 ? '#FFE4E5' : '#DDDDDD', alignItems: 'center', justifyContent: 'center' }}>
+                              <span style={{ color: value.status === 1 ? '#22C55E' : value.status === 2 ? '#B78101' : value.status === 3 ? '#ED1C24' : '#666666', textAlign: 'center', fontSize: 10, flexDirection: 'row' }}>
+                                {value.status === 1 ? 'Active' : value.status === 2 ? 'Need Approval' : value.status === 3 ? 'Revision Required' : 'Inactive'}
+                              </span>
+                            </div>
+                          </td>
+                          <td className='align-middle' style={{ minWidth: 125 }}>
+
+                            <div
+                              className='d-inline'
+                              data-bs-toggle="modal"
+                              data-bs-target="#kt_modal_scrollable_2"
+                              style={{ cursor: 'pointer' }}
+                            >
+                              <InlineSVG src={'/media/icons/eye.svg'} />
+                            </div>&nbsp;&nbsp;
+
+                            {
+                              value.status === 2 ?
+                                <div
+                                  className='d-inline'
+                                  onClick={() => {
+                                    setHandleDeleteData(value)
+                                    setShowDeleteModal(true)
+                                  }}
+                                  style={{ cursor: 'pointer' }}
+                                >
+                                  <InlineSVG src='/media/icons/ceklis.svg' />
+                                </div>
+                                :
+                                <button
+                                  type='button'
+                                  className='btn-transparent me-3'
+                                  onClick={() =>
+                                    // dispatch(AdminRedux.actions.getDetailAdmin('', ''))
+                                    history.push(`/voucher/edit/${value.id}`)
+                                  }
+                                >
+                                  <InlineSVG src={'/media/icons/edit.svg'} />
+                                </button>
                             }
-                          >
-                            <InlineSVG src={'/media/icons/edit.svg'} />
-                          </button>
-                          {/* ) : null} */}
-                          {/* {hasAccess({access: 'delete'}) ? ( */}
-                          <div
-                            className='d-inline'
-                            onClick={() => {
-                              setHandleDeleteData(value)
-                              setShowDeleteModal(true)
-                            }}
-                            style={{ cursor: 'pointer' }}
-                          >
-                            <InlineSVG src='/media/icons/trash.svg' />
-                          </div>
-                          {/* ) : null} */}
-                        </td>
-                      </tr>
+
+                            {value.status === 2 ?
+                              <div
+                                className='d-inline'
+                                onClick={() => {
+                                  setHandleDeleteData(value)
+                                  setShowDeleteModal(true)
+                                }}
+                                style={{ cursor: 'pointer' }}
+                              > &nbsp;
+                                <InlineSVG src='/media/icons/closered.svg' />
+                              </div>
+                              :
+                              <div
+                                className='d-inline'
+                                onClick={() => {
+                                  setHandleDeleteData(value)
+                                  setShowDeleteModal(true)
+                                }}
+                                style={{ cursor: 'pointer' }}
+                              >
+                                <InlineSVG src='/media/icons/trash.svg' />
+                              </div>}
+                            &nbsp;&nbsp;
+                            {value.status === 3 ?
+                              <div
+                                className='d-inline'
+                                onClick={() => {
+                                  setHandleDeleteData(value)
+                                  setShowDeleteModal(true)
+                                }}
+                                style={{ cursor: 'pointer' }}
+                              >
+                                <InlineSVG src='/media/icons/note.svg' />
+                              </div> : null
+                            }
+                            {/* ) : null} */}
+                          </td>
+                        </tr> : null
                     ))
                   )}
                 </tbody>
