@@ -333,7 +333,7 @@ export const CampaignInfoForm = (props: CampaignInfoFormProps) => {
               <div className="row mx-0">
                 {targetUser?.length > 0 && targetUser?.map((item, index) => (
                   <div key={`key-${item?.id}`} className="col-3 ps-0 pb-4">
-                    <div className="d-flex align-items-center user-card">
+                    <div className="d-flex align-items-center form-card">
                       <div className="w-100">
                         <p className="m-0">{item?.name}</p>
                         <p className="text-gray-600 m-0">{item?.phone}</p>

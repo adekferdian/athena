@@ -6,6 +6,7 @@ import React, {
   SetStateAction,
 } from 'react';
 import { Link } from 'react-router-dom';
+import InlineSVG from 'react-inlinesvg/esm';
 import { PageTitle } from 'src/_metronic/layout/core';
 import { CampaignInfoForm } from './CampaignInfoForm';
 import { DiscountUsageForm } from './DiscountUsageForm';
@@ -33,29 +34,33 @@ export const AddVoucher = () => {
     <FormContext.Provider value={formContextValue}>
       <PageTitle>Create Campaign</PageTitle>
       <div className="stepper-wrapper">
-        <div className={`stepper-item ${formStep >= 1 ? 'completed' : ''}`}>
+        <div className={`stepper-item ${formStep >= 2 ? 'completed' : ''} ${formStep === 1 ? 'active' : ''}`}>
           <div className="d-flex align-items-center w-100">
             <div className="w-100" />
-            <div className="step-counter" />
+            <div className="step-counter">
+              {formStep >= 2 && (<InlineSVG src={'/media/icons/efood/IconCheckWhite.svg'} />)}
+            </div>
             <div className="step-name mx-4 flex-shrink-0">Campaign Info</div>
             <div className="border-stepper-wrapper">
               <div className="border-stepper" />
             </div>
           </div>
         </div>
-        <div className={`stepper-item ${formStep >= 2 ? 'completed' : ''}`}>
+        <div className={`stepper-item ${formStep >= 3 ? 'completed' : ''} ${formStep === 2 ? 'active' : ''}`}>
           <div className="d-flex align-items-center w-100">
             <div className="border-stepper-wrapper">
               <div className="border-stepper" />
             </div>
-            <div className="step-counter" />
+            <div className="step-counter">
+              {formStep >= 3 && (<InlineSVG src={'/media/icons/efood/IconCheckWhite.svg'} />)}
+            </div>
             <div className="step-name mx-4 flex-shrink-0">Discount & Usage</div>
             <div className="border-stepper-wrapper">
               <div className="border-stepper" />
             </div>
           </div>
         </div>
-        <div className={`stepper-item ${formStep >= 3 ? 'completed' : ''}`}>
+        <div className={`stepper-item ${formStep === 3 ? 'active' : ''}`}>
           <div className="d-flex align-items-center w-100">
             <div className="border-stepper-wrapper">
               <div className="border-stepper" />
