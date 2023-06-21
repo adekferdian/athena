@@ -25,18 +25,6 @@ const PreviewVoucherModal: React.FC<Props> = ({ show, handleClose, data, onEdit 
     return (
       <div>
         <div className='fv-row'>
-          <div className='mb-4'>
-            <h2>Diskon April Seru 20%</h2>
-          </div>
-          <div className='d-flex'>
-            <span className='mt-2 text-gray-600'>Campaign Status</span>
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <div className='d-flex w-75px h-35px border p-2 status-badge'>
-              <div className='circle' />
-              <span className="text-success">
-                Active</span>
-            </div>
-          </div>
           <div className='d-flex align-items-center justify-content-between margin-tab-modal' id='navbar'>
             <ul className="nav">
               {values.map((val, index) => (
@@ -128,18 +116,6 @@ const PreviewVoucherModal: React.FC<Props> = ({ show, handleClose, data, onEdit 
     return (
       <div>
         <div className='fv-row'>
-          <div className='mb-4'>
-            <h2>Diskon April Seru 20%</h2>
-          </div>
-          <div className='d-flex'>
-            <span className='mt-2 text-gray-600'>Campaign Status</span>
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <div className='d-flex w-75px h-35px border p-2 status-badge'>
-              <div className='circle' />
-              <span className="text-success">
-                Active</span>
-            </div>
-          </div>
           <div className='d-flex align-items-center justify-content-between margin-tab-modal' id='navbar'>
             <ul className="nav">
               {values.map((val, index) => (
@@ -265,18 +241,6 @@ const PreviewVoucherModal: React.FC<Props> = ({ show, handleClose, data, onEdit 
     return (
       <div>
         <div className='fv-row'>
-          <div className='mb-4'>
-            <h2>Diskon April Seru 20%</h2>
-          </div>
-          <div className='d-flex'>
-            <span className='mt-2 text-gray-600'>Campaign Status</span>
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <div className='d-flex w-75px h-35px border p-2 status-badge'>
-              <div className='circle' />
-              <span className="text-success">
-                Active</span>
-            </div>
-          </div>
           <div className='d-flex align-items-center justify-content-between margin-tab-modal' id='navbar'>
             <ul className="nav">
               {values.map((val, index) => (
@@ -342,18 +306,6 @@ const PreviewVoucherModal: React.FC<Props> = ({ show, handleClose, data, onEdit 
     return (
       <div>
         <div className='fv-row'>
-          <div className='mb-4'>
-            <h2>Diskon April Seru 20%</h2>
-          </div>
-          <div className='d-flex'>
-            <span className='mt-2 text-gray-600'>Campaign Status</span>
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <div className='d-flex w-75px h-35px border p-2 status-badge'>
-              <div className='circle' />
-              <span className="text-success">
-                Active</span>
-            </div>
-          </div>
           <div className='d-flex align-items-center justify-content-between margin-tab-modal' id='navbar'>
             <ul className="nav">
               {values.map((val, index) => (
@@ -391,6 +343,18 @@ const PreviewVoucherModal: React.FC<Props> = ({ show, handleClose, data, onEdit 
             </div>
           </div>
           <div className="modal-body">
+            <div className='mb-4'>
+              <h2>Diskon April Seru 20%</h2>
+            </div>
+            <div className='d-flex'>
+              <span className='mt-2 text-gray-600'>Campaign Status</span>
+              &nbsp;&nbsp;&nbsp;&nbsp;
+              <div className='d-flex w-75px h-35px border p-2 status-badge'>
+                <div className='circle' style={{ width: 10, height: 10, marginRight: 5, marginTop: 5 }} />
+                <span style={{ color: '#01874E' }}>
+                  Active</span>
+              </div>
+            </div>
             {
               activeId === 1 ? modalGeneralInformation() :
                 activeId === 2 ? modalDiscountUsage() :
@@ -407,11 +371,11 @@ const PreviewVoucherModal: React.FC<Props> = ({ show, handleClose, data, onEdit 
             >
               Back
             </button>
-            <button 
-              type="button" 
+            <button
+              type="button"
               className="btn btn-secondary"
               data-bs-dismiss="modal"
-              onClick={() =>{
+              onClick={() => {
                 // dispatch(AdminRedux.actions.getDetailAdmin('', ''))
                 history.push(`/voucher/edit/${1}`)
               }}

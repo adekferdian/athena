@@ -18,6 +18,8 @@ import DeleteVoucherModal from '../components/DeleteVoucherModal'
 import PreviewVoucherModal from '../components/PreviewVoucherModal'
 import VoucherScreens from '../Screens'
 import DateRangePicker from 'src/app/components/DateRangePicker'
+import ApproveCampaignModal from '../components/ApproveCampaignModal'
+import DeclineCampaignModal from '../components/DeclineCampaignModal'
 
 const values = [
   { id: 1, text: "Active (3)" },
@@ -33,7 +35,11 @@ const VoucherList: FC = (props: any) => {
 
   const [activeId, setActiveId] = useState(1);
   const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [showApprovCampaign, setShowApprovCampaign] = useState(false)
+  const [showDeclineCampaign, setShowDeclineCampaign] = useState(false)
   const [handleDeleteData, setHandleDeleteData] = useState<any>(null)
+  const [handleApprovCampaign, setHandleApprovCampaign] = useState<any>(null)
+  const [handleDeclineCampaign, setHandleDeclineCampaign] = useState<any>(null)
   const [showPreviewModal, setShowPreviewModal] = useState(false)
   const [handleEditData, setHandleEditData] = useState<any>(null)
 
@@ -244,6 +250,11 @@ const VoucherList: FC = (props: any) => {
               }}
               className='btn btn-sm btn-secondary fw-bold fs-6'
             >
+              <InlineSVG
+                src={'/media/icons/circleplus.svg'}
+                // className='position-absolute translate-middle-y top-50 ms-4 pe-none'
+              />
+              &nbsp;
               Create Voucher
             </Link>
           </div>
@@ -253,7 +264,10 @@ const VoucherList: FC = (props: any) => {
             {values.map((val, index) => (
               //@ts-ignore
               <li key={index} className="nav-item" onClick={() => setActiveId(val.id)}>
-                <NavLink exact activeClassName={activeId === val.id ? "nav-active link-dark" : "nav-link link-dark"} to='#' >{val.text}</NavLink>
+                <NavLink exact activeClassName={activeId === val.id ? "nav-active link-dark d-flex" : "nav-link link-dark d-flex"} style={{ flexDirection: 'row' }} to='#' >
+                  <div className='circle' style={{ width: 10, height: 10, marginRight: 10, marginTop: 5, backgroundColor: val.id === 2 ? '#FFB400' : val.id === 3 ? '#FF4D53' : val.id === 4 ? '#888888' : val.id === 5 ? '#DDDDDD' : '#02EF8B' }} />
+                  {val.text}
+                </NavLink>
               </li>
             ))}
           </ul>
@@ -386,8 +400,8 @@ const VoucherList: FC = (props: any) => {
                                 <div
                                   className='d-inline'
                                   onClick={() => {
-                                    setHandleDeleteData(value)
-                                    setShowDeleteModal(true)
+                                    setHandleApprovCampaign(value)
+                                    setShowApprovCampaign(true)
                                   }}
                                   style={{ cursor: 'pointer' }}
                                 >
@@ -410,8 +424,8 @@ const VoucherList: FC = (props: any) => {
                               <div
                                 className='d-inline'
                                 onClick={() => {
-                                  setHandleDeleteData(value)
-                                  setShowDeleteModal(true)
+                                  setHandleDeclineCampaign(value)
+                                  setShowDeclineCampaign(true)
                                 }}
                                 style={{ cursor: 'pointer' }}
                               > &nbsp;
@@ -475,6 +489,38 @@ const VoucherList: FC = (props: any) => {
           show={showDeleteModal}
           handleClose={() => setShowDeleteModal(false)}
           data={handleDeleteData}
+        />
+        <ApproveCampaignModal
+          onDelete={() => {
+            // deleteGender(handleDeleteData?.id ?? '')
+            //   .then(() => {
+            //     // dispatch(AdminRedux.actions.setSuccess('User berhasil dihapus.'))
+            //     setShowDeleteModal(false)
+            //   })
+            //   .catch((err) => {
+            //     setShowDeleteModal(false)
+            //     addPageToasts({ scheme: 'danger', text: getErrorMessage(err, true) })
+            //   })
+          }}
+          show={showApprovCampaign}
+          handleClose={() => setShowApprovCampaign(false)}
+          data={handleApprovCampaign}
+        />
+        <DeclineCampaignModal
+          onDelete={() => {
+            // deleteGender(handleDeleteData?.id ?? '')
+            //   .then(() => {
+            //     // dispatch(AdminRedux.actions.setSuccess('User berhasil dihapus.'))
+            //     setShowDeleteModal(false)
+            //   })
+            //   .catch((err) => {
+            //     setShowDeleteModal(false)
+            //     addPageToasts({ scheme: 'danger', text: getErrorMessage(err, true) })
+            //   })
+          }}
+          show={showDeclineCampaign}
+          handleClose={() => setShowDeclineCampaign(false)}
+          data={handleDeclineCampaign}
         />
         <PreviewVoucherModal
           onEdit={() => {

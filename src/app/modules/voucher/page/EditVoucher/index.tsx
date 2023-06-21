@@ -11,19 +11,12 @@ import { NavLink, useParams } from 'react-router-dom'
 // import Select from 'react-select'
 // import {ReactSelectMetronicTheme} from 'src/app/components/CustomReactSelect'
 // import {SelectComponentsConfig} from 'react-select'
-import VoucherScreens from '../Screens'
-//@ts-ignore
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-//@ts-ignore
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import VoucherScreens from '../../Screens'
 import InlineSVG from 'react-inlinesvg/esm'
+import { CampaignInfoForm } from './CampaignInfoForm'
+import { DiscountUsageForm } from './DiscountUsageForm'
 //@ts-ignore
 import DatePicker from "react-datepicker";
-//@ts-ignore
-// import TimePicker from 'react-times';
-import { TimePicker } from 'react-ios-time-picker';
-
-// use material theme
 import 'react-times/css/material/default.css';
 // or you can use classic theme
 import 'react-times/css/classic/default.css';
@@ -45,9 +38,11 @@ export const EditVoucher = () => {
   const [selectPlatform, setSelectPlatform] = useState('SHOP')
   const [selectCampaign, setSelectCampaign] = useState('VOUCHER')
   const [success, setSuccess] = useState('')
-  const [activeId, setActiveId] = useState(3);
+  const [activeId, setActiveId] = useState(1);
   const [startDate, setStartDate] = useState(new Date());
   const [value, setValue] = useState('10:00');
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
   // const [role, setRole] = useState<{label: string; value: string}[]>([])
   // const [sentData, setSentData] = useState<undefined | SentDataModel>(undefined)
   // const [passwordModal, setPasswordModal] = useState(false)
@@ -143,251 +138,6 @@ export const EditVoucher = () => {
 
   const onChange = (timeValue: any) => {
     setValue(timeValue);
-  }
-
-  const renderGeneralInformation = () => {
-    return (
-      <div>
-        <div className='card mb-5'>
-          <div className='row mt-5 mb-5 p-5'>
-            <div className='col-2 text-gray-800 fw-bold fs-7'>Select Platform</div>
-            <div className="col-1 form-check form-check-custom form-check-solid">
-              <input className="form-check-input" type="radio" value="SHOP" id="flexRadioDefault" checked={selectPlatform == "SHOP"} onChange={onValueChangePlatform} />
-              <label className="form-check-label">
-                SHOP
-              </label>
-            </div>
-            <div className="col-1 form-check form-check-custom form-check-solid">
-              <input className="form-check-input" type="radio" value="FOOD" id="flexRadioDefault" checked={selectPlatform == "FOOD"} onChange={onValueChangePlatform} />
-              <label className="form-check-label">
-                FOOD
-              </label>
-            </div>
-          </div>
-        </div>
-        <div className='card mb-5'>
-          <div className='row mt-5 mb-5 p-5'>
-            <div className='col-2 text-gray-800 fw-bold fs-7'>Campaign type</div>
-            <div className="col-1 form-check form-check-custom form-check-solid">
-              <input className="form-check-input" type="radio" value="VOUCHER" id="flexRadioDefault" checked={selectCampaign == "VOUCHER"} onChange={onValueChangeCampaign} />
-              <label className="form-check-label">
-                Voucher
-              </label>
-            </div>
-            <div className="col-1 form-check form-check-custom form-check-solid">
-              <input className="form-check-input" type="radio" value="DISCOUNT" id="flexRadioDefault" checked={selectCampaign == "DISCOUNT"} onChange={onValueChangeCampaign} />
-              <label className="form-check-label">
-                Discount
-              </label>
-            </div>
-          </div>
-        </div>
-        <div className='card mb-5'>
-          <div className="row mb-5 pt-5 p-5">
-            <div className='col-2 text-gray-800 fw-bold fs-7'>Identification</div>
-            <div className='col-8'>
-              <label className="form-label">Campaign Name</label>
-              <input
-                type="text"
-                className="form-control"
-                value='Discount April Seru 20%'
-              />
-            </div>
-          </div>
-          <div className="row mb-5 pt-5 p-5">
-            <div className='col-2'></div>
-            <div className='col-8'>
-              <div className="App">
-                <label className="form-label">Terms & Condition</label>
-                <CKEditor
-                  editor={ClassicEditor}
-                  data="Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam"
-                  onReady={(editor: any) => {
-                    // You can store the "editor" and use when it is needed.
-                    console.log('Editor is ready to use!', editor);
-                  }}
-                  onChange={(event: any, editor: any) => {
-                    const data = editor.getData();
-                    console.log({ event, editor, data });
-                  }}
-                  onBlur={(event: any, editor: any) => {
-                    console.log('Blur.', editor);
-                  }}
-                  onFocus={(event: any, editor: any) => {
-                    console.log('Focus.', editor);
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-          <div className="row mb-5 pt-5 p-5">
-            <div className='col-2'></div>
-            <div className='col-4'>
-              <label className="form-label">Total Voucher Quota</label>
-              <input
-                type="text"
-                className="form-control"
-                value='200'
-              />
-            </div>
-            <div className='col-4'>
-              <label className="form-label">Quota for each User </label>
-              <input
-                type="text"
-                className="form-control"
-                value='1'
-              />
-            </div>
-          </div>
-          <div className="row mb-10 pt-5 p-5">
-            <div className='col-2'></div>
-            <div className='row col-8'>
-              <div className='col-5'>
-                <label className="form-label">Display Voucher </label>
-              </div>
-              <div className='col-5'>
-                <div className="form-check form-switch form-check-custom form-check-solid">
-                  <input className="form-check-input" type="checkbox" value={displayVoucher} id="flexSwitchChecked" checked={displayVoucher == 1} onChange={onValueChangeDisplay} />
-                </div>
-              </div>
-              <div className='col-8'>
-                <span className="text-gray-600 fs-7">Matikan jika voucher tidak ingin tampil di platform. Kode voucher akan tetap bisa dipakai.</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className='card mb-5'>
-          <div className='row mt-12 p-5'>
-            <div className='col-2 text-gray-800 fw-bold fs-7'>Voucher Code</div>
-            <div className="col-2 form-check form-check-custom form-check-solid">
-              <input className="form-check-input" type="radio" value="VOUCHER" id="flexRadioDefault" checked={selectCampaign == "VOUCHER"} onChange={onValueChangeCampaign} />
-              <label className="form-check-label">
-                Input Manually
-              </label>
-            </div>
-            <div className="col-2 form-check form-check-custom form-check-solid">
-              <input className="form-check-input" type="radio" value="DISCOUNT" id="flexRadioDefault" checked={selectCampaign == "DISCOUNT"} onChange={onValueChangeCampaign} />
-              <label className="form-check-label">
-                Autogenerate
-              </label>
-            </div>
-          </div>
-          <div className='row mt-10 mb-12 p-5'>
-            <div className='col-2 text-gray-800 fw-bold fs-7'></div>
-            <div className="col-8 form-check form-check-custom form-check-solid">
-              <div className="input-group">
-                <input type="text" className="form-control input-generate" value="200 Voucher Codes Generated" />
-                <div className='custom-content-input'>
-                  <span className="" id="basic-addon2">Preview</span>&nbsp;
-                  <span className="text-gray-400" id="basic-addon2">|</span>&nbsp;
-                  <InlineSVG src='/media/icons/download.svg' />&nbsp;&nbsp;
-                  <InlineSVG src='/media/icons/trash.svg' />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className='card mb-5'>
-          <div className='row mt-12 p-5'>
-            <div className='col-2 text-gray-800 fw-bold fs-7'>Validity Period</div>
-            <div className="col-4">
-              <div className="input-group">
-                <label className="form-label text-gray-700 fs-7">Start Date</label>
-                <DatePicker className="form-control" selected={startDate} onChange={(date: any) => setStartDate(date)} />
-                <div className='custom-content-date'>
-                  <InlineSVG src='/media/icons/date.svg' />
-                </div>
-              </div>
-            </div>
-            <div className="col-2">
-              <div className="input-group">
-                <label className="form-label text-gray-700 fs-7">Start Time</label>
-                <TimePicker className="form-control" onChange={onChange} value={value} />
-                <div className='custom-content-time'>
-                  <InlineSVG src='/media/icons/time.svg' />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className='row mt-12 p-5'>
-            <div className='col-2 text-gray-800 fw-bold fs-7'></div>
-            <div className="col-4">
-              <div className="input-group">
-                <label className="form-label text-gray-700 fs-7">End Date</label>
-                <DatePicker className="form-control" selected={startDate} onChange={(date: any) => setStartDate(date)} />
-                <div className='custom-content-date'>
-                  <InlineSVG src='/media/icons/date.svg' />
-                </div>
-              </div>
-            </div>
-            <div className="col-2">
-              <div className="input-group">
-                <label className="form-label text-gray-700 fs-7">End Time</label>
-                <TimePicker onChange={onChange} value={value} />
-                <div className='custom-content-time'>
-                  <InlineSVG src='/media/icons/time.svg' />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className='card mb-5'>
-          <div className="row mb-5 pt-5 p-5">
-            <div className='col-2 text-gray-800 fw-bold fs-7'>Target User</div>
-            <div className='col-4'>
-              <label className="form-label">Choose User</label>
-              <select className="form-select mb-5" aria-label="Select example">
-                <option>Spesific User</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
-              </select>
-              <button className="btn btn-light-secondary mb-5">
-                <InlineSVG src='/media/icons/user.svg' />
-                &nbsp;
-                <span>Add User</span>
-              </button>
-              <div className='col-8'>
-                <input
-                  type="text"
-                  className="form-control"
-                  disabled
-                />
-                <div className='custom-content-input-user'>
-                  <span className='text-gray-800 fw-bold fs-7'>Nama user</span><br />
-                  <span className='text-gray-500 fs-7'>0821548625168</span>
-                </div>
-                <button className='custom-content-icon-input-user'>
-                  <InlineSVG src='/media/icons/close.svg' />
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className='card mb-5'>
-          <div className="row mb-5 pt-5 p-5">
-            <div className='col-2 text-gray-800 fw-bold fs-7'>Image</div>
-            <div className='col-8 row border-primary-300 border-dashed card-image-voucher'>
-              <div className='col-4 card-image-body-voucher'>
-                <img src="/media/icons/image8.png" alt="" className='image-voucher' />
-              </div>
-              <div className='col-8 card-title-voucher'>
-                <div className='col-8'>
-                  <span className='text-gray-800 fw-bold fs-7'>Img_Banner_voucher_revisi.Png</span>
-                </div>
-                <div className='col-8'>
-                  <span className='fw-bold fs-7 text-action'>Priview </span>
-                  <span className='text-gray-500 fw-bold fs-7'> · 130 KB</span>
-                </div>
-              </div>
-              <div className='card-image-voucher-action'>
-                <InlineSVG src='/media/icons/trash.svg' />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
   }
 
   const renderDiscount = () => {
@@ -1185,30 +935,40 @@ export const EditVoucher = () => {
                 </div>
               </div>
 
-              <div className='col-2'>
+              <div className='col-3'>
                 <span className='text-gray-600 fw-bold'>Instan</span>
-                <div className="d-flex row col-12 mb-5 border border-gray-400" style={{ borderRadius: 8, padding: 10, marginRight: 10, marginLeft: 0 }}>
-                  <div className='col-8 d-flex p-0' style={{ alignItems: 'center' }}>
-                    <span className='text-gray-800 fw-bold' style={{ fontSize: 11 }}>07:00</span>
-                  </div>
-                  <div className='col-4 d-flex' style={{ alignItems: 'center', justifyContent: 'center' }}>
-                    <div className="form-check form-check-custom form-check-solid">
-                      <InlineSVG src='/media/icons/time.svg' />
-                    </div>
+                <div className="input-group">
+                  <DatePicker
+                    className="form-control"
+                    selected={startTime}
+                    onChange={(time: any) => setStartTime(time)}
+                    showTimeSelect
+                    showTimeSelectOnly
+                    timeIntervals={15}
+                    timeCaption="Time"
+                    dateFormat="h:mm aa"
+                  />
+                  <div className="custom-content-input">
+                    <InlineSVG src="/media/icons/time.svg" />
                   </div>
                 </div>
               </div>
 
-              <div className='col-2'>
+              <div className='col-3'>
                 <span className='text-gray-600 fw-bold'>Instan</span>
-                <div className="d-flex row col-12 mb-5 border border-gray-400" style={{ borderRadius: 8, padding: 10, marginRight: 10, marginLeft: 0 }}>
-                  <div className='col-8 d-flex p-0' style={{ alignItems: 'center' }}>
-                    <span className='text-gray-800 fw-bold' style={{ fontSize: 11 }}>09:00</span>
-                  </div>
-                  <div className='col-4 d-flex' style={{ alignItems: 'center', justifyContent: 'center' }}>
-                    <div className="form-check form-check-custom form-check-solid">
-                      <InlineSVG src='/media/icons/time.svg' />
-                    </div>
+                <div className="input-group">
+                  <DatePicker
+                    className="form-control"
+                    selected={endTime}
+                    onChange={(time: any) => setEndTime(time)}
+                    showTimeSelect
+                    showTimeSelectOnly
+                    timeIntervals={15}
+                    timeCaption="Time"
+                    dateFormat="h:mm aa"
+                  />
+                  <div className="custom-content-input">
+                    <InlineSVG src="/media/icons/time.svg" />
                   </div>
                 </div>
               </div>
@@ -1219,8 +979,8 @@ export const EditVoucher = () => {
 
         <div className='card mb-5'>
           <div className='row mt-5 mb-5 p-5'>
-            <div className='col-12 border-grey-300 border-dashed p-2 d-flex' style={{ borderRadius:2, alignItems: 'center', justifyContent: 'center'}}>
-                <span className='text-secondary'>Add New Rule</span>
+            <div className='col-12 border-grey-300 border-dashed p-2 d-flex' style={{ borderRadius: 2, alignItems: 'center', justifyContent: 'center' }}>
+              <span className='text-secondary'>Add New Rule</span>
             </div>
           </div>
         </div>
@@ -1249,7 +1009,7 @@ export const EditVoucher = () => {
                   {/* <span className="text-success">
                     Active
                   </span> */}
-                  <select className="form-select form-select-white mr-5" aria-label="Select example" style={{ width: '100%', height: 20, padding: 0, paddingRight: 30 }}>
+                  <select className="form-select form-select-white mr-5" aria-label="Select example" style={{ width: '100%', height: 20, padding: 0, paddingRight: 30, color: '#01874E' }}>
                     <option value="1">Active</option>
                     <option value="2">Inactive</option>
                   </select>
@@ -1268,8 +1028,8 @@ export const EditVoucher = () => {
             </div>
           </div>
           {
-            activeId === 1 ? renderGeneralInformation() :
-              activeId === 2 ? renderDiscount() :
+            activeId === 1 ? <CampaignInfoForm /> :
+              activeId === 2 ? <DiscountUsageForm /> :
                 activeId === 3 ? renderRules() : null
           }
         </div>
