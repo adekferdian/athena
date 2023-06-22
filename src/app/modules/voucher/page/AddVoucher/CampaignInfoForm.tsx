@@ -375,7 +375,25 @@ export const CampaignInfoForm = (props: CampaignInfoFormProps) => {
     let limit = document.getElementById('limit');
     let rules = document.getElementById('rules');
     let result = document.getElementById('result');
-    dragula([condition, limit, rules, result]);
+    dragula([condition, limit, rules, result],  {
+      moves: function (el: any, source: any, handle: any, sibling: any) {
+        console.log("EL ",el);
+        console.log("handle ",handle);
+        console.log("source ",source);
+        console.log("sibling ",sibling);
+        return true; // elements are always draggable by default
+      },
+      accepts: function (el: any, target: any, source: any, sibling: any) {
+        console.log("EL accept ",el);
+        console.log("target accept ",target);
+        return true; // elements can be dropped in any of the `containers` by default
+      },
+      mirrorContainer: document.body,
+    });
+    var drake = dragula({
+      copy: true
+    });
+    drake.containers.push(result);
     document.getElementById('container-drag')
   })
 
