@@ -9,13 +9,10 @@ import InputPercentage from 'src/app/components/InputPercentage';
 import RadioButtonCard from 'src/app/components/RadioButtonCard';
 import CheckboxSwitch from 'src/app/components/CheckboxSwitch';
 import LabelAlert from 'src/app/components/LabelAlert';
+import InlineSVG from 'react-inlinesvg/esm';
 // import { FormContext } from './index';
 
 export const DiscountUsageForm = () => {
-  const [minTransaction, setMinTransaction] = useState('');
-  const [maxTransaction, setMaxTransaction] = useState('');
-  const [discount, setDiscount] = useState('');
-  const [maxDiscount, setMaxDiscount] = useState('');
   const [discountMerchantCovered, setDiscountMerchantCovered] = useState('');
   const [discountCompanyCovered, setDiscountCompanyCovered] = useState('');
   const [usageHowTo, setUsageHowTo] = useState('');
@@ -24,44 +21,112 @@ export const DiscountUsageForm = () => {
   const [OTPRequired, setOTPRequired] = useState(false);
   const [voucherCombine, setVoucherCombine] = useState(false);
   const [voucherCombineType, setVoucherCombineType] = useState('');
+  const [strataForms, setStrataForms] = useState([{
+    id: 0,
+    minTransaction: '',
+    maxTransaction: '',
+    discount: '',
+    maxDiscount: '',
+  }])
 
   // Use for passing form values
   // const contextState = useContext(FormContext);
+
+  const onMinTrasactionChange = (value: string, index: number) => {
+    let updatedForms = [...strataForms];
+    updatedForms[index].minTransaction = value;
+    setStrataForms(updatedForms);
+  };
+
+  const onMaxTrasactionChange = (value: string, index: number) => {
+    let updatedForms = [...strataForms];
+    updatedForms[index].maxTransaction = value;
+    setStrataForms(updatedForms);
+  };
+
+  const onDiscountChange = (value: string, index: number) => {
+    let updatedForms = [...strataForms];
+    updatedForms[index].discount = value;
+    setStrataForms(updatedForms);
+  };
+
+  const onMaxDiscountChange = (value: string, index: number) => {
+    let updatedForms = [...strataForms];
+    updatedForms[index].maxDiscount = value;
+    setStrataForms(updatedForms);
+  };
 
   const renderSectionDiscount = () => (
     <div className="card mb-4 py-12 px-8">
       <div className="d-flex">
         <label className="col-2 text-gray-800 fw-bold fs-6">Discount</label>
         <div className="col-10">
-          <div className="d-flex gap-2">
-            <InputMoney
-              onChangeValue={(value) => setMinTransaction(value)}
-              value={minTransaction}
-              className="col-3 col-sm-6 form-control"
-              label="Minimum Transaction"
-            />
-            <InputMoney
-              onChangeValue={(value) => setMaxTransaction(value)}
-              value={maxTransaction}
-              className="col-3 col-sm-6 form-control"
-              label="Maximum Transaction (Optional)"
-            />
-            <InputPercentage
-              onChangeValue={(value) => setDiscount(value)}
-              value={discount}
-              className="col-3 col-sm-6 form-control"
-              label="Discount"
-            />
-            <InputMoney
-              onChangeValue={(value) => setMaxDiscount(value)}
-              value={maxDiscount}
-              className="col-3 col-sm-6 form-control"
-              label="Maximum Discount (Optional)"
-            />
-          </div>
-          <div className="dashed-button mt-4">
-            <p className="m-0">Add Strata Discount</p>
-          </div>
+          {strataForms.map((item, index) => (
+            <div className="d-flex gap-2 mb-4 align-items-center" key={`key-${item?.id}`}>
+              <InputMoney
+                onChangeValue={(value) => onMinTrasactionChange(value, index)}
+                value={item?.minTransaction}
+                className="col-3 col-sm-6 form-control"
+                label="Minimum Transaction"
+              />
+              <InputMoney
+                onChangeValue={(value) => onMaxTrasactionChange(value, index)}
+                value={item?.maxTransaction}
+                className="col-3 col-sm-6 form-control"
+                label="Maximum Transaction (Optional)"
+              />
+              <InputPercentage
+                onChangeValue={(value) => onDiscountChange(value, index)}
+                value={item?.discount}
+                className="col-3 col-sm-6 form-control"
+                label="Discount"
+              />
+              <InputMoney
+                onChangeValue={(value) => onMaxDiscountChange(value, index)}
+                value={item?.maxDiscount}
+                className="col-3 col-sm-6 form-control"
+                label="Maximum Discount (Optional)"
+              />
+              {index > 0 && (
+                <InlineSVG
+                  src="/media/icons/payment/trash.svg"
+                  height="16"
+                  className="me-2 mt-8 cursor-pointer"
+                  onClick={() => {
+                    setStrataForms(
+                      strataForms.filter((obj) => {
+                        return obj.id !== item?.id;
+                      })
+                    );
+                  }}
+                />
+              )}
+
+              {strataForms.length > 1 && (
+                <div style={{ width: 30 }} />
+              )}
+            </div>
+          ))}
+
+          {strataForms.length < 3 && (
+            <div
+              className="dashed-button mt-4"
+              onClick={() => {
+                setStrataForms([
+                  ...strataForms,
+                  {
+                    id: strataForms.length + 1,
+                    minTransaction: '',
+                    maxTransaction: '',
+                    discount: '',
+                    maxDiscount: '',
+                  }
+                ])
+              }}
+            >
+              <p className="m-0">+ Add Strata Discount</p>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -18,6 +18,7 @@ import CheckboxSwitch from 'src/app/components/CheckboxSwitch';
 import LabelAlert from 'src/app/components/LabelAlert';
 import InputCheckBox from 'src/app/components/InputCheckBox';
 import ImageDropZone from 'src/app/components/ImageDropZone';
+import Select from 'react-select';
 // import { FormContext } from './index';
 
 interface CampaignInfoFormProps extends HTMLProps<HTMLInputElement> {
@@ -37,7 +38,7 @@ export const CampaignInfoForm = (props: CampaignInfoFormProps) => {
   const [startTime, setStartTime] = useState('');
   const [endDate, setEndDate] = useState('');
   const [endTime, setEndTime] = useState('');
-  const [chosenUser, setChosenUser] = useState('all');
+  const [chosenUser, setChosenUser] = useState({ value: 'all', label: 'All' });
   const [targetUser, setTargetUser] = useState([
     {
       id: 0,
@@ -45,6 +46,12 @@ export const CampaignInfoForm = (props: CampaignInfoFormProps) => {
       phone: '0821548625168',
     }
   ]);
+
+  const options = [
+    { value: 'all', label: 'All' },
+    { value: 'specific', label: 'Specific User' },
+    { value: 'existing', label: 'Existing User' },
+  ];
 
   // Use for passing form values
   // const contextState = useContext(FormContext);
@@ -303,18 +310,15 @@ export const CampaignInfoForm = (props: CampaignInfoFormProps) => {
         <div className="col-10">
           <div className="col-4">
             <label className="form-label">Choose User</label>
-            <select
-              className="form-select mb-4"
-              aria-label="Select example"
-              onChange={(e) => setChosenUser(e.target.value)}
-            >
-              <option value="all">All User</option>
-              <option value="specific">Specific User</option>
-              <option value="existing">Existing User</option>
-            </select>
+            <Select
+              defaultValue={chosenUser}
+              onChange={(e: any) => setChosenUser(e)}
+              options={options}
+              className="mb-4"
+            />
           </div>
 
-          {chosenUser !== 'all' && (
+          {chosenUser.value !== 'all' && (
             <div className="col-12">
               <div
                 className="d-inline-flex align-items-center btn btn-light-secondary mb-4"

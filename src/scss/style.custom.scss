@@ -867,3 +867,12 @@ input[type="text"][disabled] {
 .text-action {
   color: #EB008B;
 }
+
+.select-option {
+  padding: 1rem 2rem;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #EEEEEE;
+  }
+}
