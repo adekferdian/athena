@@ -101,14 +101,19 @@ export const RulesForm = () => {
     smallLabel: string | null;
   }
   interface PaymentInterface {
-    label: string;
-    img: Element;
-    value: string;
+    [index: number]: {
+      label: string;
+      img: Element;
+      value: string;
+    }
   };
 
-  interface RuleFormsInterface extends PaymentInterface {
+  interface RuleFormsInterface {
     id: number;
     ruleValue: RuleInterface | null;
+    paymentCourier: PaymentInterface[];
+    paymentVirtualAccount: PaymentInterface[];
+    paymentInstant: PaymentInterface[];
   }
 
   // Use for passing form values
@@ -116,40 +121,8 @@ export const RulesForm = () => {
   const [selectedRule, setSelectedRule] = useState('');
   const [showRuleOptions, setShowRuleOptions] = useState(false);
   const [showPaymentOptions, setShowPaymentOptions] = useState(false);
-  const [ruleForms, setRuleForms] = useState<RuleFormsInterface[]>([
-    {
-      id: 0,
-      ruleValue: {
-        label: 'Payment Method',
-        value: 'payment-method',
-        smallLabel: '',
-      },
-      paymentCourier: [{
-        label: 'Bayar cash di tempat',
-        img: (<img src="/media/icons/payment/cod.svg" alt="" height="16" className="me-2" />),
-        value: 'cod'
-      }],
-      paymentVirtualAccount: [{
-        label: 'BCA Virtual Account',
-        img: (<InlineSVG src="/media/icons/payment/bca.svg" height={16} className="me-2" />),
-        value: 'bca'
-      }, {
-        label: 'BRI Virtual Account',
-        img: (<img src="/media/icons/payment/bri.png" alt="" height="16" className="me-2" />),
-        value: 'bri'
-      }],
-      paymentInstant: [{
-        label: 'QRIS',
-        img: (<img src="/media/icons/payment/qris.png" alt="" height="16" className="me-2" />),
-        value: 'qris'
-      }, {
-        label: 'OVO',
-        img: (<InlineSVG src="/media/icons/payment/ovo.svg" height={16} className="me-2" />),
-        value: 'ovo'
-      }],
-    },
-  ]);
-  const [ruleChecked, setRuleChecked] = useState<RuleInterface>(null);
+  const [ruleForms, setRuleForms] = useState<RuleFormsInterface[]>([]);
+  const [ruleChecked, setRuleChecked] = useState<RuleInterface | null>(null);
   const [paymentCourierChecked, setPaymentCourierChecked] = useState<PaymentInterface[]>([]);
   const [paymentVirtualAccountChecked, setPaymentVirtualAccountChecked] = useState<PaymentInterface[]>([]);
   const [paymentInstantChecked, setPaymentInstantChecked] = useState<PaymentInterface[]>([]);
@@ -190,7 +163,6 @@ export const RulesForm = () => {
 
   const handleSaveRule = () => {
     if (editIndex) {
-      console.log('A');
       let updateRuleForms = ruleForms;
       updateRuleForms[editIndex - 1].paymentCourier = paymentCourierChecked;
       updateRuleForms[editIndex - 1].paymentVirtualAccount = paymentVirtualAccountChecked;
@@ -198,7 +170,6 @@ export const RulesForm = () => {
 
       setRuleForms(updateRuleForms);
     } else {
-      console.log('B');
       setRuleForms([
         ...ruleForms,
         {
@@ -210,11 +181,7 @@ export const RulesForm = () => {
         }
       ]);
     }
-    setRuleChecked({
-      label: null,
-      value: null,
-      smallLabel: null,
-    });
+    setRuleChecked(null);
     setPaymentCourierChecked([]);
     setPaymentVirtualAccountChecked([]);
     setPaymentInstantChecked([]);
