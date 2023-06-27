@@ -126,7 +126,7 @@ export const RulesForm = () => {
   const [paymentCourierChecked, setPaymentCourierChecked] = useState<PaymentInterface[]>([]);
   const [paymentVirtualAccountChecked, setPaymentVirtualAccountChecked] = useState<PaymentInterface[]>([]);
   const [paymentInstantChecked, setPaymentInstantChecked] = useState<PaymentInterface[]>([]);
-  const [editIndex, setEditIndex] = useState(null);
+  const [editIndex, setEditIndex] = useState(0);
 
   const onPaymentCourierCheck = (item: any) => {
     if (paymentCourierChecked.some((obj: any) => obj.value === item?.value)) {
@@ -185,11 +185,11 @@ export const RulesForm = () => {
     setPaymentCourierChecked([]);
     setPaymentVirtualAccountChecked([]);
     setPaymentInstantChecked([]);
-    setEditIndex(null);
+    setEditIndex(0);
     setShowPaymentOptions(false);
   };
 
-  const handleEditRule = (item: any) => {
+  const handleEditRule = (item: any, index: number) => {
     setPaymentCourierChecked([
       ...item?.paymentCourier
     ]);
@@ -199,11 +199,11 @@ export const RulesForm = () => {
     setPaymentInstantChecked([
       ...item?.paymentInstant
     ]);
-    setEditIndex(item?.id + 1);
+    setEditIndex(index + 1);
     setShowPaymentOptions(true);
   }
 
-  const renderSectionRuleForms = (item: any) => (
+  const renderSectionRuleForms = (item: any, index: number) => (
     <div className="card mb-4 pt-12 pb-0 px-8">
       <div className="d-flex">
         <div className="col-3 pe-8">
@@ -219,7 +219,7 @@ export const RulesForm = () => {
               src="/media/icons/payment/gear.svg"
               height="16"
               className="me-2 cursor-pointer"
-              onClick={() => handleEditRule(item)}
+              onClick={() => handleEditRule(item, index)}
             />
             <InlineSVG
               src="/media/icons/payment/trash.svg"
@@ -326,7 +326,7 @@ export const RulesForm = () => {
       <div className="mb-10 row">
         {ruleForms.map((item, index) => (
           <div className="p-0" key={`key-${item.id}`}>
-            {renderSectionRuleForms(item)}
+            {renderSectionRuleForms(item, index)}
           </div>
         ))}
 
