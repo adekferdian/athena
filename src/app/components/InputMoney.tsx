@@ -45,17 +45,16 @@ const InputMoney: React.FC<Props> = ({
         <div
           className={clsx(
             prefixClass,
-            'position-absolute ms-4 pe-none fs-5',
+            'position-absolute pe-none fs-5 prefix-input',
             props.disabled ? 'text-gray-500' : 'text-gray-700',
           )}
-          style={{fontWeight: 500}}
         >
           Rp
         </div>
         <input
           value={addThousandSeparator(value)}
           className={className}
-          style={{paddingLeft: '35px'}}
+          style={{paddingLeft: '45px'}}
           {...props}
           onChange={onChangeWrapper}
         />

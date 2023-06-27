@@ -43,9 +43,8 @@ const InputPercentage: React.FC<Props> = ({
       <div className={clsx('position-relative d-flex align-items-center w-100', containerClass)}>
         <div
           className={clsx(
-            'position-absolute pe-none fs-5',
+            'position-absolute pe-none fs-5 suffix-input',
             props.disabled ? 'text-gray-500' : 'text-gray-700',
-            isInvalid ? 'me-11' : 'me-4'
           )}
           style={{fontWeight: 500, right: 0}}
         >
