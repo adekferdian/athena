@@ -988,3 +988,9 @@ input[type="text"][disabled] {
   border-radius: 0 4px 4px 0;
   border-right: 1px solid #e3e6ef;
 }
+
+.ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
