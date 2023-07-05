@@ -2,6 +2,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react'
 import { Modal } from 'react-bootstrap-v5'
+import InlineSVG from 'react-inlinesvg/esm'
 import { KTSVG } from 'src/_metronic/helpers'
 
 type Props = {
@@ -23,12 +24,21 @@ const TargetUserModal: React.FC<Props> = ({ show, handleClose, data, onSave }) =
                 </div>
                 {/* end::Close */}
             </div>
-    
+
             <div className='modal-body'>
                 <div className='fv-row mb-10'>
-                    <div className='mb-4'>
-                        Are you sure want to delete <span className='fw-bolder'>{data?.name}</span> from list
-                        gender?
+                    <div className='w-lg-200px w-100 position-relative'>
+                        <InlineSVG
+                            src={'/media/icons/efood/IconSearch.svg'}
+                            className='position-absolute translate-middle-y top-50 ms-4 pe-none'
+                        />
+                        <input
+                            placeholder='Search'
+                            className='form-control form-control-lg form-control-solid ps-13'
+                            type='text'
+                            autoComplete='off'
+                        // onChange={(e) => searchFn(e.currentTarget.value)}
+                        />
                     </div>
                 </div>
             </div>

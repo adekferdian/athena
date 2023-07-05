@@ -1,14 +1,24 @@
-export interface Voucher {
-  id: number,
-  voucher_name: string,
-  voucher_code: string,
-  platform: string,
-  periode: string,
-  total_quota: number,
-  quota_user: number,
-  total_used: number,
-  transaction_type: string,
-  status: string,
+export interface Campaign {
+  business_unit: object
+  campaign_id: number
+  campaign_name: string
+  image: object
+  status: string
+  transaction_type: object
+  valid_end: string
+  valid_start: string
+  voucher: Array<Voucher>
+  voucher_quota: number
+  voucher_quota_user: number
+  voucher_type: string
+  voucher_used: string
+}
+
+interface Voucher {
+  campaign_id: number
+  status: string
+  voucher_code: string
+  voucher_id: number
 }
 
 export interface UpdateGender {

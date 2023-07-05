@@ -1,17 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { FC, useCallback, useEffect, useState } from 'react'
+import React, { ChangeEvent, FC, useCallback, useEffect, useState } from 'react'
 import InlineSVG from 'react-inlinesvg/esm'
 import { usePagination } from 'src/app/hooks/pagination-hook'
 import { PageTitle } from 'src/_metronic/layout/core'
 import { getTitle } from 'src/app/utils/title-utils'
-// import { deleteGender, getGenderList } from '../redux/GenderCRUD'
-import { Voucher } from '../models/Voucher'
+import { Campaign } from '../models/Voucher'
 import {
   NavLink,
   useHistory,
 } from 'react-router-dom'
-// import DeleteGenderModal from '../components/DeleteGenderModal'
-// import { getErrorMessage } from 'src/app/utils/api-utils'
 import { useHeaderToast } from 'src/app/components/ToastComponent'
 import { Link } from 'react-router-dom'
 import DeleteVoucherModal from '../components/DeleteVoucherModal'
@@ -20,7 +17,9 @@ import VoucherScreens from '../Screens'
 import DateRangePicker from 'src/app/components/DateRangePicker'
 import ApproveCampaignModal from '../components/ApproveCampaignModal'
 import DeclineCampaignModal from '../components/DeclineCampaignModal'
-import { getVoucherList } from '../redux/VoucherCRUD'
+import { deleteCampaign, getVoucherList, updateRevision } from '../redux/VoucherCRUD'
+import moment from 'moment'
+import { getErrorMessage } from 'src/app/utils/api-utils'
 // import moment from 'moment'
 
 const values = [
@@ -38,6 +37,7 @@ const VoucherList: FC = (props: any) => {
   const [activeId, setActiveId] = useState(1);
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [showApprovCampaign, setShowApprovCampaign] = useState(false)
+  const [valueNote, setValueNote] = useState('')
   const [showDeclineCampaign, setShowDeclineCampaign] = useState(false)
   const [handleDeleteData, setHandleDeleteData] = useState<any>(null)
   const [handleApprovCampaign, setHandleApprovCampaign] = useState<any>(null)
@@ -45,177 +45,11 @@ const VoucherList: FC = (props: any) => {
   const [showPreviewModal, setShowPreviewModal] = useState(false)
   const [handleEditData, setHandleEditData] = useState<any>(null)
 
-
-  const { state, setPage, setQuery } = usePagination<Voucher, any>(
-    // useCallback((state, setState, isActive, cancelToken) => {
-    //   const fetchCall = async () => {
-    //     const statuses: string[] = []
-    //     //   if (state.query.status) {
-    //     //     statuses.push(state.query.status)
-    //     //   } else {
-    //     statuses.push('ACTIVE')
-    //     //     statuses.push('INACTIVE')
-    //     //   }
-    //     const User = {
-    //       data: {
-    //         data: {
-    //           current_page: 1,
-    //           items: [
-    //             {
-    //               id: 1,
-    //               campaign_name: 'Diskon 30% April Mop',
-    //               code: 'edot10',
-    //               platform: 'FOOD',
-    //               periode: '1 Nov 2022 - 31 Des 2022',
-    //               total_quota: 50,
-    //               quota_user: 1,
-    //               total_used: 0,
-    //               transaction_type: 'All Transaction',
-    //               status: 2,
-    //             } as Voucher,
-    //             {
-    //               id: 1,
-    //               campaign_name: 'Diskon 30% April Mop',
-    //               code: 'edot10',
-    //               platform: 'FOOD',
-    //               periode: '1 Nov 2022 - 31 Des 2022',
-    //               total_quota: 50,
-    //               quota_user: 1,
-    //               total_used: 0,
-    //               transaction_type: 'All Transaction',
-    //               status: 1,
-    //             } as Voucher,
-    //             {
-    //               id: 1,
-    //               campaign_name: 'Diskon 30% April Mop',
-    //               code: 'edot10',
-    //               platform: 'FOOD',
-    //               periode: '1 Nov 2022 - 31 Des 2022',
-    //               total_quota: 50,
-    //               quota_user: 1,
-    //               total_used: 0,
-    //               transaction_type: 'All Transaction',
-    //               status: 2,
-    //             } as Voucher,
-    //             {
-    //               id: 1,
-    //               campaign_name: 'Diskon 30% April Mop',
-    //               code: 'edot10',
-    //               platform: 'FOOD',
-    //               periode: '1 Nov 2022 - 31 Des 2022',
-    //               total_quota: 50,
-    //               quota_user: 1,
-    //               total_used: 0,
-    //               transaction_type: 'All Transaction',
-    //               status: 1,
-    //             } as Voucher,
-    //             {
-    //               id: 1,
-    //               campaign_name: 'Diskon 30% April Mop',
-    //               code: 'edot10',
-    //               platform: 'FOOD',
-    //               periode: '1 Nov 2022 - 31 Des 2022',
-    //               total_quota: 50,
-    //               quota_user: 1,
-    //               total_used: 0,
-    //               transaction_type: 'All Transaction',
-    //               status: 3,
-    //             } as Voucher,
-    //             {
-    //               id: 1,
-    //               campaign_name: 'Diskon 30% April Mop',
-    //               code: 'edot10',
-    //               platform: 'FOOD',
-    //               periode: '1 Nov 2022 - 31 Des 2022',
-    //               total_quota: 50,
-    //               quota_user: 1,
-    //               total_used: 0,
-    //               transaction_type: 'All Transaction',
-    //               status: 4,
-    //             } as Voucher,
-    //           ],
-    //           total_item: 5,
-    //         },
-    //       },
-    //     }
-    //     //   const admin = await getVerifiedMemberList({
-    //     //     page: state.page,
-    //     //     limit: state.limit,
-    //     //     search: state.query.search,
-    //     //     role_id: state.query.role_id !== '' ? state.query.role_id : undefined,
-    //     //     statuses,
-    //     //     cancelToken,
-    //     //   })
-    //     //   if (isActive()) {
-    //     setState((prev) => ({
-    //       ...prev,
-    //       loading: false,
-    //       refreshing: false,
-    //       error: false,
-    //       page: User.data.data?.current_page,
-    //       data: User.data.data?.items,
-    //       total: User.data.data?.total_item,
-    //     }))
-    //     //   }
-    //     // } catch (e) {
-    //     //   if (isActive()) {
-    //     //     setState((prev) => ({
-    //     //       ...prev,
-    //     //       loading: false,
-    //     //       error: true,
-    //     //       data: [],
-    //     //     }))
-    //     //   }
-    //     // }
-    //   }
-    //   // try {
-    //   //   const statuses: string[] = []
-    //   //   if (state.query.status) {
-    //   //     statuses.push(state.query.status)
-    //   //   } else {
-    //   //     statuses.push('ACTIVE')
-    //   //     statuses.push('INACTIVE')
-    //   //   }
-    //   //   const gender = await getGenderList({
-    //   //     search: state.query.search,
-    //   //     // role_id: state.query.role_id !== '' ? state.query.role_id : undefined,
-    //   //     statuses,
-    //   //     // cancelToken,
-    //   //   })
-    //   //   if (isActive()) {
-    //   //     setState((prev) => ({
-    //   //       ...prev,
-    //   //       loading: false,
-    //   //       refreshing: false,
-    //   //       error: false,
-    //   //       data: gender.data.data ?? [],
-    //   //     }))
-    //   //   }
-    //   // } catch (e) {
-    //   //   if (isActive()) {
-    //   //     setState((prev) => ({
-    //   //       ...prev,
-    //   //       loading: false,
-    //   //       error: true,
-    //   //       data: [],
-    //   //     }))
-    //   //   }
-    //   // }
-
-    //   fetchCall()
-    // }, []),
-    // {
-    //   loading: false,
-    //   refreshing: false,
-    //   error: false,
-    //   page: 0,
-    //   data: [] as Voucher[],
-    //   total: 0,
-    //   limit: 10,
-    //   query: {},
-    // }
+  const { state, setPage, setQuery } = usePagination<Campaign, any>(
     useCallback((state, setState, isActive, cancelToken) => {
       const fetchCall = async () => {
+        console.log("masuk");
+
         try {
           const statuses: string[] = []
           if (state.query.status) {
@@ -224,32 +58,61 @@ const VoucherList: FC = (props: any) => {
             statuses.push('ACTIVE')
             statuses.push('INACTIVE')
           }
-          const role = await getVoucherList({
+          const campaignActive = await getVoucherList({
             search: state.query.search,
-            // role_id: state.query.role_id !== '' ? state.query.role_id : undefined,
-            statuses,
+            //@ts-ignore
+            status: 'active',
+            // cancelToken,
+          })
+          const campaignNeedApprove = await getVoucherList({
+            search: state.query.search,
+            //@ts-ignore
+            status: 'need-approval',
+            // cancelToken,
+          })
+          const campaignNeedRevision = await getVoucherList({
+            search: state.query.search,
+            //@ts-ignore
+            status: 'need-revision'
+            // cancelToken,
+          })
+          const campaignInactive = await getVoucherList({
+            search: state.query.search,
+            //@ts-ignore
+            status: 'inactive',
+            // cancelToken,
+          })
+          const campaignDraft = await getVoucherList({
+            search: state.query.search,
+            //@ts-ignore
+            status: 'draft',
             // cancelToken,
           })
           // if (isActive()) {
-            //@ts-ignore
-            setState((prev) => ({
-              ...prev,
-              loading: false,
-              refreshing: false,
-              error: false,
-              data: role?.data?.data ?? [],
-            }))
-            console.log("RES LIST ", role);
-            
+          //@ts-ignore
+          setState((prev) => ({
+            ...prev,
+            loading: false,
+            refreshing: false,
+            error: false,
+            data: {
+              active: campaignActive?.data?.data ?? [],
+              needApproval: campaignNeedApprove?.data?.data ?? [],
+              needRevision: campaignNeedRevision?.data?.data ?? [],
+              inactive: campaignInactive?.data?.data ?? [],
+              draft: campaignDraft?.data?.data ?? [],
+            }
+          }))
+
           // }
         } catch (e) {
           // if (isActive()) {
-            setState((prev) => ({
-              ...prev,
-              loading: false,
-              error: true,
-              data: [],
-            }))
+          setState((prev) => ({
+            ...prev,
+            loading: false,
+            error: true,
+            data: [],
+          }))
           // }
         }
       }
@@ -261,7 +124,7 @@ const VoucherList: FC = (props: any) => {
       refreshing: false,
       error: false,
       page: 0,
-      data: [] as Voucher[],
+      data: [] as Campaign[],
       total: 0,
       limit: 10,
       query: {},
@@ -285,8 +148,8 @@ const VoucherList: FC = (props: any) => {
   }, [setPage])
 
 
-  console.log("State ",state);
-  
+  console.log("State ", state);
+
   return (
     <>
       <PageTitle>Manage Voucher</PageTitle>
@@ -309,7 +172,7 @@ const VoucherList: FC = (props: any) => {
             >
               <InlineSVG
                 src={'/media/icons/circleplus.svg'}
-                // className='position-absolute translate-middle-y top-50 ms-4 pe-none'
+              // className='position-absolute translate-middle-y top-50 ms-4 pe-none'
               />
               &nbsp;
               Create Voucher
@@ -404,120 +267,515 @@ const VoucherList: FC = (props: any) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {state.data.length === 0 ? (
-                    <tr>
-                      <td colSpan={9} className='text-center'>
-                        {state.loading
-                          ? 'Loading'
-                          : state.error
-                            ? 'Error, try to refresh the page'
-                            : 'Data Kosong'}
-                      </td>
-                    </tr>
-                  ) : (
-                    state.data.map((value, index) => (
-                      //@ts-ignore
-                      value.status === 'active' && activeId === 1 ||
-                        value.status === '2' && activeId === 2 ||
-                        value.status === '3' && activeId === 3 ||
-                        value.status === '4' && activeId === 4
-                        ?
-                        <tr key={index}>
-                          <td className='align-middle'>
-                            {(state.page - 1) * state.limit + index + 1}
-                          </td>
-                          <td className='align-middle'>{value?.voucher_name ?? '-'}</td>
-                          <td className='align-middle'>{value?.voucher_code ?? '-'}</td>
-                          <td className='align-middle'>{'-'}</td>
-                          <td className='align-middle'>test</td>
-                          <td className='align-middle'>{'-'}</td>
-                          <td className='align-middle'>{'-'}</td>
-                          <td className='align-middle'>{value?.total_used ?? '-'}</td>
-                          <td className='align-middle'>{value?.transaction_type ?? '-'}</td>
-                          <td className='align-middle'>
-                            {' '}
-                            <div className='d-flex p-1 status-badge' style={{ width: value.status === '3' || value.status === '2' ? 100 : 50, backgroundColor: value.status === 'active' ? '#DCFCE7' : value.status === '2' ? '#FFFBDF' : value.status === '3' ? '#FFE4E5' : '#DDDDDD', alignItems: 'center', justifyContent: 'center' }}>
-                              <span style={{ color: value.status === 'active' ? '#22C55E' : value.status === '2' ? '#B78101' : value.status === '3' ? '#ED1C24' : '#666666', textAlign: 'center', fontSize: 10, flexDirection: 'row' }}>
-                                {value.status === 'active' ? 'Active' : value.status === '2' ? 'Need Approval' : value.status === '3' ? 'Revision Required' : 'Inactive'}
-                              </span>
-                            </div>
-                          </td>
-                          <td className='align-middle' style={{ minWidth: 125 }}>
+                  {
+                    //@ts-ignore
+                    state.data.length === 0 ? (
+                      <tr>
+                        <td colSpan={9} className='text-center'>
+                          {state.loading
+                            ? 'Loading'
+                            : state.error
+                              ? 'Error, try to refresh the page'
+                              : 'Data Kosong'}
+                        </td>
+                      </tr>
+                    ) : (
+                      activeId === 1 ?
+                        //@ts-ignore
+                        state.data.active.map((value, index) => (
+                          // console.log("value", value)
+                          <tr key={index}>
+                            <td className='align-middle'>
+                              {(state.page - 1) * state.limit + index + 1}
+                            </td>
+                            <td className='align-middle'>{value.campaign_name}</td>
+                            <td className='align-middle'>{value?.voucher.length >= 1 && value?.voucher_type === 'manual' ? value?.voucher[0].voucher_code : value?.voucher.length >= 1 && value?.voucher_type === 'generate' ? 'Generated code ' + `(${value.voucher_quota})` : '-'}</td>
+                            <td className='align-middle'>{value.business_unit.bu_name}</td>
+                            <td className='align-middle'>{moment(value.valid_start).format('DD MMM YYYY') + ' - ' + moment(value.valid_end).format('DD MMM YYYY')}</td>
+                            <td className='align-middle'>{value.voucher_quota}</td>
+                            <td className='align-middle'>{value.voucher_quota_user}</td>
+                            <td className='align-middle'>{value.voucher_used}</td>
+                            <td className='align-middle'>{value.transaction_type.description}</td>
+                            <td className='align-middle'>
+                              {' '}
+                              <div className='d-flex p-1 status-badge' style={{ width: value.status === 'need-revision' || value.status === 'need-approval' ? 100 : 50, backgroundColor: value.status === 'active' ? '#DCFCE7' : value.status === 'need-approval' ? '#FFFBDF' : value.status === 'need-revision' ? '#FFE4E5' : '#DDDDDD', alignItems: 'center', justifyContent: 'center' }}>
+                                <span style={{ color: value.status === 'active' ? '#22C55E' : value.status === 'need-approval' ? '#B78101' : value.status === 'need-revision' ? '#ED1C24' : '#666666', textAlign: 'center', fontSize: 10, flexDirection: 'row' }}>
+                                  {value.status === 'active' ? 'Active' : value.status === 'need-approval' ? 'Need Approval' : value.status === 'need-revision' ? 'Revision Required' : 'Inactive'}
+                                </span>
+                              </div>
+                            </td>
+                            <td className='align-middle' style={{ minWidth: 125 }}>
 
-                            <div
-                              className='d-inline'
-                              data-bs-toggle="modal"
-                              data-bs-target="#kt_modal_scrollable_2"
-                              style={{ cursor: 'pointer' }}
-                            >
-                              <InlineSVG src={'/media/icons/eye.svg'} />
-                            </div>&nbsp;&nbsp;
+                              <div
+                                className='d-inline'
+                                data-bs-toggle="modal"
+                                data-bs-target="#kt_modal_scrollable_2"
+                                style={{ cursor: 'pointer' }}
+                              >
+                                <InlineSVG src={'/media/icons/eye.svg'} />
+                              </div>&nbsp;&nbsp;
 
-                            {
-                              value.status === '2' ?
+                              {
+                                value.status === 'need-approval' ?
+                                  <div
+                                    className='d-inline'
+                                    onClick={() => {
+                                      setHandleApprovCampaign(value)
+                                      setShowApprovCampaign(true)
+                                    }}
+                                    style={{ cursor: 'pointer' }}
+                                  >
+                                    <InlineSVG src='/media/icons/ceklis.svg' />
+                                  </div>
+                                  :
+                                  <button
+                                    type='button'
+                                    className='btn-transparent me-3'
+                                    onClick={() =>
+                                      // dispatch(AdminRedux.actions.getDetailAdmin('', ''))
+                                      history.push(`/voucher/edit/${value.campaign_id}`)
+                                    }
+                                  >
+                                    <InlineSVG src={'/media/icons/edit.svg'} />
+                                  </button>
+                              }
+
+                              {value.status === 'need-approval' ?
                                 <div
                                   className='d-inline'
                                   onClick={() => {
-                                    setHandleApprovCampaign(value)
-                                    setShowApprovCampaign(true)
+                                    setHandleDeclineCampaign(value)
+                                    setShowDeclineCampaign(true)
+                                  }}
+                                  style={{ cursor: 'pointer' }}
+                                > &nbsp;
+                                  <InlineSVG src='/media/icons/closered.svg' />
+                                </div>
+                                :
+                                <div
+                                  className='d-inline'
+                                  onClick={() => {
+                                    setHandleDeleteData(value)
+                                    setShowDeleteModal(true)
                                   }}
                                   style={{ cursor: 'pointer' }}
                                 >
-                                  <InlineSVG src='/media/icons/ceklis.svg' />
-                                </div>
-                                :
-                                <button
-                                  type='button'
-                                  className='btn-transparent me-3'
-                                  onClick={() =>
-                                    // dispatch(AdminRedux.actions.getDetailAdmin('', ''))
-                                    history.push(`/voucher/edit/${value.id}`)
-                                  }
+                                  <InlineSVG src='/media/icons/trash.svg' />
+                                </div>}
+                              &nbsp;&nbsp;
+                              {value.status === 'need-revision' ?
+                                <div
+                                  className='d-inline'
+                                  onClick={() => {
+                                    setHandleDeleteData(value)
+                                    setShowDeleteModal(true)
+                                  }}
+                                  style={{ cursor: 'pointer' }}
                                 >
-                                  <InlineSVG src={'/media/icons/edit.svg'} />
-                                </button>
-                            }
+                                  <InlineSVG src='/media/icons/note.svg' />
+                                </div> : null
+                              }
+                              {/* ) : null} */}
+                            </td>
+                          </tr>
+                        )) :
 
-                            {value.status === '2' ?
-                              <div
-                                className='d-inline'
-                                onClick={() => {
-                                  setHandleDeclineCampaign(value)
-                                  setShowDeclineCampaign(true)
-                                }}
-                                style={{ cursor: 'pointer' }}
-                              > &nbsp;
-                                <InlineSVG src='/media/icons/closered.svg' />
-                              </div>
-                              :
-                              <div
-                                className='d-inline'
-                                onClick={() => {
-                                  setHandleDeleteData(value)
-                                  setShowDeleteModal(true)
-                                }}
-                                style={{ cursor: 'pointer' }}
-                              >
-                                <InlineSVG src='/media/icons/trash.svg' />
-                              </div>}
-                            &nbsp;&nbsp;
-                            {value.status === '3' ?
-                              <div
-                                className='d-inline'
-                                onClick={() => {
-                                  setHandleDeleteData(value)
-                                  setShowDeleteModal(true)
-                                }}
-                                style={{ cursor: 'pointer' }}
-                              >
-                                <InlineSVG src='/media/icons/note.svg' />
-                              </div> : null
-                            }
-                            {/* ) : null} */}
-                          </td>
-                        </tr> : null
-                    ))
-                  )}
+                        activeId === 2 ?
+                          //@ts-ignore
+                          state.data.needApproval.map((value, index) => (
+                            <tr key={index}>
+                              <td className='align-middle'>
+                                {(state.page - 1) * state.limit + index + 1}
+                              </td>
+                              <td className='align-middle'>{value.campaign_name}</td>
+                              <td className='align-middle'>{value?.voucher.length >= 1 && value?.voucher_type === 'manual' ? value?.voucher[0].voucher_code : value?.voucher.length >= 1 && value?.voucher_type === 'generate' ? 'Generated code ' + `(${value.voucher_quota})` : '-'}</td>
+                              <td className='align-middle'>{value.business_unit.bu_name}</td>
+                              <td className='align-middle'>{moment(value.valid_start).format('DD MMM YYYY') + ' - ' + moment(value.valid_end).format('DD MMM YYYY')}</td>
+                              <td className='align-middle'>{value.voucher_quota}</td>
+                              <td className='align-middle'>{value.voucher_quota_user}</td>
+                              <td className='align-middle'>{value.voucher_used}</td>
+                              <td className='align-middle'>{value.transaction_type.description}</td>
+                              <td className='align-middle'>
+                                {' '}
+                                <div className='d-flex p-1 status-badge' style={{ width: value.status === 'need-revision' || value.status === 'need-approval' ? 100 : 50, backgroundColor: value.status === 'active' ? '#DCFCE7' : value.status === 'need-approval' ? '#FFFBDF' : value.status === 'need-revision' ? '#FFE4E5' : '#DDDDDD', alignItems: 'center', justifyContent: 'center' }}>
+                                  <span style={{ color: value.status === 'active' ? '#22C55E' : value.status === 'need-approval' ? '#B78101' : value.status === 'need-revision' ? '#ED1C24' : '#666666', textAlign: 'center', fontSize: 10, flexDirection: 'row' }}>
+                                    {value.status === 'active' ? 'Active' : value.status === 'need-approval' ? 'Need Approval' : value.status === 'need-revision' ? 'Revision Required' : 'Inactive'}
+                                  </span>
+                                </div>
+                              </td>
+                              <td className='align-middle' style={{ minWidth: 125 }}>
+
+                                <div
+                                  className='d-inline'
+                                  data-bs-toggle="modal"
+                                  data-bs-target="#kt_modal_scrollable_2"
+                                  style={{ cursor: 'pointer' }}
+                                >
+                                  <InlineSVG src={'/media/icons/eye.svg'} />
+                                </div>&nbsp;&nbsp;
+
+                                {
+                                  value.status === 'need-approval' ?
+                                    <div
+                                      className='d-inline'
+                                      onClick={() => {
+                                        setHandleApprovCampaign(value)
+                                        setShowApprovCampaign(true)
+                                      }}
+                                      style={{ cursor: 'pointer' }}
+                                    >
+                                      <InlineSVG src='/media/icons/ceklis.svg' />
+                                    </div>
+                                    :
+                                    <button
+                                      type='button'
+                                      className='btn-transparent me-3'
+                                      onClick={() =>
+                                        // dispatch(AdminRedux.actions.getDetailAdmin('', ''))
+                                        history.push(`/voucher/edit/${value.campaign_id}`)
+                                      }
+                                    >
+                                      <InlineSVG src={'/media/icons/edit.svg'} />
+                                    </button>
+                                }
+
+                                {value.status === 'need-approval' ?
+                                  <div
+                                    className='d-inline'
+                                    onClick={() => {
+                                      setHandleDeclineCampaign(value)
+                                      setShowDeclineCampaign(true)
+                                    }}
+                                    style={{ cursor: 'pointer' }}
+                                  > &nbsp;
+                                    <InlineSVG src='/media/icons/closered.svg' />
+                                  </div>
+                                  :
+                                  <div
+                                    className='d-inline'
+                                    onClick={() => {
+                                      setHandleDeleteData(value)
+                                      setShowDeleteModal(true)
+                                    }}
+                                    style={{ cursor: 'pointer' }}
+                                  >
+                                    <InlineSVG src='/media/icons/trash.svg' />
+                                  </div>}
+                                &nbsp;&nbsp;
+                                {value.status === 'need-revision' ?
+                                  <div
+                                    className='d-inline'
+                                    onClick={() => {
+                                      setHandleDeleteData(value)
+                                      setShowDeleteModal(true)
+                                    }}
+                                    style={{ cursor: 'pointer' }}
+                                  >
+                                    <InlineSVG src='/media/icons/note.svg' />
+                                  </div> : null
+                                }
+                                {/* ) : null} */}
+                              </td>
+                            </tr>
+                          )) :
+
+                          activeId === 3 ?
+                            //@ts-ignore
+                            state.data.needRevision.map((value, index) => (
+                              <tr key={index}>
+                                <td className='align-middle'>
+                                  {(state.page - 1) * state.limit + index + 1}
+                                </td>
+                                <td className='align-middle'>{value.campaign_name}</td>
+                                <td className='align-middle'>{value?.voucher.length >= 1 && value?.voucher_type === 'manual' ? value?.voucher[0].voucher_code : value?.voucher.length >= 1 && value?.voucher_type === 'generate' ? 'Generated code ' + `(${value.voucher_quota})` : '-'}</td>
+                                <td className='align-middle'>{value.business_unit.bu_name}</td>
+                                <td className='align-middle'>{moment(value.valid_start).format('DD MMM YYYY') + ' - ' + moment(value.valid_end).format('DD MMM YYYY')}</td>
+                                <td className='align-middle'>{value.voucher_quota}</td>
+                                <td className='align-middle'>{value.voucher_quota_user}</td>
+                                <td className='align-middle'>{value.voucher_used}</td>
+                                <td className='align-middle'>{value.transaction_type.description}</td>
+                                <td className='align-middle'>
+                                  {' '}
+                                  <div className='d-flex p-1 status-badge' style={{ width: value.status === 'need-revision' || value.status === 'need-approval' ? 100 : 50, backgroundColor: value.status === 'active' ? '#DCFCE7' : value.status === 'need-approval' ? '#FFFBDF' : value.status === 'need-revision' ? '#FFE4E5' : '#DDDDDD', alignItems: 'center', justifyContent: 'center' }}>
+                                    <span style={{ color: value.status === 'active' ? '#22C55E' : value.status === 'need-approval' ? '#B78101' : value.status === 'need-revision' ? '#ED1C24' : '#666666', textAlign: 'center', fontSize: 10, flexDirection: 'row' }}>
+                                      {value.status === 'active' ? 'Active' : value.status === 'need-approval' ? 'Need Approval' : value.status === 'need-revision' ? 'Revision Required' : 'Inactive'}
+                                    </span>
+                                  </div>
+                                </td>
+                                <td className='align-middle' style={{ minWidth: 125 }}>
+
+                                  <div
+                                    className='d-inline'
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#kt_modal_scrollable_2"
+                                    style={{ cursor: 'pointer' }}
+                                  >
+                                    <InlineSVG src={'/media/icons/eye.svg'} />
+                                  </div>&nbsp;&nbsp;
+
+                                  {
+                                    value.status === 'need-approval' ?
+                                      <div
+                                        className='d-inline'
+                                        onClick={() => {
+                                          setHandleApprovCampaign(value)
+                                          setShowApprovCampaign(true)
+                                        }}
+                                        style={{ cursor: 'pointer' }}
+                                      >
+                                        <InlineSVG src='/media/icons/ceklis.svg' />
+                                      </div>
+                                      :
+                                      <button
+                                        type='button'
+                                        className='btn-transparent me-3'
+                                        onClick={() =>
+                                          // dispatch(AdminRedux.actions.getDetailAdmin('', ''))
+                                          history.push(`/voucher/edit/${value.campaign_id}`)
+                                        }
+                                      >
+                                        <InlineSVG src={'/media/icons/edit.svg'} />
+                                      </button>
+                                  }
+
+                                  {value.status === 'need-approval' ?
+                                    <div
+                                      className='d-inline'
+                                      onClick={() => {
+                                        setHandleDeclineCampaign(value)
+                                        setShowDeclineCampaign(true)
+                                      }}
+                                      style={{ cursor: 'pointer' }}
+                                    > &nbsp;
+                                      <InlineSVG src='/media/icons/closered.svg' />
+                                    </div>
+                                    :
+                                    <div
+                                      className='d-inline'
+                                      onClick={() => {
+                                        setHandleDeleteData(value)
+                                        setShowDeleteModal(true)
+                                      }}
+                                      style={{ cursor: 'pointer' }}
+                                    >
+                                      <InlineSVG src='/media/icons/trash.svg' />
+                                    </div>}
+                                  &nbsp;&nbsp;
+                                  {value.status === 'need-revision' ?
+                                    <div
+                                      className='d-inline'
+                                      onClick={() => {
+                                        setHandleDeleteData(value)
+                                        setShowDeleteModal(true)
+                                      }}
+                                      style={{ cursor: 'pointer' }}
+                                    >
+                                      <InlineSVG src='/media/icons/note.svg' />
+                                    </div> : null
+                                  }
+                                  {/* ) : null} */}
+                                </td>
+                              </tr>
+                            )) :
+
+                            activeId === 4 ?
+                              //@ts-ignore
+                              state.data.inactive.map((value, index) => (
+                                <tr key={index}>
+                                  <td className='align-middle'>
+                                    {(state.page - 1) * state.limit + index + 1}
+                                  </td>
+                                  <td className='align-middle'>{value.campaign_name}</td>
+                                  <td className='align-middle'>{value?.voucher.length >= 1 && value?.voucher_type === 'manual' ? value?.voucher[0].voucher_code : value?.voucher.length >= 1 && value?.voucher_type === 'generate' ? 'Generated code ' + `(${value.voucher_quota})` : '-'}</td>
+                                  <td className='align-middle'>{value.business_unit.bu_name}</td>
+                                  <td className='align-middle'>{moment(value.valid_start).format('DD MMM YYYY') + ' - ' + moment(value.valid_end).format('DD MMM YYYY')}</td>
+                                  <td className='align-middle'>{value.voucher_quota}</td>
+                                  <td className='align-middle'>{value.voucher_quota_user}</td>
+                                  <td className='align-middle'>{value.voucher_used}</td>
+                                  <td className='align-middle'>{value.transaction_type.description}</td>
+                                  <td className='align-middle'>
+                                    {' '}
+                                    <div className='d-flex p-1 status-badge' style={{ width: value.status === 'need-revision' || value.status === 'need-approval' ? 100 : 50, backgroundColor: value.status === 'active' ? '#DCFCE7' : value.status === 'need-approval' ? '#FFFBDF' : value.status === 'need-revision' ? '#FFE4E5' : '#DDDDDD', alignItems: 'center', justifyContent: 'center' }}>
+                                      <span style={{ color: value.status === 'active' ? '#22C55E' : value.status === 'need-approval' ? '#B78101' : value.status === 'need-revision' ? '#ED1C24' : '#666666', textAlign: 'center', fontSize: 10, flexDirection: 'row' }}>
+                                        {value.status === 'active' ? 'Active' : value.status === 'need-approval' ? 'Need Approval' : value.status === 'need-revision' ? 'Revision Required' : 'Inactive'}
+                                      </span>
+                                    </div>
+                                  </td>
+                                  <td className='align-middle' style={{ minWidth: 125 }}>
+
+                                    <div
+                                      className='d-inline'
+                                      data-bs-toggle="modal"
+                                      data-bs-target="#kt_modal_scrollable_2"
+                                      style={{ cursor: 'pointer' }}
+                                    >
+                                      <InlineSVG src={'/media/icons/eye.svg'} />
+                                    </div>&nbsp;&nbsp;
+
+                                    {
+                                      value.status === 'need-approval' ?
+                                        <div
+                                          className='d-inline'
+                                          onClick={() => {
+                                            setHandleApprovCampaign(value)
+                                            setShowApprovCampaign(true)
+                                          }}
+                                          style={{ cursor: 'pointer' }}
+                                        >
+                                          <InlineSVG src='/media/icons/ceklis.svg' />
+                                        </div>
+                                        :
+                                        <button
+                                          type='button'
+                                          className='btn-transparent me-3'
+                                          onClick={() =>
+                                            // dispatch(AdminRedux.actions.getDetailAdmin('', ''))
+                                            history.push(`/voucher/edit/${value.campaign_id}`)
+                                          }
+                                        >
+                                          <InlineSVG src={'/media/icons/edit.svg'} />
+                                        </button>
+                                    }
+
+                                    {value.status === 'need-approval' ?
+                                      <div
+                                        className='d-inline'
+                                        onClick={() => {
+                                          setHandleDeclineCampaign(value)
+                                          setShowDeclineCampaign(true)
+                                        }}
+                                        style={{ cursor: 'pointer' }}
+                                      > &nbsp;
+                                        <InlineSVG src='/media/icons/closered.svg' />
+                                      </div>
+                                      :
+                                      <div
+                                        className='d-inline'
+                                        onClick={() => {
+                                          setHandleDeleteData(value)
+                                          setShowDeleteModal(true)
+                                        }}
+                                        style={{ cursor: 'pointer' }}
+                                      >
+                                        <InlineSVG src='/media/icons/trash.svg' />
+                                      </div>}
+                                    &nbsp;&nbsp;
+                                    {value.status === 'need-revision' ?
+                                      <div
+                                        className='d-inline'
+                                        onClick={() => {
+                                          setHandleDeleteData(value)
+                                          setShowDeleteModal(true)
+                                        }}
+                                        style={{ cursor: 'pointer' }}
+                                      >
+                                        <InlineSVG src='/media/icons/note.svg' />
+                                      </div> : null
+                                    }
+                                    {/* ) : null} */}
+                                  </td>
+                                </tr>
+                              )) :
+
+                              activeId === 5 ?
+                                //@ts-ignore
+                                state.data.inactive.map((value, index) => (
+                                  <tr key={index}>
+                                    <td className='align-middle'>
+                                      {(state.page - 1) * state.limit + index + 1}
+                                    </td>
+                                    <td className='align-middle'>{value.campaign_name}</td>
+                                    <td className='align-middle'>{value?.voucher.length >= 1 && value?.voucher_type === 'manual' ? value?.voucher[0].voucher_code : value?.voucher.length >= 1 && value?.voucher_type === 'generate' ? 'Generated code ' + `(${value.voucher_quota})` : '-'}</td>
+                                    <td className='align-middle'>{value.business_unit.bu_name}</td>
+                                    <td className='align-middle'>{moment(value.valid_start).format('DD MMM YYYY') + ' - ' + moment(value.valid_end).format('DD MMM YYYY')}</td>
+                                    <td className='align-middle'>{value.voucher_quota}</td>
+                                    <td className='align-middle'>{value.voucher_quota_user}</td>
+                                    <td className='align-middle'>{value.voucher_used}</td>
+                                    <td className='align-middle'>{value.transaction_type.description}</td>
+                                    <td className='align-middle'>
+                                      {' '}
+                                      <div className='d-flex p-1 status-badge' style={{ width: value.status === 'need-revision' || value.status === 'need-approval' ? 100 : 50, backgroundColor: value.status === 'active' ? '#DCFCE7' : value.status === 'need-approval' ? '#FFFBDF' : value.status === 'need-revision' ? '#FFE4E5' : '#DDDDDD', alignItems: 'center', justifyContent: 'center' }}>
+                                        <span style={{ color: value.status === 'active' ? '#22C55E' : value.status === 'need-approval' ? '#B78101' : value.status === 'need-revision' ? '#ED1C24' : '#666666', textAlign: 'center', fontSize: 10, flexDirection: 'row' }}>
+                                          {value.status === 'active' ? 'Active' : value.status === 'need-approval' ? 'Need Approval' : value.status === 'need-revision' ? 'Revision Required' : 'Inactive'}
+                                        </span>
+                                      </div>
+                                    </td>
+                                    <td className='align-middle' style={{ minWidth: 125 }}>
+
+                                      <div
+                                        className='d-inline'
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#kt_modal_scrollable_2"
+                                        style={{ cursor: 'pointer' }}
+                                      >
+                                        <InlineSVG src={'/media/icons/eye.svg'} />
+                                      </div>&nbsp;&nbsp;
+
+                                      {
+                                        value.status === 'need-approval' ?
+                                          <div
+                                            className='d-inline'
+                                            onClick={() => {
+                                              setHandleApprovCampaign(value)
+                                              setShowApprovCampaign(true)
+                                            }}
+                                            style={{ cursor: 'pointer' }}
+                                          >
+                                            <InlineSVG src='/media/icons/ceklis.svg' />
+                                          </div>
+                                          :
+                                          <button
+                                            type='button'
+                                            className='btn-transparent me-3'
+                                            onClick={() =>
+                                              // dispatch(AdminRedux.actions.getDetailAdmin('', ''))
+                                              history.push(`/voucher/edit/${value.campaign_id}`)
+                                            }
+                                          >
+                                            <InlineSVG src={'/media/icons/edit.svg'} />
+                                          </button>
+                                      }
+
+                                      {value.status === 'need-approval' ?
+                                        <div
+                                          className='d-inline'
+                                          onClick={() => {
+                                            setHandleDeclineCampaign(value)
+                                            setShowDeclineCampaign(true)
+                                          }}
+                                          style={{ cursor: 'pointer' }}
+                                        > &nbsp;
+                                          <InlineSVG src='/media/icons/closered.svg' />
+                                        </div>
+                                        :
+                                        <div
+                                          className='d-inline'
+                                          onClick={() => {
+                                            setHandleDeleteData(value)
+                                            setShowDeleteModal(true)
+                                          }}
+                                          style={{ cursor: 'pointer' }}
+                                        >
+                                          <InlineSVG src='/media/icons/trash.svg' />
+                                        </div>}
+                                      &nbsp;&nbsp;
+                                      {value.status === 'need-revision' ?
+                                        <div
+                                          className='d-inline'
+                                          onClick={() => {
+                                            setHandleDeleteData(value)
+                                            setShowDeleteModal(true)
+                                          }}
+                                          style={{ cursor: 'pointer' }}
+                                        >
+                                          <InlineSVG src='/media/icons/note.svg' />
+                                        </div> : null
+                                      }
+                                      {/* ) : null} */}
+                                    </td>
+                                  </tr>
+                                )) : null
+                    )}
                 </tbody>
               </table>
             </div>
@@ -534,15 +792,16 @@ const VoucherList: FC = (props: any) => {
         </div>
         <DeleteVoucherModal
           onDelete={() => {
-            // deleteGender(handleDeleteData?.id ?? '')
-            //   .then(() => {
-            //     // dispatch(AdminRedux.actions.setSuccess('User berhasil dihapus.'))
-            //     setShowDeleteModal(false)
-            //   })
-            //   .catch((err) => {
-            //     setShowDeleteModal(false)
-            //     addPageToasts({ scheme: 'danger', text: getErrorMessage(err, true) })
-            //   })
+            deleteCampaign(handleDeleteData?.campaign_id ?? '')
+              .then(() => {
+                // dispatch(AdminRedux.actions.setSuccess('User berhasil dihapus.'))
+                setShowDeleteModal(false)
+                setPage(state.page)
+              })
+              .catch((err) => {
+                setShowDeleteModal(false)
+                addPageToasts({ scheme: 'danger', text: getErrorMessage(err, true) })
+              })
           }}
           show={showDeleteModal}
           handleClose={() => setShowDeleteModal(false)}
@@ -550,32 +809,37 @@ const VoucherList: FC = (props: any) => {
         />
         <ApproveCampaignModal
           onDelete={() => {
-            // deleteGender(handleDeleteData?.id ?? '')
-            //   .then(() => {
-            //     // dispatch(AdminRedux.actions.setSuccess('User berhasil dihapus.'))
-            //     setShowDeleteModal(false)
-            //   })
-            //   .catch((err) => {
-            //     setShowDeleteModal(false)
-            //     addPageToasts({ scheme: 'danger', text: getErrorMessage(err, true) })
-            //   })
+            updateRevision(handleApprovCampaign.campaign_id, 'approve', '')
+              .then(() => {
+                // dispatch(GenderRedux.actions.setSuccess('Gender berhasil dihapus.'))
+                setShowApprovCampaign(false)
+                setPage(state.page)
+              })
+              .catch((err) => {
+                setShowApprovCampaign(false)
+                addPageToasts({ scheme: 'danger', text: getErrorMessage(err, true) })
+              })
           }}
           show={showApprovCampaign}
           handleClose={() => setShowApprovCampaign(false)}
           data={handleApprovCampaign}
         />
         <DeclineCampaignModal
-          onDelete={() => {
-            // deleteGender(handleDeleteData?.id ?? '')
-            //   .then(() => {
-            //     // dispatch(AdminRedux.actions.setSuccess('User berhasil dihapus.'))
-            //     setShowDeleteModal(false)
-            //   })
-            //   .catch((err) => {
-            //     setShowDeleteModal(false)
-            //     addPageToasts({ scheme: 'danger', text: getErrorMessage(err, true) })
-            //   })
+          onRevision={() => {
+            updateRevision(handleDeclineCampaign.campaign_id, 'decline', valueNote)
+              .then(() => {
+                // dispatch(GenderRedux.actions.setSuccess('Gender berhasil dihapus.'))
+                setShowDeclineCampaign(false)
+                setPage(state.page)
+              })
+              .catch((err) => {
+                setShowDeclineCampaign(false)
+                addPageToasts({ scheme: 'danger', text: getErrorMessage(err, true) })
+              })
           }}
+          //@ts-ignore
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setValueNote(e.target.value)
+          }
           show={showDeclineCampaign}
           handleClose={() => setShowDeclineCampaign(false)}
           data={handleDeclineCampaign}

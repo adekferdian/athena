@@ -9,10 +9,11 @@ type Props = {
     show: boolean
     data: any
     handleClose: () => void
-    onDelete: () => void | any
+    onRevision: () => void | any
+    onChange: () => void | any
 }
 
-const DeclineCampaignModal: React.FC<Props> = ({ show, handleClose, data, onDelete }) => {
+const DeclineCampaignModal: React.FC<Props> = ({ show, handleClose, data, onRevision, onChange }) => {
     return (
         <Modal aria-hidden='true' tabIndex='-1' show={show} onHide={handleClose} centered>
 
@@ -26,13 +27,16 @@ const DeclineCampaignModal: React.FC<Props> = ({ show, handleClose, data, onDele
                 <div className='d-flex align-items-center justify-content-center'>
                     <h3 className='d-flex align-items-center'>Decline Campaign</h3>
                 </div>
-                <div className='fv-row mb-10 d-flex align-items-center justify-content-center'>
+                <div className='fv-row mb-5 d-flex align-items-center justify-content-center'>
                     <div className='mb-4 text-gray-500 fw-bold' style={{ textAlign: 'center' }}>
                         {/* Are you sure want to delete <span className='fw-bolder'>{data?.name}</span> from list
-            gender? */}
+                gender? */}
                         Apa Anda yakin akan menolak Campaign ini?
                         Jika iya, Campaign akan dipindahkan ke Revision Required
                     </div>
+                </div>
+                <div className="d-flex flex-column mb-10 mx-10">
+                    <textarea className="form-control" placeholder="Add note (Optional)" onChange={onChange} data-kt-autosize="true"></textarea>
                 </div>
                 <div className='fv-row mb-10 d-flex align-items-center justify-content-center'>
                     <button
@@ -48,7 +52,7 @@ const DeclineCampaignModal: React.FC<Props> = ({ show, handleClose, data, onDele
                     <button
                         type='button'
                         className={`btn btn-lg btn-secondary fw-bolder me-4`}
-                        onClick={onDelete}
+                        onClick={onRevision}
                     >
                         Ya, Decline
                     </button>
