@@ -36,12 +36,19 @@ docker-build-dev:
   only:
     - dev
 
-deploy-to-ECS-dev:
+deploy-to-EC2-dev:
   stage: deploy
   image: docker:latest
   services:
     - docker:dind
   before_script:
+    - 'which ssh-agent || ( apk update && apk add --no-cache openssh )'
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+    - chmod 700 ~/.ssh/id_rsa
+    - eval "$(ssh-agent -s)"
+    - ssh-add ~/.ssh/id_rsa
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
   script:
     - echo "mulai deploy ke server"
     - ssh -o StrictHostKeyChecking=no -p $SSH_PORT $SSH_USER@$SSH_HOST_DEV "aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin 261622543538.dkr.ecr.ap-southeast-1.amazonaws.com"
@@ -53,12 +60,19 @@ deploy-to-ECS-dev:
   only:
     - dev
 
-deploy-to-ECS-prod:
+deploy-to-EC2-prod:
   stage: deploy
   image: docker:latest
   services:
     - docker:dind
   before_script:
+    - 'which ssh-agent || ( apk update && apk add --no-cache openssh )'
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY_DEV" | tr -d '\r' > ~/.ssh/id_rsa
+    - chmod 700 ~/.ssh/id_rsa
+    - eval "$(ssh-agent -s)"
+    - ssh-add ~/.ssh/id_rsa
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
   script:
     - echo "mulai deploy ke server"
     - ssh -o StrictHostKeyChecking=no -p $SSH_PORT $SSH_USER@$SSH_HOST "aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin 261622543538.dkr.ecr.ap-southeast-1.amazonaws.com"
