@@ -243,44 +243,20 @@ const useMenus = (): Menu[] => {
           //   title: 'Alcohol Type',
           //   icon: '',
           // },
-         
+
         ],
       },
-      // {
-      //   title: 'ACCOUNT MEMBER',
-      //   children: [
-      //     {
-      //       to: '/role-management',
-      //       title: 'Verify Account',
-      //       fontIcon: 'bi-archive',
-      //       icon: '/media/icons/efood/IconProfileEFood.svg',
-      //       children: [
-      //         {
-      //           to: MemberScreens.UNVERIFIED_LIST.PATH,
-      //           title: 'Unverified',
-      //           // permissions: {code: 'user_role_admin'},
-      //         },
-      //         {
-      //           to: MemberScreens.VERIFIED_LIST.PATH,
-      //           title: 'Verified',
-      //           // permissions: {code: 'user_role_user_corporate'},
-      //         },
-      //       ],
-      //     },
-      //     {
-      //       to: RoleScreens.ROLE_LIST.PATH,
-      //       title: 'Role',
-      //       fontIcon: 'bi-archive',
-      //       icon: '/media/icons/efood/IconProfileEFood.svg',
-      //     },
-      //     {
-      //       to: UserScreens.USER_LIST.PATH,
-      //       title: 'User',
-      //       fontIcon: 'bi-archive',
-      //       icon: '/media/icons/efood/IconProfileEFood.svg',
-      //     },
-      //   ],
-      // },
+      {
+        title: 'MASTER DATA',
+        children: [
+          {
+            to: '/master-rules',
+            title: 'Master Rules',
+            fontIcon: 'bi-archive',
+            icon: '/media/icons/efood/IconProfileEFood.svg',
+          },
+        ],
+      },
     ],
     []
   )
@@ -296,8 +272,8 @@ const GeneratedMenu: React.FC<{menu: Menu}> = ({menu}) => {
             <span className='menu-section text-muted text-uppercase fs-8 ls-1'>{menu.title}</span>
           </div>
         </div>
-        {menu.children?.map((child) => {
-          return <GeneratedMenu menu={child} key={child.id} />
+        {menu.children?.map((child, index) => {
+          return <GeneratedMenu menu={child} key={index} />
         })}
       </>
     )
@@ -353,8 +329,8 @@ const AsideMenuData: React.FC = () => {
   // )
   return (
     <>
-      {menus?.map((child) => {
-        return <GeneratedMenu menu={child} key={child.id} />
+      {menus?.map((child, index) => {
+        return <GeneratedMenu menu={child} key={index} />
       })}
     </>
   )
