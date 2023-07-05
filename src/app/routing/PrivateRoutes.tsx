@@ -10,6 +10,7 @@ export function PrivateRoutes() {
   const MasterComponentRoutes = lazy(() => import('../modules/master/Component/MasterComponentRoutes'))
   const MasterBenefitTypeRoutes = lazy(() => import('../modules/master/BenefitType/MasterBenefitTypeRoutes'))
   const MasterBenefitRoutes = lazy(() => import('../modules/master/Benefit/MasterBenefitRoutes'))
+  const MasterBusinessUnitRoutes = lazy(() => import('../modules/master/BusinessUnit/MasterBusinessUnitRoutes'))
 
   return (
     <Suspense fallback={<FallbackView />}>
@@ -17,6 +18,7 @@ export function PrivateRoutes() {
         <Redirect from='/auth' to='/' />
         <Redirect exact from='/' to='/' />
         <Route path='/voucher' component={VoucherRoutes} />
+        <Route path='/master-bu' component={MasterBusinessUnitRoutes} />
         <Route path='/master-component' component={MasterComponentRoutes} />
         <Route path='/master-rules' component={MasterRulesRoutes} />
         <Route path='/master-benefit' component={MasterBenefitRoutes} />
