@@ -256,6 +256,12 @@ const useMenus = (): Menu[] => {
             icon: '/media/icons/efood/IconProfileEFood.svg',
           },
           {
+            to: '/master-component',
+            title: 'Component',
+            fontIcon: 'bi-archive',
+            icon: '/media/icons/efood/IconProfileEFood.svg',
+          },
+          {
             to: '/master-benefit',
             title: 'Benefit',
             fontIcon: 'bi-archive',
@@ -334,7 +340,6 @@ const GeneratedMenu: React.FC<{menu: Menu}> = ({menu}) => {
 const AsideMenuData: React.FC = () => {
   // const {hasAccess} = usePermissions()
   const menus = useMenus()
-  console.log(menus)
   // const generated = useMemo(
   //   () => filterMenus(menus, (menu) => hasAccess(menu.permissions) && !menu.hidden),
   //   [hasAccess, menus]

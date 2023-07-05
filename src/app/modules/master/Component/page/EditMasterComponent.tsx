@@ -9,24 +9,22 @@ import AlertSuccess from 'src/app/components/AlertSuccess'
 import {ReactSelectMetronicTheme} from 'src/app/components/CustomReactSelect'
 import {getTitle} from 'src/app/utils/title-utils'
 import * as Yup from 'yup'
-import MasterBenefitScreens from '../Screens'
-import {getMasterBenefitDetail, updateMasterBenefit} from '../redux/MasterBenefitCRUD'
-import {getMasterBenefitTypeList} from '../../BenefitType/redux/MasterBenefitTypeCRUD'
+import MasterComponentScreens from '../Screens'
+import {getMasterComponentDetail, updateMasterComponent} from '../redux/MasterComponentCRUD'
 
 const editSchema = Yup.object().shape({
-  benefit_type: Yup.string().required('This field is required'),
-  benefit_name: Yup.string().required('This field is required'),
+  component_name: Yup.string().required('This field is required'),
+  // status: Yup.string().required('This field is required'),
 })
 
 const initialValues = {
-  benefit_type: '',
-  benefit_name: '',
-  benefit_description: '',
+  component_name: '',
+  description: '',
   meta_data: '',
   status: '',
 }
 
-const EditMasterBenefit: FC = (props: any) => {
+const EditMasterComponent: FC = (props: any) => {
   // Variables
   const {id} = useParams<any>()
   const history = useHistory()
@@ -35,9 +33,6 @@ const EditMasterBenefit: FC = (props: any) => {
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState<any>()
   const [save, setSave] = useState(false)
-  const [selectedBenefitType, setSelectedBenefitType] = useState<{label: string; value: number;} | undefined>()
-  const [benefitType, setBenefitType] = useState<any>([])
-
   const [selectedStatus, setSelectedStatus] = useState<{label: string; value: string} | undefined>()
   const statList = [
     {label: 'Active', value: 'active'},
@@ -50,24 +45,16 @@ const EditMasterBenefit: FC = (props: any) => {
     validateOnChange: false,
     validationSchema: editSchema,
     onSubmit: (values: any, {setStatus, setSubmitting}) => {
-      console.log(values)
-      updateBenefit(values)
+      updateComponent(values)
       setSave(true)
     },
   })
 
-  const updateBenefit = async (values: any) => {
+  const updateComponent = async (values:any) => {
     formik.setSubmitting(true)
     setLoading(true)
     setTimeout(() => {
-      updateMasterBenefit(
-        id,
-        values.benefit_type,
-        values.benefit_name,
-        values.benefit_description,
-        values.meta_data,
-        selectedStatus?.value ?? values.status
-      )
+      updateMasterComponent(id, values.component_name, values.description, values.meta_data ,selectedStatus?.value ?? values.status)
         .then(() => {
           setLoading(false)
           formik.setSubmitting(false)
@@ -77,59 +64,42 @@ const EditMasterBenefit: FC = (props: any) => {
           setSave(false)
           setLoading(false)
           formik.setSubmitting(false)
-          formik.setStatus('Update Master Benefit Failed.')
+          formik.setStatus('Update Master Component Failed.')
         })
     }, 1000)
   }
 
   //start::TITLE_FUNC
-  const pageTitle = useMemo(() => MasterBenefitScreens.EDIT_MASTER_BENEFIT.TITLE, [])
+  const pageTitle = useMemo(() => MasterComponentScreens.EDIT_MASTER_COMPONENT.TITLE, [])
 
   const breadcrumbs = useMemo(
     () => [
       {
         isActive: false,
-        path: MasterBenefitScreens.LIST_MASTER_BENEFIT.PATH,
-        title: MasterBenefitScreens.LIST_MASTER_BENEFIT.TITLE,
+        path: MasterComponentScreens.LIST_MASTER_COMPONENT.PATH,
+        title: MasterComponentScreens.LIST_MASTER_COMPONENT.TITLE,
       },
       {isActive: false, path: '', title: '', isSeparator: true},
     ],
     []
   )
 
-  const getBenefitType = async () => {
-    try {
-      const {data} = await getMasterBenefitTypeList({})
-      setBenefitType(data.data)
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
   useEffect(() => {
     const getData = async () => {
       try {
-        const detail = await getMasterBenefitDetail(id)
+        const detail = await getMasterComponentDetail(id)
         setData(detail.data.data ?? null)
-        setSelectedBenefitType({
-          label: detail?.data?.data?.type.benefittype ?? '',
-          value: detail?.data?.data?.type?.benefittype_id ?? 0,
-        })
         detail.data.data?.status === 'not_active'
           ? setSelectedStatus({label: 'Inactive', value: detail.data.data?.status})
           : setSelectedStatus({label: 'Active', value: detail.data.data?.status ?? 'active'})
-        formik.setFieldValue('benefit_type', detail.data.data?.benefit_type)
-        formik.setFieldValue('benefit_name', detail.data.data?.benefit_name)
-        formik.setFieldValue('benefit_description', detail.data.data?.benefit_description)
+        formik.setFieldValue('component_name', detail.data.data?.component_name)
+        formik.setFieldValue('description', detail.data.data?.description)
         formik.setFieldValue('meta_data', detail.data.data?.meta_data)
         formik.setFieldValue('status', selectedStatus)
-      } catch (error) {
-        console.log(error)
-      }
+      } catch (error) {}
     }
 
     getData()
-    getBenefitType()
   }, [id])
 
   useEffect(() => {
@@ -146,16 +116,35 @@ const EditMasterBenefit: FC = (props: any) => {
           <div className='mb-10 col'>
             <div className='col-12 col-md-6 mb-10 mb-md-0 mt-10'>
               <label className='flex-fill form-label fs-6 fw-bolder text-gray-800'>
-                Benefit Name<span className='text-danger'>*</span>
+                Benefit Type Name<span className='text-danger'>*</span>
               </label>
               <input
-                placeholder='Input Benefit Name'
-                {...formik.getFieldProps('benefit_name')}
+                placeholder='Input Benefit Type Name'
+                {...formik.getFieldProps('component_name')}
                 className={clsx('form-control form-control-lg form-control-solid', {
-                  'border-danger': formik.touched.benefit_name && formik.errors.benefit_name,
+                  'border-danger': formik.touched.component_name && formik.errors.component_name,
                 })}
                 type='text'
-                name='benefit_name'
+                name='component_name'
+                autoComplete='off'
+              />
+              {formik.touched.component_name && formik.errors.component_name && (
+                <div className='fv-plugins-message-container mt-2 text-danger'>
+                  <span role='alert'>{formik.errors.component_name}</span>
+                </div>
+              )}
+            </div>
+            <div className='col-12 col-md-6 mb-10 mb-md-0 mt-10'>
+              <label className='flex-fill form-label fs-6 fw-bolder text-gray-800'>
+                Description
+              </label>
+              <textarea
+                placeholder='Input Component Description'
+                {...formik.getFieldProps('description')}
+                className={clsx('form-control form-control-lg form-control-solid', {
+                  'border-danger': formik.touched.description && formik.errors.description,
+                })}
+                name='description'
                 autoComplete='off'
               />
               {formik.touched.description && formik.errors.description && (
@@ -166,26 +155,8 @@ const EditMasterBenefit: FC = (props: any) => {
             </div>
             <div className='col-12 col-md-6 mb-10 mb-md-0 mt-10'>
               <label className='flex-fill form-label fs-6 fw-bolder text-gray-800'>
-                Benefit Description
+               Meta Data
               </label>
-              <textarea
-                placeholder='Input Benefit Description'
-                {...formik.getFieldProps('benefit_description')}
-                className={clsx('form-control form-control-lg form-control-solid', {
-                  'border-danger':
-                    formik.touched.benefit_description && formik.errors.benefit_description,
-                })}
-                name='benefit_description'
-                autoComplete='off'
-              />
-              {formik.touched.description && formik.errors.description && (
-                <div className='fv-plugins-message-container mt-2 text-danger'>
-                  <span role='alert'>{formik.errors.description}</span>
-                </div>
-              )}
-            </div>
-            <div className='col-12 col-md-6 mb-10 mb-md-0 mt-10'>
-              <label className='flex-fill form-label fs-6 fw-bolder text-gray-800'>Meta Data</label>
               <input
                 placeholder='Input Meta Data'
                 {...formik.getFieldProps('meta_data')}
@@ -196,33 +167,9 @@ const EditMasterBenefit: FC = (props: any) => {
                 name='meta_data'
                 autoComplete='off'
               />
-              {formik.touched.description && formik.errors.description && (
+              {formik.touched.meta_data && formik.errors.meta_data && (
                 <div className='fv-plugins-message-container mt-2 text-danger'>
-                  <span role='alert'>{formik.errors.description}</span>
-                </div>
-              )}
-            </div>
-            <div className='col-12 col-md-6 mt-10'>
-              <label className='flex-fill form-label fs-6 fw-bolder text-gray-800'>
-                Benefit Type<span className='text-danger'>*</span>
-              </label>
-              <Select
-                placeholder='Select'
-                cacheOptions
-                defaultOptions
-                components={ReactSelectMetronicTheme as SelectComponentsConfig<any, true>}
-                value={selectedBenefitType}
-                options={benefitType.map((data: any) => {
-                  return {label: data.benefittype, value: data.benefittype_id}
-                })}
-                onChange={(value: any) => {
-                  setSelectedBenefitType(value)
-                  formik.setFieldValue('benefit_type', value.value)
-                }}
-              />
-              {formik.touched.status && formik.errors.status && (
-                <div className='fv-plugins-message-container mt-3 text-danger'>
-                  <span role='alert'>{formik.errors.status}</span>
+                  <span role='alert'>{formik.errors.meta_data}</span>
                 </div>
               )}
             </div>
@@ -278,4 +225,4 @@ const EditMasterBenefit: FC = (props: any) => {
   )
 }
 
-export {EditMasterBenefit}
+export {EditMasterComponent}
