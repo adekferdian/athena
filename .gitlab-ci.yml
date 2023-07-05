@@ -13,14 +13,14 @@ docker-build-prod:
     - aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin 261622543538.dkr.ecr.ap-southeast-1.amazonaws.com
   script:
     - echo "Disini Build Docker"
-    - docker build -t dating-apps .
-    - docker tag dating-apps:latest 261622543538.dkr.ecr.ap-southeast-1.amazonaws.com/dating-apps:dating-fe-zeus-prod
-    - docker push 261622543538.dkr.ecr.ap-southeast-1.amazonaws.com/dating-apps:dating-fe-zeus-prod
+    - docker build -t voucher-global-web-zeus .
+    - docker tag voucher-global-web-zeus:latest 261622543538.dkr.ecr.ap-southeast-1.amazonaws.com/voucher-global-web-zeus:prod
+    - docker push 261622543538.dkr.ecr.ap-southeast-1.amazonaws.com/voucher-global-web-zeus:prod
     - echo "Build successfully!"
   only:
     - prod
 
-docker-build-staging:
+docker-build-dev:
   stage: build-container
   image: docker:latest
   services:
@@ -29,14 +29,14 @@ docker-build-staging:
     - aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin 261622543538.dkr.ecr.ap-southeast-1.amazonaws.com
   script:
     - echo "Disini Build Docker"
-    - docker build -t dating-apps .
-    - docker tag dating-apps:latest 261622543538.dkr.ecr.ap-southeast-1.amazonaws.com/dating-apps:dating-fe-zeus-stg
-    - docker push 261622543538.dkr.ecr.ap-southeast-1.amazonaws.com/dating-apps:dating-fe-zeus-stg
+    - docker build -t voucher-global-web-zeus .
+    - docker tag voucher-global-web-zeus:latest 261622543538.dkr.ecr.ap-southeast-1.amazonaws.com/voucher-global-web-zeus:dev
+    - docker push 261622543538.dkr.ecr.ap-southeast-1.amazonaws.com/voucher-global-web-zeus:dev
     - echo "Build successfully!"
   only:
-    - stg
+    - dev
 
-deploy-to-ECS-staging:
+deploy-to-ECS-dev:
   stage: deploy
   image: docker:latest
   services:
@@ -44,10 +44,14 @@ deploy-to-ECS-staging:
   before_script:
   script:
     - echo "mulai deploy ke server"
-    - aws ecs register-task-definition --family dating-fe-zeus-stg --cli-input-json file://.json/stg.json
-    - aws ecs update-service --cluster DatingApps-stg --service dating-fe-zeus-stg --task-definition dating-fe-zeus-stg
+    - ssh -o StrictHostKeyChecking=no -p $SSH_PORT $SSH_USER@$SSH_HOST_DEV "aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin 261622543538.dkr.ecr.ap-southeast-1.amazonaws.com"
+    - ssh -o StrictHostKeyChecking=no -p $SSH_PORT $SSH_USER@$SSH_HOST_DEV "cp ~/../ubuntu/Projects/env/voucher-global-web-zeus.env .env"
+    - ssh -o StrictHostKeyChecking=no -p $SSH_PORT $SSH_USER@$SSH_HOST_DEV "docker pull 261622543538.dkr.ecr.ap-southeast-1.amazonaws.com/voucher-global-web-zeus:dev"
+    - ssh -o StrictHostKeyChecking=no -p $SSH_PORT $SSH_USER@$SSH_HOST_DEV "docker stop voucher-global-web-zeus || true && docker rm voucher-global-web-zeus || true"
+    - ssh -o StrictHostKeyChecking=no -p $SSH_PORT $SSH_USER@$SSH_HOST_DEV "docker run -d --network host --restart unless-stopped --name voucher-global-web-zeus --env-file ./.env 261622543538.dkr.ecr.ap-southeast-1.amazonaws.com/voucher-global-web-zeus:dev"
+    - ssh -o StrictHostKeyChecking=no -p $SSH_PORT $SSH_USER@$SSH_HOST_DEV "docker image prune -a -f"
   only:
-    - stg
+    - dev
 
 deploy-to-ECS-prod:
   stage: deploy
@@ -57,7 +61,11 @@ deploy-to-ECS-prod:
   before_script:
   script:
     - echo "mulai deploy ke server"
-    - aws ecs register-task-definition --family dating-fe-zeus --cli-input-json file://.json/prod.json
-    - aws ecs update-service --cluster DatingApps --service dating-fe-zeus --task-definition dating-fe-zeus
+    - ssh -o StrictHostKeyChecking=no -p $SSH_PORT $SSH_USER@$SSH_HOST "aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin 261622543538.dkr.ecr.ap-southeast-1.amazonaws.com"
+    - ssh -o StrictHostKeyChecking=no -p $SSH_PORT $SSH_USER@$SSH_HOST "cp ~/../ubuntu/Projects/env/voucher-global-web-zeus.env .env"
+    - ssh -o StrictHostKeyChecking=no -p $SSH_PORT $SSH_USER@$SSH_HOST "docker pull 261622543538.dkr.ecr.ap-southeast-1.amazonaws.com/voucher-global-web-zeus:prod"
+    - ssh -o StrictHostKeyChecking=no -p $SSH_PORT $SSH_USER@$SSH_HOST "docker stop voucher-global-web-zeus || true && docker rm voucher-global-web-zeus || true"
+    - ssh -o StrictHostKeyChecking=no -p $SSH_PORT $SSH_USER@$SSH_HOST "docker run -d --network host --restart unless-stopped --name voucher-global-web-zeus --env-file ./.env 261622543538.dkr.ecr.ap-southeast-1.amazonaws.com/voucher-global-web-zeus:prod"
+    - ssh -o StrictHostKeyChecking=no -p $SSH_PORT $SSH_USER@$SSH_HOST "docker image prune -a -f"
   only:
     - prod
