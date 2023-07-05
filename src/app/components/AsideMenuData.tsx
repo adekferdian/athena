@@ -251,7 +251,19 @@ const useMenus = (): Menu[] => {
         children: [
           {
             to: '/master-rules',
-            title: 'Master Rules',
+            title: 'Rules',
+            fontIcon: 'bi-archive',
+            icon: '/media/icons/efood/IconProfileEFood.svg',
+          },
+          {
+            to: '/master-benefit',
+            title: 'Benefit',
+            fontIcon: 'bi-archive',
+            icon: '/media/icons/efood/IconProfileEFood.svg',
+          },
+          {
+            to: '/master-type-benefit',
+            title: 'Benefit Type',
             fontIcon: 'bi-archive',
             icon: '/media/icons/efood/IconProfileEFood.svg',
           },

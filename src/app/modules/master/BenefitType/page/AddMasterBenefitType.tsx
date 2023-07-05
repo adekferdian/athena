@@ -1,104 +1,78 @@
-import clsx from 'clsx'
-import {useFormik} from 'formik'
-import {FC, useEffect, useMemo, useState} from 'react'
-import {useHistory, useParams} from 'react-router-dom'
-import {SelectComponentsConfig} from 'react-select'
+import clsx from "clsx"
+import { useFormik } from "formik"
+import { FC, useEffect, useMemo, useState } from "react"
+import { useHistory } from "react-router-dom"
+import { SelectComponentsConfig } from "react-select"
 import Select from 'react-select'
-import {PageTitle} from 'src/_metronic/layout/core'
-import AlertSuccess from 'src/app/components/AlertSuccess'
-import {ReactSelectMetronicTheme} from 'src/app/components/CustomReactSelect'
-import {getTitle} from 'src/app/utils/title-utils'
+import { PageTitle } from "src/_metronic/layout/core"
+import AlertSuccess from "src/app/components/AlertSuccess"
+import { ReactSelectMetronicTheme } from "src/app/components/CustomReactSelect"
+import { getTitle } from "src/app/utils/title-utils"
 import * as Yup from 'yup'
-import MasterRulesScreens from '../Screens'
-import {getMasterRulesDetail, updateMasterRules} from '../redux/MasterRulesCRUD'
+import MasterBenefitTypeScreens from "../Screens"
+import { createMasterBenefitType } from "../redux/MasterBenefitTypeCRUD"
 
-const editSchema = Yup.object().shape({
-  rule_name: Yup.string().required('This field is required'),
-  // status: Yup.string().required('This field is required'),
+const addSchema = Yup.object().shape({
+  benefittype: Yup.string().required('This field is required'),
+  status: Yup.string().required('This field is required'),
 })
 
 const initialValues = {
-  rule_name: '',
-  description: '',
+  benefittype: '',
   status: '',
 }
 
-const EditMasterRules: FC = (props: any) => {
-  // Variables
-  const {id} = useParams<any>()
-  const history = useHistory()
 
+export const AddMasterBenefitType: FC = () => {
   const [success, setSuccess] = useState('')
   const [loading, setLoading] = useState(false)
-  const [data, setData] = useState<any>()
-  const [save, setSave] = useState(false)
   const [selectedStatus, setSelectedStatus] = useState<{label: string; value: string} | undefined>()
   const statList = [
     {label: 'Active', value: 'active'},
     {label: 'Inactive', value: 'not_active'},
   ]
-
+  // Variables
+  const history = useHistory()
   const formik = useFormik({
     initialValues,
     validateOnBlur: false,
     validateOnChange: false,
-    validationSchema: editSchema,
+    validationSchema: addSchema,
     onSubmit: (values: any, {setStatus, setSubmitting}) => {
-      updateMasterRule(values)
-      setSave(true)
+      setSubmitting(true)
+      setLoading(true)
+      setTimeout(() => {
+        console.log('value: ' + JSON.stringify(values))
+        createMasterBenefitType(values.benefittype, values.status)
+          .then(() => {
+            setLoading(false)
+            setSubmitting(false)
+            history.goBack()
+          })
+          .catch(() => {
+            setLoading(false)
+            setSubmitting(false)
+            setStatus('Add benefit type failed.')
+          })
+      }, 1000)
+      setLoading(false)
     },
   })
 
-  const updateMasterRule = async (values:any) => {
-    formik.setSubmitting(true)
-    setLoading(true)
-    setTimeout(() => {
-      updateMasterRules(id, values.rule_name, values.description, selectedStatus?.value ?? values.status)
-        .then(() => {
-          setLoading(false)
-          formik.setSubmitting(false)
-          history.goBack()
-        })
-        .catch(() => {
-          setSave(false)
-          setLoading(false)
-          formik.setSubmitting(false)
-          formik.setStatus('Update Master Rule Failed.')
-        })
-    }, 1000)
-  }
-
   //start::TITLE_FUNC
-  const pageTitle = useMemo(() => MasterRulesScreens.EDIT_MASTER_RULES.TITLE, [])
+  const pageTitle = useMemo(() => MasterBenefitTypeScreens.ADD_MASTER_BENEFIT_TYPE.TITLE, [])
 
   const breadcrumbs = useMemo(
     () => [
       {
         isActive: false,
-        path: MasterRulesScreens.LIST_MASTER_RULES.PATH,
-        title: MasterRulesScreens.LIST_MASTER_RULES.TITLE,
+        path: MasterBenefitTypeScreens.LIST_MASTER_BENEFIT_TYPE.PATH,
+        title: MasterBenefitTypeScreens.LIST_MASTER_BENEFIT_TYPE.TITLE,
       },
       {isActive: false, path: '', title: '', isSeparator: true},
     ],
     []
   )
-
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const detail = await getMasterRulesDetail(id)
-        setData(detail.data.data ?? null)
-        detail.data.data?.status === 'not_active'
-          ? setSelectedStatus({label: 'Inactive', value: detail.data.data?.status})
-          : setSelectedStatus({label: 'Active', value: detail.data.data?.status ?? 'active'})
-        formik.setFieldValue('rule_name', detail.data.data?.rule_name)
-        formik.setFieldValue('description', detail.data.data?.description)
-        formik.setFieldValue('status', selectedStatus)
-      } catch (error) {}
-    }
-
-    getData()
-  }, [id])
 
   useEffect(() => {
     document.title = getTitle(pageTitle)
@@ -114,35 +88,16 @@ const EditMasterRules: FC = (props: any) => {
           <div className='mb-10 col'>
             <div className='col-12 col-md-6 mb-10 mb-md-0 mt-10'>
               <label className='flex-fill form-label fs-6 fw-bolder text-gray-800'>
-                Rule Name<span className='text-danger'>*</span>
+                Benefit Type Name<span className='text-danger'>*</span>
               </label>
               <input
-                placeholder='Input Rule Name'
-                {...formik.getFieldProps('rule_name')}
+                placeholder='Input Benefit Type Name'
+                {...formik.getFieldProps('benefittype')}
                 className={clsx('form-control form-control-lg form-control-solid', {
-                  'border-danger': formik.touched.rule_name && formik.errors.rule_name,
+                  'border-danger': formik.touched.benefittype && formik.errors.benefittype,
                 })}
                 type='text'
-                name='rule_name'
-                autoComplete='off'
-              />
-              {formik.touched.description && formik.errors.description && (
-                <div className='fv-plugins-message-container mt-2 text-danger'>
-                  <span role='alert'>{formik.errors.description}</span>
-                </div>
-              )}
-            </div>
-            <div className='col-12 col-md-6 mb-10 mb-md-0 mt-10'>
-              <label className='flex-fill form-label fs-6 fw-bolder text-gray-800'>
-                Description
-              </label>
-              <textarea
-                placeholder='Input Description'
-                {...formik.getFieldProps('description')}
-                className={clsx('form-control form-control-lg form-control-solid', {
-                  'border-danger': formik.touched.description && formik.errors.description,
-                })}
-                name='description'
+                name='benefittype'
                 autoComplete='off'
               />
               {formik.touched.description && formik.errors.description && (
@@ -201,6 +156,6 @@ const EditMasterRules: FC = (props: any) => {
       </div>
     </div>
   )
+
 }
 
-export {EditMasterRules}

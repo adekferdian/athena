@@ -5,7 +5,7 @@ import {AddMasterRules} from './page/AddMasterRules'
 import {EditMasterRules} from './page/EditMasterRules'
 import MasterRulesScreen from './Screens'
 
-const VoucherRoutes: React.FC = () => {
+const MasterRules: React.FC = () => {
   return (
     <Switch>
       <Route path={MasterRulesScreen.LIST_MASTER_RULES.PATH} component={ListMasterRules} />
@@ -17,4 +17,4 @@ const VoucherRoutes: React.FC = () => {
   )
 }
 
-export default VoucherRoutes
+export default MasterRules

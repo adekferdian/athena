@@ -14,7 +14,6 @@ import { createMasterRules } from "../redux/MasterRulesCRUD"
 
 const addSchema = Yup.object().shape({
   rule_name: Yup.string().required('This field is required'),
-  description: Yup.string().required('This field is required'),
   status: Yup.string().required('This field is required'),
 })
 
@@ -110,15 +109,14 @@ export const AddMasterRules: FC = (props: any) => {
             </div>
             <div className='col-12 col-md-6 mb-10 mb-md-0 mt-10'>
               <label className='flex-fill form-label fs-6 fw-bolder text-gray-800'>
-                Description<span className='text-danger'>*</span>
+                Description
               </label>
-              <input
+              <textarea
                 placeholder='Input Description'
                 {...formik.getFieldProps('description')}
                 className={clsx('form-control form-control-lg form-control-solid', {
                   'border-danger': formik.touched.description && formik.errors.description,
                 })}
-                type='text'
                 name='description'
                 autoComplete='off'
               />

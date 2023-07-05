@@ -11,7 +11,7 @@ type Props = {
   onDelete: () => void | any
 }
 
-const DeleteMasterRulesModal: React.FC<Props> = ({show, handleClose, data, onDelete}) => {
+const DeleteMasterBenefitModal: React.FC<Props> = ({show, handleClose, data, onDelete}) => {
   return (
     <Modal aria-hidden='true' tabIndex='-1' show={show} onHide={handleClose} centered>
       <div className='modal-header d-flex align-items-center justify-content-between'>
@@ -27,7 +27,7 @@ const DeleteMasterRulesModal: React.FC<Props> = ({show, handleClose, data, onDel
       <div className='modal-body'>
         <div className='fv-row mb-10'>
           <div className='mb-4'>
-            Are you sure want to delete <span className='fw-bolder'>{data?.rule_name}</span> from list
+            Are you sure want to delete <span className='fw-bolder'>{data?.benefit_name}</span> from list
             master rules?
           </div>
         </div>
@@ -48,4 +48,4 @@ const DeleteMasterRulesModal: React.FC<Props> = ({show, handleClose, data, onDel
   )
 }
 
-export default DeleteMasterRulesModal
+export default DeleteMasterBenefitModal
