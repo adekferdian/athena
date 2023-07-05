@@ -279,6 +279,12 @@ const useMenus = (): Menu[] => {
             fontIcon: 'bi-archive',
             icon: '/media/icons/efood/IconProfileEFood.svg',
           },
+          {
+            to: '/master-limit',
+            title: 'Limit',
+            fontIcon: 'bi-archive',
+            icon: '/media/icons/efood/IconProfileEFood.svg',
+          },
         ],
       },
     ],

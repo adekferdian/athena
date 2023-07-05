@@ -7,6 +7,7 @@ export function PrivateRoutes() {
   const VoucherRoutes = lazy(() => import('../modules/voucher/VoucherRoutes'))
   const LanguageRoutes = lazy(() => import('../modules/language/LanguageRoutes'))
   const MasterRulesRoutes = lazy(() => import('../modules/master/Rules/MasterRulesRoutes'))
+  const MasterLimitRoutes = lazy(() => import('../modules/master/Limit/MasterLimitRoutes'))
   const MasterComponentRoutes = lazy(() => import('../modules/master/Component/MasterComponentRoutes'))
   const MasterBenefitTypeRoutes = lazy(() => import('../modules/master/BenefitType/MasterBenefitTypeRoutes'))
   const MasterBenefitRoutes = lazy(() => import('../modules/master/Benefit/MasterBenefitRoutes'))
@@ -18,6 +19,7 @@ export function PrivateRoutes() {
         <Redirect from='/auth' to='/' />
         <Redirect exact from='/' to='/' />
         <Route path='/voucher' component={VoucherRoutes} />
+        <Route path='/master-limit' component={MasterLimitRoutes} />
         <Route path='/master-bu' component={MasterBusinessUnitRoutes} />
         <Route path='/master-component' component={MasterComponentRoutes} />
         <Route path='/master-rules' component={MasterRulesRoutes} />
