@@ -285,6 +285,12 @@ const useMenus = (): Menu[] => {
             fontIcon: 'bi-archive',
             icon: '/media/icons/efood/IconProfileEFood.svg',
           },
+          {
+            to: '/voucher-rules',
+            title: 'Voucher Rules',
+            fontIcon: 'bi-archive',
+            icon: '/media/icons/efood/IconProfileEFood.svg',
+          },
         ],
       },
     ],
