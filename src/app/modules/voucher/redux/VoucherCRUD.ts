@@ -3,6 +3,7 @@ import { BaseResponse, BaseResponseNoPagination} from 'src/app/models/api.types'
 import {Campaign} from '../models/Voucher'
 
 const url = `campaign`
+const urlVoucher = `voucher`
 
 type VoucherListParam = {
   search?: string
@@ -10,8 +11,8 @@ type VoucherListParam = {
   // role_id?: string
   // cancelToken?: any
 }
-export function createVoucher(description: string, status: number) {
-  // return axios.post(url, {description: description, status: status})
+export function createCampaign(data: object) {
+  return axios.post(url, {data})
 }
 
 export function updateVoucher(id: string, description: string, status: number) {
@@ -28,6 +29,10 @@ export function getCampaignDetail(id: string) {
 
 export function updateRevision(id: string, status: string, note: string) {
   return axios.post(url + `/revision/${id}`, {status: status, note: note})
+}
+
+export function generateVoucher(prefix: string, amount: number) {
+  return axios.post(urlVoucher + `/generate`, {prefix: prefix, amount: amount})
 }
 
 export function getVoucherList({
