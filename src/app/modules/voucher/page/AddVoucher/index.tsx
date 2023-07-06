@@ -30,6 +30,9 @@ export const AddVoucher = () => {
     setVoucherForm,
   };
 
+  console.log("voucherForm ", voucherForm);
+  
+
   return (
     <FormContext.Provider value={formContextValue}>
       <PageTitle>Create Campaign</PageTitle>

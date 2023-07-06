@@ -44,6 +44,7 @@ const VoucherList: FC = (props: any) => {
   const [handleDeclineCampaign, setHandleDeclineCampaign] = useState<any>(null)
   const [showPreviewModal, setShowPreviewModal] = useState(false)
   const [handleEditData, setHandleEditData] = useState<any>(null)
+  const [handlePreviewModal, setHandlePreviewModal] = useState<any>(null)
 
   const { state, setPage, setQuery } = usePagination<Campaign, any>(
     useCallback((state, setState, isActive, cancelToken) => {
@@ -310,6 +311,9 @@ const VoucherList: FC = (props: any) => {
                                 className='d-inline'
                                 data-bs-toggle="modal"
                                 data-bs-target="#kt_modal_scrollable_2"
+                                onClick={() => {
+                                  setHandlePreviewModal(value)
+                                }}
                                 style={{ cursor: 'pointer' }}
                               >
                                 <InlineSVG src={'/media/icons/eye.svg'} />
@@ -704,9 +708,11 @@ const VoucherList: FC = (props: any) => {
 
                                       <div
                                         className='d-inline'
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#kt_modal_scrollable_2"
                                         style={{ cursor: 'pointer' }}
+                                        onClick={() => {
+                                          setHandlePreviewModal(value)
+                                          setShowPreviewModal(true)
+                                        }}
                                       >
                                         <InlineSVG src={'/media/icons/eye.svg'} />
                                       </div>&nbsp;&nbsp;
@@ -845,8 +851,8 @@ const VoucherList: FC = (props: any) => {
           data={handleDeclineCampaign}
         />
         <PreviewVoucherModal
-          onEdit={() => {
-            // deleteGender(handleDeleteData?.id ?? '')
+          onPreview={() => {
+            // getCampaignDetail(handlePreviewModal?.campaign_id ?? '')
             //   .then(() => {
             //     // dispatch(AdminRedux.actions.setSuccess('User berhasil dihapus.'))
             //     setShowDeleteModal(false)
@@ -858,7 +864,7 @@ const VoucherList: FC = (props: any) => {
           }}
           show={showPreviewModal}
           handleClose={() => setShowPreviewModal(false)}
-          data={handleEditData}
+          data={handlePreviewModal}
         />
       </div>
     </>

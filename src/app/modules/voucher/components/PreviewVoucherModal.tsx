@@ -1,14 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { NavLink, useHistory } from 'react-router-dom'
 import { KTSVG } from 'src/_metronic/helpers'
+import { getCampaignDetail } from '../redux/VoucherCRUD'
+import { getErrorMessage } from 'src/app/utils/api-utils'
+import { useHeaderToast } from 'src/app/components/ToastComponent'
 
 type Props = {
   show: boolean
   data: any
   handleClose: () => void
-  onEdit: () => void | any
+  onPreview: () => void | any
 }
 
 const values = [
@@ -18,9 +21,29 @@ const values = [
   { id: 4, text: "Note (0)" }
 ];
 
-const PreviewVoucherModal: React.FC<Props> = ({ show, handleClose, data, onEdit }) => {
+const PreviewVoucherModal: React.FC<Props> = ({ show, handleClose, data, onPreview }) => {
+
+
   const [activeId, setActiveId] = useState(1);
+  const [dataDetail, setData] = useState<any>(null);
   const history = useHistory()
+  const { addPageToasts } = useHeaderToast()
+
+  useEffect(() => {
+    if (data !== null) {
+      getCampaignDetail(data?.campaign_id ?? '')
+        .then((value) => {
+          console.log("RES DATA ", data);
+          setData(value.data.data)
+        })
+        .catch((err) => {
+          addPageToasts({ scheme: 'danger', text: getErrorMessage(err, true) })
+        })
+    }
+    console.log("STATE DATA ", dataDetail);
+
+  }, [data])
+
   const modalGeneralInformation = () => {
     return (
       <div>
@@ -41,7 +64,7 @@ const PreviewVoucherModal: React.FC<Props> = ({ show, handleClose, data, onEdit 
             <div className='row mt-8 mb-12'>
               <div className='col-2 text-gray-800 fs-7'>Select Platform</div>
               <div className='col-10 text-gray-800 fw-bold fs-7'>
-                <span className='bg-ligt'>Shop</span>
+                <span className='bg-ligt'>{dataDetail ? dataDetail.business_unit.bu_name : '-'}</span>
               </div>
             </div>
             <div className='row mt-12 mb-12'>
@@ -49,7 +72,7 @@ const PreviewVoucherModal: React.FC<Props> = ({ show, handleClose, data, onEdit 
               <div className='col-10 text-gray-800 fs-7'>Voucher Name</div>
               <div className='col-2 text-gray-800 fs-7'></div>
               <div className='col-10 text-gray-800 fw-bold fs-7'>
-                <span className='text-gray-800 fw-bold fs-7'>Diskon April Seru 20%</span>
+                <span className='text-gray-800 fw-bold fs-7'>{dataDetail ? dataDetail.campaign_name : '-'}</span>
               </div>
             </div>
             <div className='row mt-12 mb-12'>
@@ -73,37 +96,37 @@ const PreviewVoucherModal: React.FC<Props> = ({ show, handleClose, data, onEdit 
               <div className='col-10 text-gray-800 fs-7'>Voucher Descriptions</div>
               <div className='col-2 text-gray-800 fs-7'></div>
               <div className='col-10 text-gray-800 fw-bold fs-7'>
-                <span className='text-gray-800 fw-bold fs-7'>-</span>
+                <span className='text-gray-800 fw-bold fs-7'>{dataDetail ? dataDetail.voucher_usage.description : '-'}</span>
               </div>
             </div>
             <div className='row mt-12 mb-12'>
               <div className='col-2 text-gray-800 fs-7'></div>
               <div className='row col-4'>
                 <span className='text-gray-800 fs-7'>Total Voucher Quota</span>
-                <span className='text-gray-800 fw-bold fs-7'>200</span>
+                <span className='text-gray-800 fw-bold fs-7'>{dataDetail ? dataDetail.voucher_quota : '-'}</span>
               </div>
               <div className='row col-4'>
                 <span className='text-gray-800 fs-7'>Quota for each User </span>
-                <span className='text-gray-800 fw-bold fs-7'>1</span>
+                <span className='text-gray-800 fw-bold fs-7'>{dataDetail ? dataDetail.voucher_quota_user : '-'}</span>
               </div>
             </div>
             <div className='row mt-12 mb-12'>
               <div className='col-2 text-gray-800 fs-7'></div>
               <div className='row col-4'>
                 <span className='text-gray-800 fs-7'>Total Used</span>
-                <span className='text-gray-800 fw-bold fs-7'>195</span>
+                <span className='text-gray-800 fw-bold fs-7'>{dataDetail ? dataDetail.voucher_quota : '-'}</span>
               </div>
               <div className='row col-4'>
                 <span className='text-gray-800 fs-7'>Remaining quota</span>
-                <span className='text-gray-800 fw-bold fs-7'>5</span>
+                <span className='text-gray-800 fw-bold fs-7'>{dataDetail ? dataDetail.voucher_quota : '-'}</span>
               </div>
             </div>
             <div className='row mt-12 mb-12'>
               <div className='col-2 text-gray-800 fs-7'>Voucher Code</div>
-              <div className='col-10 text-gray-800 fs-7'>Autogenerate</div>
+              <div className='col-10 text-gray-800 fs-7'>{dataDetail && dataDetail.voucher_type === 'generate' ? 'Autogenerate' : 'Manual'}</div>
               <div className='col-2 text-gray-800 fs-7'></div>
               <div className='col-10 text-gray-800 fw-bold fs-7'>
-                <span className='text-gray-800 fw-bold fs-7'>200 Voucher Codes Generated</span>
+                <span className='text-gray-800 fw-bold fs-7'>{dataDetail ? dataDetail.voucher_quota : '-'} Voucher Codes Generated</span>
               </div>
             </div>
           </div>
@@ -131,70 +154,40 @@ const PreviewVoucherModal: React.FC<Props> = ({ show, handleClose, data, onEdit 
           <div className='col-12'>
             <div className='row mt-12 mb-12'>
               <div className='col-2 text-gray-800 fs-7'>Discount</div>
-              <div className='row col-3 border-bottom pb-5'>
-                <span className='text-gray-800 fs-7'>Minimum Transaction</span>
-                <span className='text-gray-800 fw-bold fs-7'>Rp 0</span>
-              </div>
-              <div className='row col-3 border-bottom pb-5'>
-                <span className='text-gray-800 fs-7'>Maximum Transaction</span>
-                <span className='text-gray-800 fw-bold fs-7'>Rp 100.000</span>
-              </div>
-              <div className='row col-2 border-bottom pb-5'>
-                <span className='text-gray-800 fs-7'>Discount</span>
-                <span className='text-gray-800 fw-bold fs-7'>5%</span>
-              </div>
-              <div className='row col-3 border-bottom pb-5'>
-                <span className='text-gray-800 fs-7'>Maximum Discount</span>
-                <span className='text-gray-800 fw-bold fs-7'>Rp 3.000</span>
-              </div>
-            </div>
-            <div className='row mt-12 mb-12'>
-              <div className='col-2 text-gray-800 fs-7'></div>
-              <div className='row col-3 border-bottom pb-5'>
-                <span className='text-gray-800 fs-7'>Minimum Transaction</span>
-                <span className='text-gray-800 fw-bold fs-7'>Rp 100.001</span>
-              </div>
-              <div className='row col-3 border-bottom pb-5'>
-                <span className='text-gray-800 fs-7'>Maximum Transaction</span>
-                <span className='text-gray-800 fw-bold fs-7'>Rp 200.000</span>
-              </div>
-              <div className='row col-2 border-bottom pb-5'>
-                <span className='text-gray-800 fs-7'>Discount</span>
-                <span className='text-gray-800 fw-bold fs-7'>10%</span>
-              </div>
-              <div className='row col-3 border-bottom pb-5'>
-                <span className='text-gray-800 fs-7'>Maximum Discount</span>
-                <span className='text-gray-800 fw-bold fs-7'>Rp 15.000</span>
-              </div>
-            </div>
-            <div className='row mt-12 mb-12'>
-              <div className='col-2 text-gray-800 fs-7'></div>
-              <div className='row col-3 border-bottom pb-5'>
-                <span className='text-gray-800 fs-7'>Minimum Transaction</span>
-                <span className='text-gray-800 fw-bold fs-7'>Rp 200.001</span>
-              </div>
-              <div className='row col-3 border-bottom pb-5'>
-                <span className='text-gray-800 fs-7'>Maximum Transaction</span>
-                <span className='text-gray-800 fw-bold fs-7'>-</span>
-              </div>
-              <div className='row col-2 border-bottom pb-5'>
-                <span className='text-gray-800 fs-7'>Discount</span>
-                <span className='text-gray-800 fw-bold fs-7'>15%</span>
-              </div>
-              <div className='row col-3 border-bottom pb-5'>
-                <span className='text-gray-800 fs-7'>Maximum Discount</span>
-                <span className='text-gray-800 fw-bold fs-7'>Rp 20.000</span>
-              </div>
+              {
+              dataDetail ? 
+              dataDetail.campaign_discount.map((val: any, index: any) => (
+                <>
+                  <div className='row col-3 border-bottom pb-5'>
+                    <span className='text-gray-800 fs-7'>Minimum Transaction</span>
+                    <span className='text-gray-800 fw-bold fs-7'>Rp {val.min_transaction}</span>
+                  </div>
+                  <div className='row col-3 border-bottom pb-5'>
+                    <span className='text-gray-800 fs-7'>Maximum Transaction</span>
+                    <span className='text-gray-800 fw-bold fs-7'>Rp {val.max_transaction}</span>
+                  </div>
+                  <div className='row col-2 border-bottom pb-5'>
+                    <span className='text-gray-800 fs-7'>Discount</span>
+                    <span className='text-gray-800 fw-bold fs-7'>{val.min_discount}%</span>
+                  </div>
+                  <div className='row col-3 border-bottom pb-5'>
+                    <span className='text-gray-800 fs-7'>Maximum Discount</span>
+                    <span className='text-gray-800 fw-bold fs-7'>Rp {val.max_discount}</span>
+                  </div>
+                </>
+              ))
+                : null
+            }
             </div>
           </div>
           <div className='col-12'>
             <div className='row mt-12 mb-12'>
               <div className='col-2 text-gray-800 fs-7'>Covered by</div>
-              <div className='row col-2'>
+              <div className='row col-3'>
                 <span className='text-gray-800 fs-7'>Seller/Merchant</span>
                 <span className='text-gray-800 fw-bold fs-7'>50%</span>
               </div>
-              <div className='row col-2'>
+              <div className='row col-3'>
                 <span className='text-gray-800 fs-7'>eDOT</span>
                 <span className='text-gray-800 fw-bold fs-7'>50%</span>
               </div>
@@ -209,7 +202,7 @@ const PreviewVoucherModal: React.FC<Props> = ({ show, handleClose, data, onEdit 
             </div>
             <div className='col-2 text-gray-800 fs-7'></div>
             <div className='col-10 text-gray-800 fw-bold fs-7'>
-              <span className='text-gray-600 fs-7'>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.</span>
+              <span className='text-gray-600 fs-7'>{dataDetail ? dataDetail.voucher_usage.description : '-'}</span>
             </div>
           </div>
           <div className='row mt-6 mb-6'>
