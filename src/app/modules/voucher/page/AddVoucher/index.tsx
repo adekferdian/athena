@@ -5,7 +5,7 @@ import React, {
   Dispatch,
   SetStateAction,
 } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import InlineSVG from 'react-inlinesvg/esm';
 import { PageTitle } from 'src/_metronic/layout/core';
 import { CampaignInfoForm } from './CampaignInfoForm';
@@ -21,42 +21,17 @@ interface FormContextInterface {
 }
 
 export const formContextDefaultValue: FormContextInterface = {
-  voucherForm: {
-    campaigntype_id: 1,
-    bu_id: 4,
-    campaign_name: "eFood Discount 20%",
-    campaign_term: "lorem ipsum",
-    campaign_image_id: 1,
-    voucher_quota: "200",
-    voucher_quota_user: "1",
-    voucher_type: "generate", //value: generate OR generate-amount OR manual
-    voucher_code: "", //diisi jika voucher_type manual, lainnya string kosong
-    campaign_mark: "hDP7gFOiKJfQypYrO93T0607FOOD1", //diisi ketika voucher_type: generate/generate-amount, lainnya string kosong
-    valid_start: "2023-06-25 16:00:00",
-    valid_end: "2023-07-20 08:00:00",
-    display_voucher: false,
-    target_user: "All User",
-    target_user_ids:[],
-    campaign_condition_ids: [1],
-    campaign_limit_ids: [],
-    discount: [],
-    covered_byseller: "70",
-    covered_bycompany: "30",
-    usage_id: 2,
-    vouchertype_id: 4,
-    transaction_type_id: 7,
-    otp_validation: false,
-    allow_combination_id: 0,
-    rules:[]
-  },
+  voucherForm: {},
   setVoucherForm: () => null
 }
 
 export const FormContext = createContext<FormContextInterface>(formContextDefaultValue);
 
 export const AddVoucher = () => {
+  const history = useHistory()
+
   const [voucherForm, setVoucherForm] = useState({
-    campaigntype_id: 0,
+    campaigntype_id: 1,
     bu_id: 0,
     campaign_name: "",
     campaign_term: "",
@@ -70,7 +45,7 @@ export const AddVoucher = () => {
     valid_end: "",
     display_voucher: false,
     target_user: "All User",
-    target_user_ids:[],
+    target_user_ids: [],
     campaign_condition_ids: [1],
     campaign_limit_ids: [],
     discount: [
@@ -91,29 +66,20 @@ export const AddVoucher = () => {
         seq: 2
       }
     ],
-    covered_byseller: "",
-    covered_bycompany: "",
+    covered_byseller: "70",
+    covered_bycompany: "30",
     usage_id: 2,
     vouchertype_id: 4,
     transaction_type_id: 7,
     otp_validation: false,
     allow_combination_id: 0,
-    rules:[{
-      rules_id:1,
+    rules: [{
+      rules_id: 1,
       item: [{
-          ref_id:1,
-          data:{}
+        ref_id: 1,
+        data: {}
       }]
-  },{
-      rules_id:5,
-      item: [{
-          ref_id:10,
-          data:{
-              time_start:"01:00",
-              time_end:"03:00"
-          }
-      }]
-  }]
+    }]
   });
   const [formStep, setFormStep] = useState(1);
   const { addPageToasts } = useHeaderToast()
@@ -123,7 +89,7 @@ export const AddVoucher = () => {
   };
 
   console.log("voucher", voucherForm);
-  
+
   return (
     //@ts-ignore
     <FormContext.Provider value={formContextValue}>
@@ -182,7 +148,7 @@ export const AddVoucher = () => {
           <Link
             to={{ pathname: `/voucher/` }}
             className="btn btn-lg btn-light fw-bolder"
-            onClick={() => {}}
+            onClick={() => { }}
           >
             Cancel
           </Link>
@@ -202,11 +168,14 @@ export const AddVoucher = () => {
           onClick={() => {
             setFormStep(formStep < 3 ? formStep + 1 : formStep)
             if (formStep === 3) {
+              //@ts-ignore
               createCampaign(voucherForm)
                 .then((res) => {
                   // dispatch(GenderRedux.actions.setSuccess('Gender berhasil dihapus.'))
                   console.log("res ", res);
-                  
+                  //@ts-ignore
+                  addPageToasts({ scheme: 'success', text: res.data.message })
+                  history.push(`/voucher`)
                 })
                 .catch((err) => {
                   // setShowDeclineCampaign(false)

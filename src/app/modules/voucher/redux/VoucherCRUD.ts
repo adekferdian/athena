@@ -11,8 +11,10 @@ type VoucherListParam = {
   // role_id?: string
   // cancelToken?: any
 }
-export function createCampaign(data: object) {
-  return axios.post(url, {data})
+export function createCampaign(data: any) {
+  // console.log(data);
+  
+  return axios.post(url, data)
 }
 
 export function updateVoucher(id: string, description: string, status: number) {
