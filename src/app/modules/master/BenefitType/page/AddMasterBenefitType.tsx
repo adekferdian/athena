@@ -42,7 +42,6 @@ export const AddMasterBenefitType: FC = () => {
       setSubmitting(true)
       setLoading(true)
       setTimeout(() => {
-        console.log('value: ' + JSON.stringify(values))
         createMasterBenefitType(values.benefittype, values.status)
           .then(() => {
             setLoading(false)

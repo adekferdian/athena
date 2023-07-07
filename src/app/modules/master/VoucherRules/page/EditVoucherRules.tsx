@@ -144,8 +144,6 @@ const EditVoucherRules: FC = (props: any) => {
 
   useEffect(() => {
     if (data) {
-      console.log(data.bu_id);
-
       setSelectedBusiness({
         label: data.business_unit?.bu_name,
         value: data.bu_id,

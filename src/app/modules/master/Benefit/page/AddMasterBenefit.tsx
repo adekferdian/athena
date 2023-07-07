@@ -90,7 +90,9 @@ export const AddMasterBenefit: FC = () => {
   const getBenefitType = async () => {
     try {
       const masterBenefitType = await getMasterBenefitTypeList({})
-      setBenefitType(masterBenefitType.data.data)
+      const benefitTypeActive = masterBenefitType?.data?.data?.filter(item => item.status === 'active');
+
+      setBenefitType(benefitTypeActive)
     } catch (error) {
       console.error(error)
     }
@@ -123,9 +125,9 @@ export const AddMasterBenefit: FC = () => {
                 name='benefit_name'
                 autoComplete='off'
               />
-              {formik.touched.description && formik.errors.description && (
+              {formik.touched.benefit_name && formik.errors.benefit_name && (
                 <div className='fv-plugins-message-container mt-2 text-danger'>
-                  <span role='alert'>{formik.errors.description}</span>
+                  <span role='alert'>{formik.errors.benefit_name}</span>
                 </div>
               )}
             </div>
@@ -143,9 +145,9 @@ export const AddMasterBenefit: FC = () => {
                 name='benefit_description'
                 autoComplete='off'
               />
-              {formik.touched.description && formik.errors.description && (
+              {formik.touched.benefit_description && formik.errors.benefit_description && (
                 <div className='fv-plugins-message-container mt-2 text-danger'>
-                  <span role='alert'>{formik.errors.description}</span>
+                  <span role='alert'>{formik.errors.benefit_description}</span>
                 </div>
               )}
             </div>
@@ -161,9 +163,9 @@ export const AddMasterBenefit: FC = () => {
                 name='meta_data'
                 autoComplete='off'
               />
-              {formik.touched.description && formik.errors.description && (
+              {formik.touched.meta_data && formik.errors.meta_data && (
                 <div className='fv-plugins-message-container mt-2 text-danger'>
-                  <span role='alert'>{formik.errors.description}</span>
+                  <span role='alert'>{formik.errors.meta_data}</span>
                 </div>
               )}
             </div>
@@ -185,9 +187,9 @@ export const AddMasterBenefit: FC = () => {
                   formik.setFieldValue('benefit_type', value.value)
                 }}
               />
-              {formik.touched.status && formik.errors.status && (
+              {formik.touched.benefit_type && formik.errors.benefit_type && (
                 <div className='fv-plugins-message-container mt-3 text-danger'>
-                  <span role='alert'>{formik.errors.status}</span>
+                  <span role='alert'>{formik.errors.benefit_type}</span>
                 </div>
               )}
             </div>
