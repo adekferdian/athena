@@ -1,17 +1,26 @@
-import {FC, useCallback, useEffect} from 'react'
+import {FC, useCallback, useEffect, useState} from 'react'
+import {Link, useHistory} from 'react-router-dom'
 import {PageTitle} from 'src/_metronic/layout/core'
+import {useHeaderToast} from 'src/app/components/ToastComponent'
 import {useDebounceEffect} from 'src/app/hooks/debounce-hook'
 import {usePagination} from 'src/app/hooks/pagination-hook'
 import {getTitle} from 'src/app/utils/title-utils'
-import MasterVoucherUsageScreens from '../Screens'
+import MasterCampaignTypeScreens from '../Screens'
 import InlineSVG from 'react-inlinesvg'
-import {MasterVoucherUsage} from '../models/VoucherUsage'
-import {getVoucherUsageTransaction} from '../redux/MasterVoucherUsageCRUD'
+import {MasterCampaignType} from '../models/CampaignType'
+import DeleteMasterCampaignTypeModal from '../components/DeleteMasterCampaignTypeModal'
+import {deleteMasterCampaignType, getMasterCampaignTypeList} from '../redux/MasterCampaignTypeCRUD'
+import {getErrorMessage} from 'src/app/utils/api-utils'
 import Pagination from 'src/app/components/Pagination'
 
-const ListTypeVoucher: FC = () => {
+const ListMasterCampaignType: FC = () => {
+  const {addPageToasts} = useHeaderToast()
+  const history = useHistory()
 
-  const {state, setLimit, setPage, setQuery} = usePagination<MasterVoucherUsage, any>(
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [handleDeleteData, setHandleDeleteData] = useState<any>(null)
+
+  const {state, setLimit, setPage, setQuery} = usePagination<MasterCampaignType, any>(
     useCallback((state, setState, isActive) => {
       const fetchCall = async () => {
         try {
@@ -19,7 +28,8 @@ const ListTypeVoucher: FC = () => {
           if (state.query.status) {
             status = state.query.status
           }
-          const masterVoucherUsage = await getVoucherUsageTransaction({
+          const masterBenefitType = await getMasterCampaignTypeList({
+            limit: state.limit,
             search: state.query.search,
           })
           if (isActive()) {
@@ -29,7 +39,7 @@ const ListTypeVoucher: FC = () => {
             refreshing: false,
             error: false,
             page: 1,
-            data: masterVoucherUsage.data.data ?? [],
+            data: masterBenefitType.data.data ?? [],
             total: 0,
             status,
           }))
@@ -54,7 +64,7 @@ const ListTypeVoucher: FC = () => {
       refreshing: false,
       error: false,
       page: 0,
-      data: [] as MasterVoucherUsage[],
+      data: [] as MasterCampaignType[],
       total: 0,
       limit: 10,
       query: {},
@@ -62,7 +72,7 @@ const ListTypeVoucher: FC = () => {
   )
 
   useEffect(() => {
-    document.title = getTitle('List of Master How Voucher Usage ')
+    document.title = getTitle('List of Master Campaign Type')
   }, [])
 
   useEffect(() => {
@@ -84,11 +94,22 @@ const ListTypeVoucher: FC = () => {
 
   return (
     <>
-      <PageTitle>List Master How Voucher Usage </PageTitle>
+      <PageTitle>Manage Master Campaign Type</PageTitle>
       <div className='card shadow-sm'>
         <div className='card-header d-flex align-items-center justify-content-between'>
           <div className='flex-fill fs-2 fw-bolder'>
-            {MasterVoucherUsageScreens.LIST_MASTER_VOUCHER_USAGE_HOW.TITLE}
+            {MasterCampaignTypeScreens.LIST_MASTER_CAMPAIGN_TYPE.TITLE}
+          </div>
+          <div className='card-toolbar'>
+            <Link
+              to={{
+                pathname: `/master-type-campaign/add`,
+              }}
+              className='btn btn-sm btn-secondary fw-bold fs-6'
+            >
+              <InlineSVG src={'/media/icons/mingle/IconAdd.svg'} style={{marginRight: 5}} />
+              Add Master Campaign Type
+            </Link>
           </div>
         </div>
         <div className='card-body'>
@@ -116,11 +137,10 @@ const ListTypeVoucher: FC = () => {
                 <thead className='text-gray fw-700'>
                   <tr>
                     <th>No</th>
-                    <th>ID</th>
-                    <th>Title</th>
-                    <th>Slug</th>
-                    <th>Description</th>
-                    <th>Type</th>
+                    <th>Campaign Type ID</th>
+                    <th>Campaign Type Name</th>
+                    <th>Status</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -148,12 +168,33 @@ const ListTypeVoucher: FC = () => {
                         <td className='align-middle'>
                           {(state.page - 1) * state.limit + index + 1}
                         </td>
-                        <td className='align-middle'>{value.id}</td>
-                        <td className='align-middle'>{value.title}</td>
-                        <td className='align-middle'>{value.slug}</td>
-                        <td className='align-middle'>{value.description}</td>
-                        <td className='align-middle'>{value.type}</td>
+                        <td className='align-middle'>{value.campaigntype_id}</td>
+                        <td className='align-middle'>{value.campaigntype}</td>
+                        <td className='align-middle'>{value.status  === 'not_active' ? 'inactive' : 'active'}</td>
                         <td className='align-middle' style={{minWidth: 125}}>
+                          {/* {hasAccess({access: 'update'}) ? ( */}
+                          <button
+                            type='button'
+                            className='btn-transparent me-3'
+                            onClick={() =>
+                              history.push(`/master-type-campaign/edit/${value.campaigntype_id}`)
+                            }
+                          >
+                            <InlineSVG src={'/media/icons/edit.svg'} />
+                          </button>
+                          {/* ) : null} */}
+                          {/* {hasAccess({access: 'delete'}) ? ( */}
+                          <div
+                            className='d-inline'
+                            onClick={() => {
+                              setHandleDeleteData(value)
+                              setShowDeleteModal(true)
+                            }}
+                            style={{cursor: 'pointer'}}
+                          >
+                            <InlineSVG src='/media/icons/trash.svg' />
+                          </div>
+                          {/* ) : null} */}
                         </td>
                       </tr>
                     ))
@@ -180,9 +221,25 @@ const ListTypeVoucher: FC = () => {
             maxData={state.total}
           />
         </div>
+        <DeleteMasterCampaignTypeModal
+          onDelete={() => {
+            deleteMasterCampaignType(handleDeleteData?.campaigntype_id ?? '')
+              .then(() => {
+                setShowDeleteModal(false)
+                setPage(state.page)
+              })
+              .catch((err) => {
+                setShowDeleteModal(false)
+                addPageToasts({scheme: 'danger', text: getErrorMessage(err, true)})
+              })
+          }}
+          show={showDeleteModal}
+          handleClose={() => setShowDeleteModal(false)}
+          data={handleDeleteData}
+        />
       </div>
     </>
   )
 }
 
-export {ListTypeVoucher}
+export {ListMasterCampaignType}

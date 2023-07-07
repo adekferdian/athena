@@ -291,6 +291,12 @@ const useMenus = (): Menu[] => {
             icon: '/media/icons/efood/IconProfileEFood.svg',
           },
           {
+            to: '/master-type-campaign',
+            title: 'Campaign Type',
+            fontIcon: 'bi-archive',
+            icon: '/media/icons/efood/IconProfileEFood.svg',
+          },
+          {
             to: '/master-usage',
             title: 'Master Usage',
             icon: '/media/icons/efood/IconProfileEFood.svg',

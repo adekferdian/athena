@@ -10,6 +10,7 @@ export function PrivateRoutes() {
   const MasterVoucherRulesRoutes = lazy(() => import('../modules/master/VoucherRules/VoucherRulesRoute'))
   const MasterLimitRoutes = lazy(() => import('../modules/master/Limit/MasterLimitRoutes'))
   const MasterComponentRoutes = lazy(() => import('../modules/master/Component/MasterComponentRoutes'))
+  const MasterCampaignTypeRoutes = lazy(() => import('../modules/master/CampaignType/MasterCampaignTypeRoutes'))
   const MasterBenefitTypeRoutes = lazy(() => import('../modules/master/BenefitType/MasterBenefitTypeRoutes'))
   const MasterBenefitRoutes = lazy(() => import('../modules/master/Benefit/MasterBenefitRoutes'))
   const MasterBusinessUnitRoutes = lazy(() => import('../modules/master/BusinessUnit/MasterBusinessUnitRoutes'))
@@ -28,6 +29,7 @@ export function PrivateRoutes() {
         <Route path='/master-rules' component={MasterRulesRoutes} />
         <Route path='/master-benefit' component={MasterBenefitRoutes} />
         <Route path='/master-type-benefit' component={MasterBenefitTypeRoutes} />
+        <Route path='/master-type-campaign' component={MasterCampaignTypeRoutes} />
         <Route path='/usage-voucher' component={MasterVoucherUsageRoutes} />
         <Route path='/language' component={LanguageRoutes} />
         <Redirect to='error/404' />
