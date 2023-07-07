@@ -297,6 +297,18 @@ const useMenus = (): Menu[] => {
             icon: '/media/icons/efood/IconProfileEFood.svg',
           },
           {
+            to: '/master-condition',
+            title: 'Condition',
+            fontIcon: 'bi-archive',
+            icon: '/media/icons/efood/IconProfileEFood.svg',
+          },
+          {
+            to: '/master-type-condition',
+            title: 'Condition Type',
+            fontIcon: 'bi-archive',
+            icon: '/media/icons/efood/IconProfileEFood.svg',
+          },
+          {
             to: '/master-usage',
             title: 'Master Usage',
             icon: '/media/icons/efood/IconProfileEFood.svg',
