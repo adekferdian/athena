@@ -37,6 +37,7 @@ const PreviewVoucherModal: React.FC<Props> = ({ show, handleClose, data, onPrevi
           setData(value.data.data)
         })
         .catch((err) => {
+          setData(null)
           addPageToasts({ scheme: 'danger', text: getErrorMessage(err, true) })
         })
     }
@@ -80,7 +81,7 @@ const PreviewVoucherModal: React.FC<Props> = ({ show, handleClose, data, onPrevi
               <div className='col-10 text-gray-800 fs-7'>Display Voucher</div>
               <div className='col-2 text-gray-800 fs-7'></div>
               <div className='col-10 text-gray-800 fw-bold fs-7'>
-                <span className='text-gray-800 fw-bold fs-7'>Yes, Voucher akan tampil di platform</span>
+                <span className='text-gray-800 fw-bold fs-7'>{dataDetail ? (dataDetail.display_voucher ? `Yes, Voucher akan tampil di platform` : `No, Voucher tidak akan tampil di platform`) : '-'}</span>
               </div>
             </div>
             <div className='row mt-12 mb-12'>
@@ -174,6 +175,7 @@ const PreviewVoucherModal: React.FC<Props> = ({ show, handleClose, data, onPrevi
                     <span className='text-gray-800 fs-7'>Maximum Discount</span>
                     <span className='text-gray-800 fw-bold fs-7'>Rp {val.max_discount}</span>
                   </div>
+                  <div className='col-2'></div>
                 </>
               ))
                 : null

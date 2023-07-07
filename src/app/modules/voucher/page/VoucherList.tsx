@@ -54,6 +54,8 @@ const VoucherList: FC = (props: any) => {
   const { state, setPage, setQuery } = usePagination<Campaign, any>(
     useCallback((state, setState, isActive, cancelToken) => {
       const fetchCall = async () => {
+        console.log("QUeris ", state);
+
         try {
           const statuses: string[] = []
           if (state.query.status) {
@@ -126,6 +128,16 @@ const VoucherList: FC = (props: any) => {
 
           // }
         } catch (e) {
+          //@ts-ignore
+          setLenghtActive(0)
+          //@ts-ignore
+          setLenghtApproval(0)
+          //@ts-ignore
+          setLenghtRevision(0)
+          //@ts-ignore
+          setLenghtInactive(0)
+          //@ts-ignore
+          setLenghtDraft(0)
           // if (isActive()) {
           setState((prev) => ({
             ...prev,
@@ -168,7 +180,7 @@ const VoucherList: FC = (props: any) => {
   }, [setPage])
 
 
-  console.log("State ", state);
+  console.log("data ", handlePreviewModal);
 
   return (
     <>
@@ -337,10 +349,11 @@ const VoucherList: FC = (props: any) => {
                                 className='d-inline'
                                 data-bs-toggle="modal"
                                 data-bs-target="#kt_modal_scrollable_2"
+                                style={{ cursor: 'pointer' }}
                                 onClick={() => {
                                   setHandlePreviewModal(value)
+                                  setShowPreviewModal(true)
                                 }}
-                                style={{ cursor: 'pointer' }}
                               >
                                 <InlineSVG src={'/media/icons/eye.svg'} />
                               </div>&nbsp;&nbsp;
@@ -440,6 +453,10 @@ const VoucherList: FC = (props: any) => {
                                   data-bs-toggle="modal"
                                   data-bs-target="#kt_modal_scrollable_2"
                                   style={{ cursor: 'pointer' }}
+                                  onClick={() => {
+                                    setHandlePreviewModal(value)
+                                    setShowPreviewModal(true)
+                                  }}
                                 >
                                   <InlineSVG src={'/media/icons/eye.svg'} />
                                 </div>&nbsp;&nbsp;
@@ -539,6 +556,10 @@ const VoucherList: FC = (props: any) => {
                                     data-bs-toggle="modal"
                                     data-bs-target="#kt_modal_scrollable_2"
                                     style={{ cursor: 'pointer' }}
+                                    onClick={() => {
+                                      setHandlePreviewModal(value)
+                                      setShowPreviewModal(true)
+                                    }}
                                   >
                                     <InlineSVG src={'/media/icons/eye.svg'} />
                                   </div>&nbsp;&nbsp;
@@ -638,6 +659,10 @@ const VoucherList: FC = (props: any) => {
                                       data-bs-toggle="modal"
                                       data-bs-target="#kt_modal_scrollable_2"
                                       style={{ cursor: 'pointer' }}
+                                      onClick={() => {
+                                        setHandlePreviewModal(value)
+                                        setShowPreviewModal(true)
+                                      }}
                                     >
                                       <InlineSVG src={'/media/icons/eye.svg'} />
                                     </div>&nbsp;&nbsp;
@@ -734,6 +759,8 @@ const VoucherList: FC = (props: any) => {
 
                                       <div
                                         className='d-inline'
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#kt_modal_scrollable_2"
                                         style={{ cursor: 'pointer' }}
                                         onClick={() => {
                                           setHandlePreviewModal(value)
