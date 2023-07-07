@@ -13,6 +13,7 @@ export function PrivateRoutes() {
   const MasterBenefitTypeRoutes = lazy(() => import('../modules/master/BenefitType/MasterBenefitTypeRoutes'))
   const MasterBenefitRoutes = lazy(() => import('../modules/master/Benefit/MasterBenefitRoutes'))
   const MasterBusinessUnitRoutes = lazy(() => import('../modules/master/BusinessUnit/MasterBusinessUnitRoutes'))
+  const MasterVoucherUsageRoutes = lazy(() => import('../modules/master/VoucherUsage/MasterVoucherUsageRoutes'));
 
   return (
     <Suspense fallback={<FallbackView />}>
@@ -27,6 +28,7 @@ export function PrivateRoutes() {
         <Route path='/master-rules' component={MasterRulesRoutes} />
         <Route path='/master-benefit' component={MasterBenefitRoutes} />
         <Route path='/master-type-benefit' component={MasterBenefitTypeRoutes} />
+        <Route path='/usage-voucher' component={MasterVoucherUsageRoutes} />
         <Route path='/language' component={LanguageRoutes} />
         <Redirect to='error/404' />
       </Switch>

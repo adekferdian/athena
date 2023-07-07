@@ -42,65 +42,65 @@ const useMenus = (): Menu[] => {
       // {
       //   title: 'USER',
       //   children: [
-          // {
-          //   to: '#',
-          //   title: 'Admin',
-          //   fontIcon: 'bi-archive',
-          //   icon: '/media/icons/efood/IconShieldUser.svg',
-          //   children: [
-          //     {
-          //       to: AdminScreens.ADMIN_LIST.PATH,
-          //       title: AdminScreens.ADMIN_LIST.TITLE,
-          //       hasBullet: true,
-          //       permissions: {code: 'user_list_admin'},
-          //     },
-          //   ],
-          // },
-          // {
-          //   to: '/user-hermes/',
-          //   title: 'User eFOOD Partner',
-          //   fontIcon: 'bi-archive',
-          //   icon: '/media/icons/efood/IconUser.svg',
-          //   children: [
-          //     {
-          //       to: AppUserScreens.USER_CORPORATE.PATH,
-          //       title: AppUserScreens.USER_CORPORATE.TITLE,
-          //       hasBullet: true,
-          //       permissions: {code: 'user_list_user_corporate'},
-          //     },
-          //     {
-          //       to: AppUserScreens.USER_CORPORATE_VERIFICATION.PATH,
-          //       title: AppUserScreens.USER_CORPORATE_VERIFICATION.TITLE,
-          //       hasBullet: true,
-          //       permissions: {code: 'user_list_verifikasi_user_corporate'},
-          //     },
-          //     {
-          //       to: AppUserScreens.USER_BRAND.PATH,
-          //       title: AppUserScreens.USER_BRAND.TITLE,
-          //       hasBullet: true,
-          //       permissions: {code: 'user_list_user_brand'},
-          //     },
-          //     {
-          //       to: AppUserScreens.USER_LIST.PATH,
-          //       title: AppUserScreens.USER_LIST.TITLE,
-          //       hasBullet: true,
-          //       permissions: {code: 'user_list_user_store'},
-          //     },
-          //   ],
-          // },
-          // {
-          //   to: CustomerEFoodScreens.CUSTOMER_LIST.PATH,
-          //   title: 'Customer eFOOD',
-          //   fontIcon: 'bi-archive',
-          //   icon: '/media/icons/efood/IconUsers.svg',
-          //   permissions: {code: 'user_customer_efood'},
-          // },
-          // {
-          //   to: '/role-management',
-          //   title: 'Role Management',
-          //   fontIcon: 'bi-archive',
-          //   icon: '/media/icons/efood/IconFlower.svg',
-          //   children: [
+      // {
+      //   to: '#',
+      //   title: 'Admin',
+      //   fontIcon: 'bi-archive',
+      //   icon: '/media/icons/efood/IconShieldUser.svg',
+      //   children: [
+      //     {
+      //       to: AdminScreens.ADMIN_LIST.PATH,
+      //       title: AdminScreens.ADMIN_LIST.TITLE,
+      //       hasBullet: true,
+      //       permissions: {code: 'user_list_admin'},
+      //     },
+      //   ],
+      // },
+      // {
+      //   to: '/user-hermes/',
+      //   title: 'User eFOOD Partner',
+      //   fontIcon: 'bi-archive',
+      //   icon: '/media/icons/efood/IconUser.svg',
+      //   children: [
+      //     {
+      //       to: AppUserScreens.USER_CORPORATE.PATH,
+      //       title: AppUserScreens.USER_CORPORATE.TITLE,
+      //       hasBullet: true,
+      //       permissions: {code: 'user_list_user_corporate'},
+      //     },
+      //     {
+      //       to: AppUserScreens.USER_CORPORATE_VERIFICATION.PATH,
+      //       title: AppUserScreens.USER_CORPORATE_VERIFICATION.TITLE,
+      //       hasBullet: true,
+      //       permissions: {code: 'user_list_verifikasi_user_corporate'},
+      //     },
+      //     {
+      //       to: AppUserScreens.USER_BRAND.PATH,
+      //       title: AppUserScreens.USER_BRAND.TITLE,
+      //       hasBullet: true,
+      //       permissions: {code: 'user_list_user_brand'},
+      //     },
+      //     {
+      //       to: AppUserScreens.USER_LIST.PATH,
+      //       title: AppUserScreens.USER_LIST.TITLE,
+      //       hasBullet: true,
+      //       permissions: {code: 'user_list_user_store'},
+      //     },
+      //   ],
+      // },
+      // {
+      //   to: CustomerEFoodScreens.CUSTOMER_LIST.PATH,
+      //   title: 'Customer eFOOD',
+      //   fontIcon: 'bi-archive',
+      //   icon: '/media/icons/efood/IconUsers.svg',
+      //   permissions: {code: 'user_customer_efood'},
+      // },
+      // {
+      //   to: '/role-management',
+      //   title: 'Role Management',
+      //   fontIcon: 'bi-archive',
+      //   icon: '/media/icons/efood/IconFlower.svg',
+      //   children: [
       //         {
       //           to: RoleManagementScreens.ROLE_ADMIN.PATH,
       //           title: 'Role Admin',
@@ -243,7 +243,6 @@ const useMenus = (): Menu[] => {
           //   title: 'Alcohol Type',
           //   icon: '',
           // },
-
         ],
       },
       {
@@ -290,6 +289,25 @@ const useMenus = (): Menu[] => {
             title: 'Voucher Rules',
             fontIcon: 'bi-archive',
             icon: '/media/icons/efood/IconProfileEFood.svg',
+          },
+          {
+            to: '/master-usage',
+            title: 'Master Usage',
+            icon: '/media/icons/efood/IconProfileEFood.svg',
+            children: [
+              {
+                to: '/usage-voucher/how-to',
+                title: 'How To Use Voucher',
+              },
+              {
+                to: '/usage-voucher/type-voucher',
+                title: 'Type Voucher',
+              },
+              {
+                to: '/usage-voucher/type-transaction',
+                title: 'Type Transaction',
+              },
+            ],
           },
         ],
       },
