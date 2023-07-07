@@ -8,6 +8,7 @@ const urlVoucher = `voucher`
 type VoucherListParam = {
   search?: string
   statuses?: string[]
+  bu_id?: any
   // role_id?: string
   // cancelToken?: any
 }
@@ -41,6 +42,7 @@ export function getVoucherList({
   search,
   //@ts-ignore
   status,
+  bu_id
 }: // role_id,
 // cancelToken,
 VoucherListParam) {
@@ -49,6 +51,7 @@ VoucherListParam) {
     params: {
       search,
       status,
+      bu_id
       // role_id,
     },
     // cancelToken,

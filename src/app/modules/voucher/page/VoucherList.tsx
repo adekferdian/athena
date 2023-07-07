@@ -23,11 +23,11 @@ import { getErrorMessage } from 'src/app/utils/api-utils'
 // import moment from 'moment'
 
 const values = [
-  { id: 1, text: "Active (3)" },
-  { id: 2, text: "Need Approval ()" },
-  { id: 3, text: "Revision Required ()" },
-  { id: 4, text: "Inactive (2)" },
-  { id: 5, text: "Draft ()" }
+  { id: 1, text: "Active" },
+  { id: 2, text: "Need Approval" },
+  { id: 3, text: "Revision Required" },
+  { id: 4, text: "Inactive" },
+  { id: 5, text: "Draft" }
 ];
 
 const VoucherList: FC = (props: any) => {
@@ -35,6 +35,11 @@ const VoucherList: FC = (props: any) => {
   const history = useHistory()
 
   const [activeId, setActiveId] = useState(1);
+  const [lenghtActive, setLenghtActive] = useState(0);
+  const [lenghtApproval, setLenghtApproval] = useState(0);
+  const [lenghtRevision, setLenghtRevision] = useState(0);
+  const [lenghtInactive, setLenghtInactive] = useState(0);
+  const [lenghtDraft, setLenghtDraft] = useState(0);
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [showApprovCampaign, setShowApprovCampaign] = useState(false)
   const [valueNote, setValueNote] = useState('')
@@ -49,8 +54,6 @@ const VoucherList: FC = (props: any) => {
   const { state, setPage, setQuery } = usePagination<Campaign, any>(
     useCallback((state, setState, isActive, cancelToken) => {
       const fetchCall = async () => {
-        console.log("masuk");
-
         try {
           const statuses: string[] = []
           if (state.query.status) {
@@ -63,32 +66,48 @@ const VoucherList: FC = (props: any) => {
             search: state.query.search,
             //@ts-ignore
             status: 'active',
+            bu_id: state.query.bu_id
             // cancelToken,
           })
           const campaignNeedApprove = await getVoucherList({
             search: state.query.search,
             //@ts-ignore
             status: 'need-approval',
+            bu_id: state.query.bu_id
             // cancelToken,
           })
           const campaignNeedRevision = await getVoucherList({
             search: state.query.search,
             //@ts-ignore
-            status: 'need-revision'
+            status: 'need-revision',
+            bu_id: state.query.bu_id
             // cancelToken,
           })
           const campaignInactive = await getVoucherList({
             search: state.query.search,
             //@ts-ignore
             status: 'inactive',
+            bu_id: state.query.bu_id
             // cancelToken,
           })
           const campaignDraft = await getVoucherList({
             search: state.query.search,
             //@ts-ignore
             status: 'draft',
+            bu_id: state.query.bu_id
             // cancelToken,
           })
+          //@ts-ignore
+          setLenghtActive(campaignActive?.data?.data?.length ?? 0)
+          //@ts-ignore
+          setLenghtApproval(campaignNeedApprove?.data?.data?.length ?? 0)
+          //@ts-ignore
+          setLenghtRevision(campaignNeedRevision?.data?.data?.length ?? 0)
+          //@ts-ignore
+          setLenghtInactive(campaignInactive?.data?.data?.length ?? 0)
+          //@ts-ignore
+          setLenghtDraft(campaignDraft?.data?.data?.length ?? 0)
+
           // if (isActive()) {
           //@ts-ignore
           setState((prev) => ({
@@ -187,7 +206,7 @@ const VoucherList: FC = (props: any) => {
               <li key={index} className="nav-item" onClick={() => setActiveId(val.id)}>
                 <NavLink exact activeClassName={activeId === val.id ? "nav-active link-dark d-flex" : "nav-link link-dark d-flex"} style={{ flexDirection: 'row' }} to='#' >
                   <div className='circle' style={{ width: 10, height: 10, marginRight: 10, marginTop: 5, backgroundColor: val.id === 2 ? '#FFB400' : val.id === 3 ? '#FF4D53' : val.id === 4 ? '#888888' : val.id === 5 ? '#DDDDDD' : '#02EF8B' }} />
-                  {val.text}
+                  {val.text + (val.id === 1 ? ` (${lenghtActive})` : val.id === 1 ? ` (${lenghtActive})` : val.id === 2 ? ` (${lenghtApproval})` : val.id === 3 ? ` (${lenghtRevision})` : val.id === 4 ? ` (${lenghtInactive})` : val.id === 5 ? ` (${lenghtDraft})` : null)}
                 </NavLink>
               </li>
             ))}
@@ -206,6 +225,13 @@ const VoucherList: FC = (props: any) => {
                 className='form-control form-control-lg form-control-solid ps-13'
                 type='text'
                 autoComplete='off'
+                value={state.query.search}
+                onChange={(e) =>
+                  setQuery((prev) => ({
+                    ...prev,
+                    search: e.target.value,
+                  }))
+                }
               // onChange={(e) => searchFn(e.currentTarget.value)}
               />
             </div>
@@ -219,17 +245,17 @@ const VoucherList: FC = (props: any) => {
                 <select
                   className='form-control form-control-lg form-control-solid pe-13'
                   autoComplete='off'
-                  value={state.query.role_id}
+                  value={state.query.bu_id}
                   onChange={(e) =>
                     setQuery((prev) => ({
                       ...prev,
-                      role_id: e.target.value,
+                      bu_id: e.target.value,
                     }))
                   }
                 >
                   <option value={''}>All</option>
-                  <option value={''}>FOOD</option>
-                  <option value={''}>SHOP</option>
+                  <option value={2}>FOOD</option>
+                  <option value={4}>SHOP</option>
                   {/* {filterRole.map((data: any, index: any) => {
                     return (
                       <option key={index} value={data.value}>

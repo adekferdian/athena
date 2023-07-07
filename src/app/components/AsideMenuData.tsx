@@ -140,7 +140,7 @@ const useMenus = (): Menu[] => {
         children: [
           {
             to: '/voucher',
-            title: 'Voucher',
+            title: 'Campaign',
             icon: '/media/icons/mingle/IconCampaign.svg',
           },
           // {
