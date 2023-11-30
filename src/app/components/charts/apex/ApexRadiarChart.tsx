@@ -55,7 +55,7 @@ const ApexRadiarChart:React.FC<ApexChartProps>= ({title, value1, value2, filter}
         options: {
           chart: {
             height: 350,
-            width: 200
+            width: 350
           },
           legend: {
             position: 'bottom'
@@ -97,7 +97,7 @@ const ApexRadiarChart:React.FC<ApexChartProps>= ({title, value1, value2, filter}
   return (
         <Chart 
           //@ts-ignore
-          options={options} series={series} type='donut' height={250} 
+          options={options} series={series} type='donut' height={220} 
         />
   )
 }

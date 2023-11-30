@@ -16,6 +16,7 @@ import RevenueComponent from 'src/app/components/dashboard/Revenue';
 import TransactionComponent from 'src/app/components/dashboard/Transaction';
 import BuContributionComponent from 'src/app/components/dashboard/BuContribution';
 import VisualitationDataComponent from 'src/app/components/dashboard/VisualizationData';
+import { convertToRupiah } from 'src/_metronic/helpers/convertToRupiah';
 
 
 const DashboardPage = () => {
@@ -38,7 +39,7 @@ const DashboardPage = () => {
                 Dashboard
             </PageTitle>
             <div className="w-100 bg-white d-flex">
-                <div className='my-1 text-break d-flex mx-9' style={{height: 50, gap: 10}}>
+                <div className='my-1 d-flex mx-9' style={{height: 50, gap: 10}}>
                     <Dropdown isOpen={dropdownOpen1} toggle={toggle1} className="cursor-pointer">
                         <DropdownToggle
                             data-toggle="dropdown"
@@ -190,28 +191,54 @@ const DashboardPage = () => {
                     </Dropdown>
                 </div>
             </div>
-            <div className="d-flex">
-                <div id="left-container">
-                    <div id="gmv" className="bg-white rounded border-1 m-9" style={{minWidth: 288,}}>
-                        <GmvComponent data={dummyData} />
+            <div className="d-flex w-100 justify-content-start">
+                <div id="left-container" className="w-100" style={{maxWidth: '28%'}}>
+                    <div id="gmv" className="bg-white rounded border-1 my-9 mx-5">
+                        <GmvComponent data={dummyData} filter={filterBuValue} />
                     </div>
-                    <div id="revenue" className="bg-white rounded border-1 m-9" style={{minWidth: 288}}>
-                        <RevenueComponent data={dummyData} />
+                    <div id="revenue" className="bg-white rounded border-1 my-9 mx-5">
+                        <RevenueComponent data={dummyData} filter={filterBuValue} />
                     </div>
-                    <div id="transaction" className="bg-white rounded border-1 m-9" style={{minWidth: 288}}>
-                        <TransactionComponent data={dummyData} />
+                    <div id="transaction" className="bg-white rounded border-1 my-9 mx-5">
+                        <TransactionComponent data={dummyData} filter={filterBuValue} />
                     </div>
                 </div>
-                <div id="right-container" style={{marginLeft: -40}}>
-                    <div className="d-flex">
-                        <div id="bu-contribution"  className="bg-white rounded border-1 m-9" style={{minWidth: 288}}>
+                <div id="right-container" className="w-100 mx-2">
+                    <div className="d-flex" style={{gap: 5, width: '100%'}}>
+                        <div id="bu-contribution"  className="bg-white rounded border-1 my-9 d-flex" style={{width: '70%'}}>
                             <BuContributionComponent data={dummyData} filter={filterBuValue} callback={(param:any) => setFilterBuValue(param)} />
                         </div>
-                        <div id="sum-promo">
-
+                        <div id="sum-promo" style={{width: "30%"}}>
+                            <div id="gmv" className="bg-white rounded border-1 my-9" style={{width: '100%'}}>
+                                <div className="p-3">
+                                    <p className="text-uppercase" style={{fontSize: 14}}>summary promo</p>
+                                    <p className="fw-bolder" style={{marginTop: -10, fontSize: 12}}>{filterBuValue}</p>
+                                    <p style={{fontSize: 14}}>Budget Used:</p>
+                                    <p style={{fontSize: 26}} className="fw-bolder responsive-font-example">{convertToRupiah(160000000)}</p>
+                                    <div className="d-flex justify-content-between">
+                                        <p style={{fontSize: 14}}>Allocation:</p>
+                                        <p style={{fontSize: 14}} className="fw-bolder">{convertToRupiah(200000000)}</p>
+                                    </div>
+                                    <div className="mb-2" style={{border: ".5px solid #F4F4F4", width: '100%', marginTop: -10}} />
+                                    <div className="d-flex justify-content-between" style={{width: '95%'}}>
+                                        <div>
+                                            <p>Total Promo:</p>
+                                            <p className="fw-bolder" style={{marginTop: -10}}>24</p>
+                                            <p>Promo Claimed:</p>
+                                            <p className="fw-bolder" style={{marginTop: -10}}>1500</p>
+                                        </div>
+                                        <div>
+                                            <p>Total Quota:</p>
+                                            <p className="fw-bolder" style={{marginTop: -10}}>2400</p>
+                                            <p>Promo Used:</p>
+                                            <p className="fw-bolder" style={{marginTop: -10}}>1240</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div id="visual-data" className="bg-white rounded border-1 m-9" style={{minWidth: 288}}>
+                    <div id="visual-data" className="bg-white rounded border-1 my-2" style={{width: '100%'}}>
                         <VisualitationDataComponent data={dummyData} filter={filterBuValue} />
                     </div>
                 </div>

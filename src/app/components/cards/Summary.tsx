@@ -22,7 +22,7 @@ const CardSummary:React.FC<SummaryProps>= ({
         <div className="p-3">
             <p className="text-uppercase">{title}</p>
             <p className="fw-bolder">{buName}</p>
-            <p style={{fontSize: 32,}} className="fw-bolder">{convertToRupiah(total)}</p>
+            <p style={{fontSize: '1.7vw'}} className="fw-bolder responsive-font-example">{convertToRupiah(total)}</p>
             <div className="d-flex justify-content-between">
                 <p>Target:</p>
                 <p className="fw-bolder">{convertToRupiah(target)}</p>

@@ -3,16 +3,17 @@ import CardSummary from '../../cards/Summary';
 
 
 interface RevenueComponentProps {
-    data:any
+    data:any,
+    filter: any
 }
 
-const RevenueComponent:React.FC<RevenueComponentProps>=({data}) => {
+const RevenueComponent:React.FC<RevenueComponentProps>=({data, filter}) => {
 
     return (
         <div>
             <CardSummary 
                 title="summary revenue"
-                buName="Mitra"
+                buName={filter}
                 total={74425521}
                 target={120000000}
                 achievement="61.4%"

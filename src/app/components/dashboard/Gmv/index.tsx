@@ -3,16 +3,17 @@ import CardSummary from '../../cards/Summary';
 
 
 interface GmvComponentProps {
-    data:any
+    data:any,
+    filter: any
 }
 
-const GmvComponent:React.FC<GmvComponentProps>=({data}) => {
+const GmvComponent:React.FC<GmvComponentProps>=({data, filter}) => {
 
     return (
-        <div>
+        <div className="w-100">
             <CardSummary 
                 title="summary gmv"
-                buName="Mitra"
+                buName={filter}
                 total={92503412}
                 target={95000000}
                 achievement="92.2%"
