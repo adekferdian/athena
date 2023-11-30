@@ -3,7 +3,7 @@
 import React, {FC} from 'react'
 import clsx from 'clsx'
 import {useLayout} from '../../core'
-import {KTSVG} from '../../../helpers'
+// import {KTSVG} from '../../../helpers'
 import {AsideMenu} from './AsideMenu'
 import InlineSVG from 'react-inlinesvg/esm'
 
@@ -29,9 +29,9 @@ const AsideDefault: FC = () => {
         {aside.theme === 'dark' && (
           <span className='fs-2 text-white flex-fill d-flex justify-content-center fw-bolder text-center'>
             <InlineSVG
-              src={'/media/icons/mingle/IconZeusSidemenu.svg'}
+              src={'/media/sidebar/edot_athena.svg'}
               className='pt-2 logo-big'
-              style={{marginRight: 16}}
+              style={{marginLeft: -40}}
             />
             {/* <img
               alt='Logo'
@@ -47,17 +47,12 @@ const AsideDefault: FC = () => {
               className='pt-2 logo-big'
               style={{marginRight: 16}}
             />
-            {/* <img
-              alt='Logo'
-              src={toAbsoluteUrl('/media/icons/efood/IconEfood.png')}
-              className='h-30px logo-small'
-            /> */}
           </span>
         )}
         {/* end::Logo */}
 
         {/* begin::Aside toggler */}
-        {aside.minimize && (
+        {/* {aside.minimize && (
           <div
             id='kt_aside_toggle'
             className='btn btn-icon w-auto px-0 btn-active-color-primary aside-toggle'
@@ -71,7 +66,7 @@ const AsideDefault: FC = () => {
               className={'svg-icon-1 rotate-180'}
             />
           </div>
-        )}
+        )} */}
         {/* end::Aside toggler */}
       </div>
       {/* end::Brand */}

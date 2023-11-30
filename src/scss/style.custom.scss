@@ -738,6 +738,14 @@ input.checked::before {
   color: #2BBECB;
 }
 
+.filter-dashboard {
+  min-height: 20px;
+}
+
+.filter-dashboard:hover {
+  background-color: #D5FAFD;
+}
+
 .margin-tab-modal {
   margin-left: 30px;
 }

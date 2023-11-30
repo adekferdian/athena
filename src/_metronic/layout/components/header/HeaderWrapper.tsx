@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import clsx from 'clsx'
-import React, {useEffect} from 'react'
+// import React, {useEffect} from 'react'
 import {Link, useLocation} from 'react-router-dom'
-import {MenuComponent} from '../../../assets/ts/components'
+// import {MenuComponent} from '../../../assets/ts/components'
 import {KTSVG, toAbsoluteUrl} from '../../../helpers'
 import {useLayout} from '../../core'
 import {DefaultTitle} from './page-title/DefaultTitle'
@@ -13,9 +13,9 @@ export function HeaderWrapper() {
   const {config, classes, attributes} = useLayout()
   const {aside} = config
 
-  useEffect(() => {
-    MenuComponent.reinitialization()
-  }, [pathname])
+  // useEffect(() => {
+  //   MenuComponent.reinitialization()
+  // }, [pathname])
 
   return (
     <div

@@ -6,10 +6,11 @@ import {ScrollTop} from './components/ScrollTop'
 import {Content} from './components/Content'
 import {MasterInit} from './MasterInit'
 import {PageDataProvider} from './core'
-import {DrawerMessenger, ActivityDrawer, Main, InviteUsers, UpgradePlan} from '../partials'
+import {DrawerMessenger, Main, InviteUsers, UpgradePlan} from '../partials'
 import {HeaderToastProvider, HeaderToast} from 'src/app/components/ToastComponent'
 
 const MasterLayout: React.FC = ({children}) => {
+  
   return (
     <PageDataProvider>
       <HeaderToastProvider>
@@ -31,7 +32,7 @@ const MasterLayout: React.FC = ({children}) => {
       </HeaderToastProvider>
 
       {/* begin:: Drawers */}
-      <ActivityDrawer />
+      {/* <ActivityDrawer /> */}
       {/* <ExploreMain /> */}
       <DrawerMessenger />
       {/* end:: Drawers */}

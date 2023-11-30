@@ -17,6 +17,10 @@ export function PrivateRoutes() {
   const MasterBenefitRoutes = lazy(() => import('../modules/master/Benefit/MasterBenefitRoutes'))
   const MasterBusinessUnitRoutes = lazy(() => import('../modules/master/BusinessUnit/MasterBusinessUnitRoutes'))
   const MasterVoucherUsageRoutes = lazy(() => import('../modules/master/VoucherUsage/MasterVoucherUsageRoutes'));
+  
+  {/* ATHENA MODEL START */}
+  const DashboardRoutes = lazy(() => import('../modules/dashboard/DashboardRoutes'));
+   {/* ATHENA MODEL END */}
 
   return (
     <Suspense fallback={<FallbackView />}>
@@ -36,6 +40,11 @@ export function PrivateRoutes() {
         <Route path='/master-type-campaign' component={MasterCampaignTypeRoutes} />
         <Route path='/usage-voucher' component={MasterVoucherUsageRoutes} />
         <Route path='/language' component={LanguageRoutes} />
+
+        {/* ATHENA ROUTES START */}
+        <Route path='/dashboard' component={DashboardRoutes} />
+
+        {/* ATHENA ROUTES END */}
         <Redirect to='error/404' />
       </Switch>
     </Suspense>
