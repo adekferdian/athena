@@ -4,14 +4,15 @@ import Chart from "react-apexcharts";
 interface ApexChartProps {
   title: any,
   value1: any,
-  value2: any
+  value2: any,
+  filter: any
 }
 
-const ApexRadiarChart:React.FC<ApexChartProps>= ({title, value1, value2}) => {
+const ApexRadiarChart:React.FC<ApexChartProps>= ({title, value1, value2, filter}) => {
   const donutColors = {
     series1: 'red',
-    series2: '#18B2FB',
-    series3: '#F4F4F4'
+    series2: filter !== "Logistic" ? '#18B2FB' : '#F4F4F4',
+    series3: filter !== "Mitra" ? '#25D786' : '#F4F4F4'
   }
   const options = {
     legend: {
@@ -32,13 +33,14 @@ const ApexRadiarChart:React.FC<ApexChartProps>= ({title, value1, value2}) => {
               fontSize: '1rem',
               fontFamily: 'Montserrat',
               formatter(val:any) {
-                return `${parseInt(val)}%`
+                // return `${parseInt(val)}%`
               }
             },
             total: {
               show: true,
-              fontSize: '1.5rem',
+              fontSize: '1rem',
               label: title,
+              color: 'black',
               formatter() {
                 // return "GMV"
               }

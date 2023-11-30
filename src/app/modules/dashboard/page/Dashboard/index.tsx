@@ -5,7 +5,8 @@ import {
     DropdownToggle,
     DropdownMenu,
     FormGroup,
-    Input
+    Input,
+    Button
 } from 'reactstrap';
 import {
     ChevronDown, ChevronUp
@@ -14,11 +15,13 @@ import GmvComponent from 'src/app/components/dashboard/Gmv';
 import RevenueComponent from 'src/app/components/dashboard/Revenue';
 import TransactionComponent from 'src/app/components/dashboard/Transaction';
 import BuContributionComponent from 'src/app/components/dashboard/BuContribution';
+import VisualitationDataComponent from 'src/app/components/dashboard/VisualizationData';
 
 
 const DashboardPage = () => {
-    const [filterBuValue, setFilterBuValue] = React.useState("All Business Unit");
     const [filterDateValue, setFilterDateValue] = React.useState("Today");
+    const [filterBuValue, setFilterBuValue] = React.useState("All Business Unit");
+    const [filterTempBuValue, setFilterTempBuValue] = React.useState("All Business Unit");
     const [filterPovValue, setFilterPovValue] = React.useState("Commercial");
     const [dropdownOpen1, setDropdownOpen1] = React.useState(false);
     const [dropdownOpen2, setDropdownOpen2] = React.useState(false);
@@ -35,7 +38,7 @@ const DashboardPage = () => {
                 Dashboard
             </PageTitle>
             <div className="w-100 bg-white d-flex">
-                <div className='my-1 ellipsis text-break d-flex mx-9' style={{height: 50, gap: 10}}>
+                <div className='my-1 text-break d-flex mx-9' style={{height: 50, gap: 10}}>
                     <Dropdown isOpen={dropdownOpen1} toggle={toggle1} className="cursor-pointer">
                         <DropdownToggle
                             data-toggle="dropdown"
@@ -96,56 +99,61 @@ const DashboardPage = () => {
                             </div>
                         </DropdownToggle>
                         <DropdownMenu className="rounded bg-white" style={{minWidth: 150}}>
-                            <FormGroup className="mb-3 filter-dashboard d-flex" style={{gap: 5}}>
+                            <FormGroup className="mb-3 filter-dashboard d-flex" style={{gap: 5, backgroundColor: filterTempBuValue === "All Business Unit" ? '#D5FAFD' : "white", height: 40, alignItems: 'center'}} onClick={(e:any) => setFilterTempBuValue("All Business Unit")}>
                                 <Input
                                     inline
                                     type="checkbox"
                                     label="Checkbox"
                                     style={{
-                                        backgroundColor: filterBuValue === "All Business Unit" ? '#2BBECB' : "#c9c9c9",
+                                        backgroundColor: filterTempBuValue === "All Business Unit" ? '#2BBECB' : "#c9c9c9",
                                         width: 23,
                                         height: 20,
                                         marginLeft: 5
                                     }}
                                     value="All Business Unit"
-                                    onClick={(e:any) => setFilterBuValue(e.target.value)}
                                     checked={true}
                                 />
-                                <p style={{color: '#2BBECB', fontSize: 14}} >All Business Unit</p>
+                                <p style={{color: '#2BBECB', fontSize: 14, marginTop: 12}} >All Business Unit</p>
                             </FormGroup>
-                            <FormGroup className="mb-3 filter-dashboard d-flex" style={{gap: 5}}>
+                            <FormGroup className="mb-3 filter-dashboard d-flex" style={{gap: 5, backgroundColor: filterTempBuValue === "Mitra" ? '#D5FAFD' : "white", height: 40, alignItems: 'center'}} onClick={(e:any) => setFilterTempBuValue("Mitra")}>
                                 <Input
                                     inline
                                     type="checkbox"
                                     label="Checkbox"
                                     style={{
-                                        backgroundColor: filterBuValue === "Mitra" ? '#2BBECB' : "#c9c9c9",
+                                        backgroundColor: filterTempBuValue === "Mitra" ? '#2BBECB' : "#c9c9c9",
                                         width: 23,
                                         height: 20,
                                         marginLeft: 5
                                     }}
                                     value="Mitra"
-                                    onClick={(e:any) => setFilterBuValue(e.target.value)}
                                     checked={true}
                                 />
-                                <p style={{color: '#2BBECB', fontSize: 14}} >Mitra</p>
+                                <p style={{color: '#2BBECB', fontSize: 14, marginTop: 12}}>Mitra</p>
                             </FormGroup>
-                            <FormGroup className="mb-3 filter-dashboard d-flex" style={{gap: 5}}>
+                            <FormGroup className="mb-3 filter-dashboard d-flex" style={{gap: 5, backgroundColor: filterTempBuValue === "Logistic" ? '#D5FAFD' : "white", height: 40, alignItems: 'center'}} onClick={(e:any) => setFilterTempBuValue("Logistic")}>
                                 <Input
                                     inline
                                     type="checkbox"
                                     label="Checkbox"
                                     style={{
-                                        backgroundColor: filterBuValue === "Logistic" ? '#2BBECB' : "#c9c9c9",
+                                        backgroundColor: filterTempBuValue === "Logistic" ? '#2BBECB' : "#c9c9c9",
                                         width: 23,
                                         height: 20,
                                         marginLeft: 5
                                     }}
                                     value="Logistic"
-                                    onClick={(e:any) => setFilterBuValue(e.target.value)}
                                     checked={true}
                                 />
-                                <p style={{color: '#2BBECB', fontSize: 14}} >Logistic</p>
+                                <p style={{color: '#2BBECB', fontSize: 14, marginTop: 12}}>Logistic</p>
+                            </FormGroup>
+                            <FormGroup className="d-flex justify-content-center">
+                                <Button style={{height: 40, width: '80%'}} onClick={() => {
+                                    setFilterBuValue(filterTempBuValue)
+                                    toggle2()
+                                }}>
+                                    <p style={{marginTop: -3}}>Apply</p>
+                                </Button>
                             </FormGroup>
                         </DropdownMenu>
                     </Dropdown>
@@ -197,15 +205,15 @@ const DashboardPage = () => {
                 <div id="right-container" style={{marginLeft: -40}}>
                     <div className="d-flex">
                         <div id="bu-contribution"  className="bg-white rounded border-1 m-9" style={{minWidth: 288}}>
-                            <BuContributionComponent data={dummyData} />
+                            <BuContributionComponent data={dummyData} filter={filterBuValue} callback={(param:any) => setFilterBuValue(param)} />
                         </div>
                         <div id="sum-promo">
 
                         </div>
                     </div>
-                </div>
-                <div id="visual-data">
-
+                    <div id="visual-data" className="bg-white rounded border-1 m-9" style={{minWidth: 288}}>
+                        <VisualitationDataComponent data={dummyData} filter={filterBuValue} />
+                    </div>
                 </div>
             </div>
         </div>
