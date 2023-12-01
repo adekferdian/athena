@@ -1,4 +1,4 @@
-# mingle_zeus_fe
+# voucher enginee
 
 
 
@@ -15,14 +15,14 @@ Already a pro? Just edit this README.md and make it your own. Want to make it ea
 
 ```
 cd existing_repo
-git remote add origin https://gitlab.edot.id/edot/superapp/mingle/mingle_zeus_fe.git
+git remote add origin git@gitlab.edot.id:edot/global_voucher/voucher-package/voucher-web.git
 git branch -M main
 git push -uf origin main
 ```
 
 ## Integrate with your tools
 
-- [ ] [Set up project integrations](https://gitlab.edot.id/edot/superapp/mingle/mingle_zeus_fe/-/settings/integrations)
+- [ ] [Set up project integrations](https://gitlab.edot.id/edot/global_voucher/voucher-package/voucher-web/-/settings/integrations)
 
 ## Collaborate with your team
 
