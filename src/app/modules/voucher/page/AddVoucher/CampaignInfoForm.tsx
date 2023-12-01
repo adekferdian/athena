@@ -648,4 +648,4 @@ export const CampaignInfoForm = (props: CampaignInfoFormProps) => {
       />
     </>
   )
-}
+};
