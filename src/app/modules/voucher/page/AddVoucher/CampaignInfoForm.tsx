@@ -3,6 +3,7 @@ import React, {
   useState,
   ChangeEvent,
   HTMLProps,
+  useEffect,
   // useContext,
 } from 'react';
 import InlineSVG from 'react-inlinesvg/esm';
@@ -18,7 +19,12 @@ import CheckboxSwitch from 'src/app/components/CheckboxSwitch';
 import LabelAlert from 'src/app/components/LabelAlert';
 import InputCheckBox from 'src/app/components/InputCheckBox';
 import ImageDropZone from 'src/app/components/ImageDropZone';
+<<<<<<< HEAD
 import Select from 'react-select';
+=======
+var dragula = require('react-dragula');
+
+>>>>>>> 54e5d20 (layout draggable condition, limit, rules, result)
 // import { FormContext } from './index';
 
 interface CampaignInfoFormProps extends HTMLProps<HTMLInputElement> {
@@ -114,7 +120,7 @@ export const CampaignInfoForm = (props: CampaignInfoFormProps) => {
               label="Terms & Condition"
               editorHeight={200}
               value="test"
-              onChange={() => {}}
+              onChange={() => { }}
             />
           </div>
 
@@ -364,14 +370,94 @@ export const CampaignInfoForm = (props: CampaignInfoFormProps) => {
     </div>
   );
 
+  useEffect(() => {
+    let condition = document.getElementById('condition');
+    let limit = document.getElementById('limit');
+    let rules = document.getElementById('rules');
+    let result = document.getElementById('result');
+    dragula([condition, limit, rules, result]);
+    document.getElementById('container-drag')
+  })
+
+  const renderSectionRule = () => (
+    <div className='row p-0'>
+      <div className='col-5' style={{ display: 'inline-block' }}>
+        <label className="text-gray-800 fw-bold fs-6 py-2">Condition</label>
+        <div id="condition" className="card mb-4 py-12 px-8 container-drag" style={{ marginRight: 5 }}>
+          <div className="row py-2">
+            <div className="col-12 pb-4">
+              <div className="d-flex align-items-center form-card-draggable">
+                <div className='col-3 py-8 px-8 d-flex align-items-center justify-content-center bg-primary' style={{ borderTopLeftRadius: 5, borderBottomLeftRadius: 5 }}>
+                  <InlineSVG
+                    src="/media/icons/close.svg"
+                  />
+                </div>
+                <div className="w-100 px-4">
+                  <p className="m-0">efood</p>
+                  <p className="text-gray-600 m-0">provider_corporate</p>
+                  <p className="text-gray-600 m-0">VoucherID: MAKANGRATIS</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <label className="text-gray-800 fw-bold fs-6 py-2">Limit</label>
+        <div id="limit" className="card mb-4 py-12 px-8 container-drag" style={{ marginRight: 5 }}>
+          <div className="row py-2">
+            <div className="col-12 pb-4">
+              <div className="d-flex align-items-center form-card-draggable">
+                <div className='col-3 py-8 px-8 d-flex align-items-center justify-content-center bg-primary' style={{ borderTopLeftRadius: 5, borderBottomLeftRadius: 5 }}>
+                  <InlineSVG
+                    src="/media/icons/close.svg"
+                  />
+                </div>
+                <div className="w-100 px-4">
+                  <p className="m-0">efood</p>
+                  <p className="text-gray-600 m-0">provider_corporate</p>
+                  <p className="text-gray-600 m-0">VoucherID: MAKANGRATIS</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <label className="text-gray-800 fw-bold fs-6 py-2">Rules</label>
+        <div id="rules" className="card mb-4 py-12 px-8 container-drag" style={{ marginRight: 5 }}>
+          <div className="row py-2">
+            <div className="col-12 pb-4">
+              <div className="d-flex align-items-center form-card-draggable">
+                <div className='col-3 py-8 px-8 d-flex align-items-center justify-content-center bg-primary' style={{ borderTopLeftRadius: 5, borderBottomLeftRadius: 5 }}>
+                  <InlineSVG
+                    src="/media/icons/close.svg"
+                  />
+                </div>
+                <div className="w-100 px-4">
+                  <p className="m-0">efood</p>
+                  <p className="text-gray-600 m-0">provider_corporate</p>
+                  <p className="text-gray-600 m-0">VoucherID: MAKANGRATIS</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div className='col-5' style={{ display: 'inline-block' }}>
+        <label className="text-gray-800 fw-bold fs-6 py-2">Result</label>
+        <div id="result" className="card mb-4 py-12 px-8 container-drag" style={{ marginLeft: 5 }}>
+
+        </div>
+      </div>
+    </div>
+  );
+
   const renderSectionImage = () => (
     <div className="card mb-4 py-12 px-8">
       <div className="d-flex">
         <label className="col-2 text-gray-800 fw-bold fs-6">Image</label>
         <div className="col-8">
           <ImageDropZone
-            onDrop={() => {}}
-            onClear={() => {}}
+            onDrop={() => { }}
+            onClear={() => { }}
             preview="preview"
             title="title"
             message="message"
@@ -395,6 +481,7 @@ export const CampaignInfoForm = (props: CampaignInfoFormProps) => {
         {renderSectionVoucherCode()}
         {renderSectionValidityPeriod()}
         {renderSectionTargetUser()}
+        {renderSectionRule()}
         {renderSectionImage()}
       </div>
     </>
