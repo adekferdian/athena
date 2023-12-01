@@ -15,7 +15,11 @@ Already a pro? Just edit this README.md and make it your own. Want to make it ea
 
 ```
 cd existing_repo
+<<<<<<< HEAD
 git remote add origin git@gitlab.edot.id:edot/global_voucher/voucher-package/voucher-web.git
+=======
+git remote add origin https://gitlab.edot.id/edot/global_voucher/voucher-package/voucher-web.git
+>>>>>>> ee16ad8 (Initial commit)
 git branch -M main
 git push -uf origin main
 ```
