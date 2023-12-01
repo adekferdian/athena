@@ -4,7 +4,7 @@ import React, {
   ChangeEvent,
   HTMLProps,
   useEffect,
-  // useContext,
+  useContext,
 } from 'react';
 import InlineSVG from 'react-inlinesvg/esm';
 //@ts-ignore
@@ -19,32 +19,31 @@ import CheckboxSwitch from 'src/app/components/CheckboxSwitch';
 import LabelAlert from 'src/app/components/LabelAlert';
 import InputCheckBox from 'src/app/components/InputCheckBox';
 import ImageDropZone from 'src/app/components/ImageDropZone';
-<<<<<<< HEAD
 import Select from 'react-select';
-=======
+import TargetUserModal from '../../components/TargetUserModal';
+import { FormContext } from '.';
+import moment from 'moment';
+import { generateVoucher } from '../../redux/VoucherCRUD';
+import { getErrorMessage } from 'src/app/utils/api-utils';
+import { useHeaderToast } from 'src/app/components/ToastComponent';
 var dragula = require('react-dragula');
 
->>>>>>> 54e5d20 (layout draggable condition, limit, rules, result)
-// import { FormContext } from './index';
 
 interface CampaignInfoFormProps extends HTMLProps<HTMLInputElement> {
   nextStep?: (value: any) => void
 }
 
 export const CampaignInfoForm = (props: CampaignInfoFormProps) => {
-  const [selectPlatform, setSelectPlatform] = useState('SHOP');
-  const [selectCampaign, setSelectCampaign] = useState('VOUCHER');
-  const [campaignName, setCampaignName] = useState('');
+  const [voucherCode, setVoucherCode] = useState('');
   const [voucherQuotaTotal, setVoucherQuotaTotal] = useState('');
   const [voucherQuotaEach, setVoucherQuotaEach] = useState('');
-  const [voucherCodeType, setVoucherCodeType] = useState('');
-  const [voucherCode, setVoucherCode] = useState('');
-  const [voucherGeneratedCode, setVoucherGeneratedCode] = useState('');
   const [startDate, setStartDate] = useState('');
   const [startTime, setStartTime] = useState('');
   const [endDate, setEndDate] = useState('');
   const [endTime, setEndTime] = useState('');
-  const [chosenUser, setChosenUser] = useState({ value: 'all', label: 'All' });
+  const [chosenUser, setChosenUser] = useState({ value: 'All User', label: 'All User' });
+  const [showTargetUserModal, setShowTargetUserModal] = useState(false)
+  const [handleTargetUserData, setHandleTargetUserData] = useState<any>(null)
   const [targetUser, setTargetUser] = useState([
     {
       id: 0,
@@ -54,13 +53,15 @@ export const CampaignInfoForm = (props: CampaignInfoFormProps) => {
   ]);
 
   const options = [
-    { value: 'all', label: 'All' },
+    { value: 'All User', label: 'All User' },
     { value: 'specific', label: 'Specific User' },
     { value: 'existing', label: 'Existing User' },
   ];
 
+  const { addPageToasts } = useHeaderToast()
+
   // Use for passing form values
-  // const contextState = useContext(FormContext);
+  const { voucherForm, setVoucherForm } = useContext(FormContext);
 
   const renderSectionSelectPlatform = () => (
     <div className="card mb-4 py-12 px-8">
@@ -68,14 +69,22 @@ export const CampaignInfoForm = (props: CampaignInfoFormProps) => {
         <label className="col-2 text-gray-800 fw-bold fs-6">Select Platform</label>
         <InputRadio
           label="SHOP"
-          checked={selectPlatform === 'SHOP'}
-          onClick={() => setSelectPlatform('SHOP')}
+          //@ts-ignore
+          checked={voucherForm?.bu_id === 4}
+          onClick={() => setVoucherForm({
+            ...voucherForm,
+            bu_id: 4
+          })}
           wrapperClass="col-2"
         />
         <InputRadio
           label="FOOD"
-          checked={selectPlatform === 'FOOD'}
-          onClick={() => setSelectPlatform('FOOD')}
+          //@ts-ignore
+          checked={voucherForm?.bu_id === 2}
+          onClick={() => setVoucherForm({
+            ...voucherForm,
+            bu_id: 2
+          })}
           wrapperClass="col-2"
         />
       </div>
@@ -88,14 +97,22 @@ export const CampaignInfoForm = (props: CampaignInfoFormProps) => {
         <label className="col-2 text-gray-800 fw-bold fs-6">Campaign Type</label>
         <InputRadio
           label="Voucher"
-          checked={selectCampaign === 'VOUCHER'}
-          onClick={() => setSelectCampaign('VOUCHER')}
+          //@ts-ignore
+          checked={voucherForm?.campaigntype_id === 1}
+          onClick={() => setVoucherForm({
+            ...voucherForm,
+            campaigntype_id: 1
+          })}
           wrapperClass="col-2"
         />
         <InputRadio
           label="Discount"
-          checked={selectCampaign === 'DISCOUNT'}
-          onClick={() => setSelectCampaign('DISCOUNT')}
+          //@ts-ignore
+          checked={voucherForm?.campaigntype_id === 2}
+          onClick={() => setVoucherForm({
+            ...voucherForm,
+            campaigntype_id: 2
+          })}
           wrapperClass="col-2"
         />
       </div>
@@ -110,8 +127,12 @@ export const CampaignInfoForm = (props: CampaignInfoFormProps) => {
           <div className="mb-8">
             <InputText
               label="Campaign Name"
-              value={campaignName}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => setCampaignName(e.target.value)}
+              //@ts-ignore
+              value={voucherForm?.campaign_name}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setVoucherForm({
+                ...voucherForm,
+                campaign_name: e.target.value
+              })}
             />
           </div>
 
@@ -119,8 +140,12 @@ export const CampaignInfoForm = (props: CampaignInfoFormProps) => {
             <TextEditor
               label="Terms & Condition"
               editorHeight={200}
-              value="test"
-              onChange={() => { }}
+              //@ts-ignore
+              value={voucherForm?.campaign_term}
+              onChange={(e) => setVoucherForm({
+                ...voucherForm,
+                campaign_term: e
+              })}
             />
           </div>
 
@@ -128,15 +153,23 @@ export const CampaignInfoForm = (props: CampaignInfoFormProps) => {
             <div>
               <InputNumber
                 label="Total Voucher Quota"
-                value={voucherQuotaTotal}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => setVoucherQuotaTotal(e.target.value)}
+                //@ts-ignore
+                value={voucherForm.voucher_quota}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setVoucherForm({
+                  ...voucherForm,
+                  voucher_quota: e.target.value
+                })}
               />
             </div>
             <div>
               <InputNumber
                 label="Quota for each User"
-                value={voucherQuotaEach}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => setVoucherQuotaEach(e.target.value)}
+                //@ts-ignore
+                value={voucherForm.voucher_quota_user}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setVoucherForm({
+                  ...voucherForm,
+                  voucher_quota_user: e.target.value
+                })}
               />
             </div>
           </div>
@@ -147,6 +180,13 @@ export const CampaignInfoForm = (props: CampaignInfoFormProps) => {
                 label="Display Voucher"
                 wrapperClass="flex-row-reverse w-100"
                 labelClass="m-0 fw-bold flex-fill"
+                //@ts-ignore
+                checked={voucherForm?.display_voucher}
+                onClick={() => setVoucherForm({
+                  ...voucherForm,
+                  //@ts-ignore
+                  display_voucher: !voucherForm?.display_voucher
+                })}
               />
             </div>
             <p className="text-gray-600 fs-7">
@@ -166,67 +206,107 @@ export const CampaignInfoForm = (props: CampaignInfoFormProps) => {
           <div className="d-flex">
             <InputRadio
               label="Input Manually"
-              checked={voucherCodeType === 'MANUAL'}
-              onClick={() => setVoucherCodeType('MANUAL')}
+              //@ts-ignore
+              checked={voucherForm.voucher_type === 'manual'}
+              onClick={() => setVoucherForm({
+                ...voucherForm,
+                //@ts-ignore
+                voucher_type: 'manual'
+              })}
               wrapperClass="col-4"
             />
             <InputRadio
               label="Autogenerate"
-              checked={voucherCodeType === 'AUTO'}
-              onClick={() => setVoucherCodeType('AUTO')}
+              //@ts-ignore
+              checked={voucherForm.voucher_type === 'generate'}
+              onClick={() => setVoucherForm({
+                ...voucherForm,
+                //@ts-ignore
+                voucher_type: 'generate'
+              })}
               wrapperClass="col-4"
             />
           </div>
 
-          {voucherCodeType === 'MANUAL' && (
-            <div className="d-flex mt-6">
-              <div className="col-8">
-                <InputText
-                  label="Input Voucher Code"
-                  value={voucherCode}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) => setVoucherCode(e.target.value)}
-                  showCharacterCount
-                  maxLength={25}
-                />
-              </div>
-              <div className="col-4">
-                <LabelAlert
-                  message="The code is available"
-                  className="mt-8 ms-4"
-                  alertType="success"
-                />
-              </div>
-            </div>
-          )}
-          {voucherCodeType === 'AUTO' && (
-            <div className="col-8 mt-6">
-              <InputCheckBox
-                label="Generate code based on Total Voucher Quota"
-              />
-              <p className="text-gray-600 fs-7 mt-4">
-                Sistem akan generate kode voucher berdasarkan banyaknya Voucher Quota yang diisi
-              </p>
-              <button
-                type="button"
-                className={`btn btn-md btn-light-secondary fw-bolder me-4`}
-                onClick={() => setVoucherGeneratedCode('2311FOOD')}
-                tabIndex={8}
-              >
-                Generate Code
-              </button>
-              {voucherGeneratedCode && (
-                <div className="mt-4">
+
+          {
+            //@ts-ignore
+            voucherForm.voucher_type === 'manual' && (
+              <div className="d-flex mt-6">
+                <div className="col-8">
                   <InputText
-                    label="Generated Code"
-                    value={voucherGeneratedCode}
+                    label="Input Voucher Code"
+                    //@ts-ignore
+                    value={voucherForm?.voucher_code}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => setVoucherForm({
+                      ...voucherForm,
+                      //@ts-ignore
+                      voucher_code: e.target.value
+                    })}
                     showCharacterCount
                     maxLength={25}
-                    disabled
                   />
                 </div>
-              )}
-            </div>
-          )}
+                <div className="col-4">
+                  <LabelAlert
+                    message="The code is available"
+                    className="mt-8 ms-4"
+                    alertType="success"
+                  />
+                </div>
+              </div>
+            )}
+          {
+            //@ts-ignore
+            voucherForm.voucher_type === 'generate' && (
+              <div className="col-8 mt-6">
+                <InputCheckBox
+                  label="Generate code based on Total Voucher Quota"
+                />
+                <p className="text-gray-600 fs-7 mt-4">
+                  Sistem akan generate kode voucher berdasarkan banyaknya Voucher Quota yang diisi
+                </p>
+                <button
+                  type="button"
+                  className={`btn btn-md btn-light-secondary fw-bolder me-4`}
+                  onClick={() => {
+                    generateVoucher('2311FOOD', 100)
+                    .then((res) => {
+                      console.log("res generate",res);
+                      setVoucherForm({
+                        ...voucherForm,
+                        //@ts-ignore
+                        campaign_mark: res.data.data.campaign_mark
+                      })
+                      // setVoucherCode(res.data.campaign_mark)
+                      // dispatch(GenderRedux.actions.setSuccess('Gender berhasil dihapus.'))
+                    })
+                    .catch((err) => {
+                      // setShowDeclineCampaign(false)
+                      addPageToasts({ scheme: 'danger', text: getErrorMessage(err, true) })
+                    })
+                    
+                  }}
+                  tabIndex={8}
+                >
+                  Generate Code
+                </button>
+                {
+                  //@ts-ignore
+                  voucherForm.campaign_mark && (
+                    <div className="mt-4">
+                      <InputText
+                        label="Generated Code"
+                        //@ts-ignore
+                        value={voucherForm.campaign_mark}
+                        showCharacterCount
+                        maxLength={25}
+                        disabled
+                      />
+                    </div>
+                  )}
+              </div>
+            )}
         </div>
       </div>
     </div>
@@ -257,12 +337,19 @@ export const CampaignInfoForm = (props: CampaignInfoFormProps) => {
                 <DatePicker
                   className="form-control"
                   selected={startTime}
-                  onChange={(date: any) => setStartTime(date)}
+                  onChange={(time: any) => {
+                    setStartTime(time)
+                    setVoucherForm({
+                      ...voucherForm,
+                      //@ts-ignore
+                      valid_start: moment(startDate).format('YYYY-MM-DD') + " " + moment(time).format('h:mm:ss')
+                    })
+                  }}
                   showTimeSelect
                   showTimeSelectOnly
                   timeIntervals={15}
                   timeCaption="Time"
-                  dateFormat="h:mm aa"
+                  dateFormat="h:mm:ss"
                 />
                 <div className="custom-content-input">
                   <InlineSVG src="/media/icons/time.svg" />
@@ -291,7 +378,14 @@ export const CampaignInfoForm = (props: CampaignInfoFormProps) => {
                 <DatePicker
                   className="form-control"
                   selected={endTime}
-                  onChange={(date: any) => setEndTime(date)}
+                  onChange={(time: any) => {
+                    setEndTime(time)
+                    setVoucherForm({
+                      ...voucherForm,
+                      //@ts-ignore
+                      valid_end: moment(endDate).format('YYYY-MM-DD') + " " + moment(time).format('h:mm:ss')
+                    })
+                  }}
                   showTimeSelect
                   showTimeSelectOnly
                   timeIntervals={15}
@@ -318,50 +412,84 @@ export const CampaignInfoForm = (props: CampaignInfoFormProps) => {
             <label className="form-label">Choose User</label>
             <Select
               defaultValue={chosenUser}
-              onChange={(e: any) => setChosenUser(e)}
+              onChange={(e: any) => {
+                setChosenUser(e)
+                // setVoucherForm({
+                //   ...voucherForm,
+                //   //@ts-ignore
+                //   target_user: e.value
+                // })
+              }}
               options={options}
               className="mb-4"
             />
           </div>
 
-          {chosenUser.value !== 'all' && (
+          {chosenUser.value !== 'All User' && (
             <div className="col-12">
               <div
                 className="d-inline-flex align-items-center btn btn-light-secondary mb-4"
-                onClick={() => setTargetUser([
-                  ...targetUser,
-                  {
-                    id: Math.random(),
-                    name: 'New user',
-                    phone: '0821548625168',
-                  },
-                ])}
+                onClick={() =>
+                // setShowTargetUserModal(true)
+                {
+                  setTargetUser([
+                    ...targetUser,
+                    {
+                      id: Math.random(),
+                      name: 'New user',
+                      phone: '0821548625168',
+                    },
+                  ])
+                  // setVoucherForm({
+                  //   ...voucherForm,
+                  //   //@ts-ignore
+                  //   target_user_ids: [
+                  //     //@ts-ignore
+                  //     ...voucherForm.target_user_ids,
+                  //     {
+                  //       id: Math.random(),
+                  //       name: 'New user',
+                  //       phone: '0821548625168',
+                  //     },
+                  //   ]
+                  // })
+                }
+                }
               >
                 <InlineSVG src="/media/icons/user.svg" />
                 <p className="mb-0 ms-2">Add User</p>
               </div>
               <div className="row mx-0">
-                {targetUser?.length > 0 && targetUser?.map((item, index) => (
-                  <div key={`key-${item?.id}`} className="col-3 ps-0 pb-4">
-                    <div className="d-flex align-items-center form-card">
-                      <div className="w-100">
-                        <p className="m-0">{item?.name}</p>
-                        <p className="text-gray-600 m-0">{item?.phone}</p>
+                {
+                  //@ts-ignore
+                  voucherForm.target_user_ids.length > 0 && voucherForm.target_user_ids.map((item, index) => (
+                    <div key={`key-${item?.id}`} className="col-3 ps-0 pb-4">
+                      <div className="d-flex align-items-center form-card">
+                        <div className="w-100">
+                          <p className="m-0">{item?.name}</p>
+                          <p className="text-gray-600 m-0">{item?.phone}</p>
+                        </div>
+                        <InlineSVG
+                          src="/media/icons/close.svg"
+                          onClick={() => {
+                            // setVoucherForm({
+                            //   ...voucherForm,
+                            //   //@ts-ignore
+                            //   target_user_ids: voucherForm.target_user_ids.filter((obj) => {
+                            //     return obj.id !== item?.id;
+                            //   })
+                            // })
+                            setTargetUser(
+                              targetUser.filter((obj) => {
+                                return obj.id !== item?.id;
+                              })
+                            );
+                          }}
+                          className="cursor-pointer"
+                        />
                       </div>
-                      <InlineSVG
-                        src="/media/icons/close.svg"
-                        onClick={() => {
-                          setTargetUser(
-                            targetUser.filter((obj) => {
-                              return obj.id !== item?.id;
-                            })
-                          );
-                        }}
-                        className="cursor-pointer"
-                      />
                     </div>
-                  </div>
-                ))}
+                  ))}
               </div>
             </div>
           )}
@@ -375,20 +503,19 @@ export const CampaignInfoForm = (props: CampaignInfoFormProps) => {
     let limit = document.getElementById('limit');
     let rules = document.getElementById('rules');
     let result = document.getElementById('result');
-    dragula([condition, limit, rules, result],  {
+    dragula([condition, limit, rules, result], {
       moves: function (el: any, source: any, handle: any, sibling: any) {
-        console.log("EL ",el);
-        console.log("handle ",handle);
-        console.log("source ",source);
-        console.log("sibling ",sibling);
+        console.log("EL ", el);
+        console.log("handle ", handle);
+        console.log("source ", source);
+        console.log("sibling ", sibling);
         return true; // elements are always draggable by default
       },
       accepts: function (el: any, target: any, source: any, sibling: any) {
-        console.log("EL accept ",el);
-        console.log("target accept ",target);
+        console.log("EL accept ", el);
+        console.log("target accept ", target);
         return true; // elements can be dropped in any of the `containers` by default
       },
-      mirrorContainer: document.body,
     });
     var drake = dragula({
       copy: true
@@ -430,9 +557,9 @@ export const CampaignInfoForm = (props: CampaignInfoFormProps) => {
                   />
                 </div>
                 <div className="w-100 px-4">
-                  <p className="m-0">efood</p>
-                  <p className="text-gray-600 m-0">provider_corporate</p>
-                  <p className="text-gray-600 m-0">VoucherID: MAKANGRATIS</p>
+                  {/* <p className="m-0">efood</p> */}
+                  <p className="text-gray-500 m-0">Min Belanja 20.000</p>
+                  <p className="text-gray-800 m-0 fs-16">Min belanja sampai 20.000</p>
                 </div>
               </div>
             </div>
@@ -458,7 +585,7 @@ export const CampaignInfoForm = (props: CampaignInfoFormProps) => {
           </div>
         </div>
       </div>
-      
+
       <div className='col-5' style={{ display: 'inline-block' }}>
         <label className="text-gray-800 fw-bold fs-6 py-2">Result</label>
         <div id="result" className="card mb-4 py-12 px-8 container-drag" style={{ marginLeft: 5 }}>
@@ -502,6 +629,23 @@ export const CampaignInfoForm = (props: CampaignInfoFormProps) => {
         {renderSectionRule()}
         {renderSectionImage()}
       </div>
+
+      <TargetUserModal
+        onSave={() => {
+          // deleteGender(handleDeleteData?.id ?? '')
+          //   .then(() => {
+          //     // dispatch(AdminRedux.actions.setSuccess('User berhasil dihapus.'))
+          //     setShowDeleteModal(false)
+          //   })
+          //   .catch((err) => {
+          //     setShowDeleteModal(false)
+          //     addPageToasts({ scheme: 'danger', text: getErrorMessage(err, true) })
+          //   })
+        }}
+        show={showTargetUserModal}
+        handleClose={() => setShowTargetUserModal(false)}
+        data={handleTargetUserData}
+      />
     </>
   )
 }

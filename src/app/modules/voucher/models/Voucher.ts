@@ -1,14 +1,14 @@
 export interface Voucher {
   id: number,
-  campaign_name: string,
-  code: string,
+  voucher_name: string,
+  voucher_code: string,
   platform: string,
   periode: string,
   total_quota: number,
   quota_user: number,
   total_used: number,
   transaction_type: string,
-  status: number,
+  status: string,
 }
 
 export interface UpdateGender {

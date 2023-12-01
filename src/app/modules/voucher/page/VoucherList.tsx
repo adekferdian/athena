@@ -20,6 +20,8 @@ import VoucherScreens from '../Screens'
 import DateRangePicker from 'src/app/components/DateRangePicker'
 import ApproveCampaignModal from '../components/ApproveCampaignModal'
 import DeclineCampaignModal from '../components/DeclineCampaignModal'
+import { getVoucherList } from '../redux/VoucherCRUD'
+// import moment from 'moment'
 
 const values = [
   { id: 1, text: "Active (3)" },
@@ -45,160 +47,212 @@ const VoucherList: FC = (props: any) => {
 
 
   const { state, setPage, setQuery } = usePagination<Voucher, any>(
+    // useCallback((state, setState, isActive, cancelToken) => {
+    //   const fetchCall = async () => {
+    //     const statuses: string[] = []
+    //     //   if (state.query.status) {
+    //     //     statuses.push(state.query.status)
+    //     //   } else {
+    //     statuses.push('ACTIVE')
+    //     //     statuses.push('INACTIVE')
+    //     //   }
+    //     const User = {
+    //       data: {
+    //         data: {
+    //           current_page: 1,
+    //           items: [
+    //             {
+    //               id: 1,
+    //               campaign_name: 'Diskon 30% April Mop',
+    //               code: 'edot10',
+    //               platform: 'FOOD',
+    //               periode: '1 Nov 2022 - 31 Des 2022',
+    //               total_quota: 50,
+    //               quota_user: 1,
+    //               total_used: 0,
+    //               transaction_type: 'All Transaction',
+    //               status: 2,
+    //             } as Voucher,
+    //             {
+    //               id: 1,
+    //               campaign_name: 'Diskon 30% April Mop',
+    //               code: 'edot10',
+    //               platform: 'FOOD',
+    //               periode: '1 Nov 2022 - 31 Des 2022',
+    //               total_quota: 50,
+    //               quota_user: 1,
+    //               total_used: 0,
+    //               transaction_type: 'All Transaction',
+    //               status: 1,
+    //             } as Voucher,
+    //             {
+    //               id: 1,
+    //               campaign_name: 'Diskon 30% April Mop',
+    //               code: 'edot10',
+    //               platform: 'FOOD',
+    //               periode: '1 Nov 2022 - 31 Des 2022',
+    //               total_quota: 50,
+    //               quota_user: 1,
+    //               total_used: 0,
+    //               transaction_type: 'All Transaction',
+    //               status: 2,
+    //             } as Voucher,
+    //             {
+    //               id: 1,
+    //               campaign_name: 'Diskon 30% April Mop',
+    //               code: 'edot10',
+    //               platform: 'FOOD',
+    //               periode: '1 Nov 2022 - 31 Des 2022',
+    //               total_quota: 50,
+    //               quota_user: 1,
+    //               total_used: 0,
+    //               transaction_type: 'All Transaction',
+    //               status: 1,
+    //             } as Voucher,
+    //             {
+    //               id: 1,
+    //               campaign_name: 'Diskon 30% April Mop',
+    //               code: 'edot10',
+    //               platform: 'FOOD',
+    //               periode: '1 Nov 2022 - 31 Des 2022',
+    //               total_quota: 50,
+    //               quota_user: 1,
+    //               total_used: 0,
+    //               transaction_type: 'All Transaction',
+    //               status: 3,
+    //             } as Voucher,
+    //             {
+    //               id: 1,
+    //               campaign_name: 'Diskon 30% April Mop',
+    //               code: 'edot10',
+    //               platform: 'FOOD',
+    //               periode: '1 Nov 2022 - 31 Des 2022',
+    //               total_quota: 50,
+    //               quota_user: 1,
+    //               total_used: 0,
+    //               transaction_type: 'All Transaction',
+    //               status: 4,
+    //             } as Voucher,
+    //           ],
+    //           total_item: 5,
+    //         },
+    //       },
+    //     }
+    //     //   const admin = await getVerifiedMemberList({
+    //     //     page: state.page,
+    //     //     limit: state.limit,
+    //     //     search: state.query.search,
+    //     //     role_id: state.query.role_id !== '' ? state.query.role_id : undefined,
+    //     //     statuses,
+    //     //     cancelToken,
+    //     //   })
+    //     //   if (isActive()) {
+    //     setState((prev) => ({
+    //       ...prev,
+    //       loading: false,
+    //       refreshing: false,
+    //       error: false,
+    //       page: User.data.data?.current_page,
+    //       data: User.data.data?.items,
+    //       total: User.data.data?.total_item,
+    //     }))
+    //     //   }
+    //     // } catch (e) {
+    //     //   if (isActive()) {
+    //     //     setState((prev) => ({
+    //     //       ...prev,
+    //     //       loading: false,
+    //     //       error: true,
+    //     //       data: [],
+    //     //     }))
+    //     //   }
+    //     // }
+    //   }
+    //   // try {
+    //   //   const statuses: string[] = []
+    //   //   if (state.query.status) {
+    //   //     statuses.push(state.query.status)
+    //   //   } else {
+    //   //     statuses.push('ACTIVE')
+    //   //     statuses.push('INACTIVE')
+    //   //   }
+    //   //   const gender = await getGenderList({
+    //   //     search: state.query.search,
+    //   //     // role_id: state.query.role_id !== '' ? state.query.role_id : undefined,
+    //   //     statuses,
+    //   //     // cancelToken,
+    //   //   })
+    //   //   if (isActive()) {
+    //   //     setState((prev) => ({
+    //   //       ...prev,
+    //   //       loading: false,
+    //   //       refreshing: false,
+    //   //       error: false,
+    //   //       data: gender.data.data ?? [],
+    //   //     }))
+    //   //   }
+    //   // } catch (e) {
+    //   //   if (isActive()) {
+    //   //     setState((prev) => ({
+    //   //       ...prev,
+    //   //       loading: false,
+    //   //       error: true,
+    //   //       data: [],
+    //   //     }))
+    //   //   }
+    //   // }
+
+    //   fetchCall()
+    // }, []),
+    // {
+    //   loading: false,
+    //   refreshing: false,
+    //   error: false,
+    //   page: 0,
+    //   data: [] as Voucher[],
+    //   total: 0,
+    //   limit: 10,
+    //   query: {},
+    // }
     useCallback((state, setState, isActive, cancelToken) => {
       const fetchCall = async () => {
-        const statuses: string[] = []
-        //   if (state.query.status) {
-        //     statuses.push(state.query.status)
-        //   } else {
-        statuses.push('ACTIVE')
-        //     statuses.push('INACTIVE')
-        //   }
-        const User = {
-          data: {
-            data: {
-              current_page: 1,
-              items: [
-                {
-                  id: 1,
-                  campaign_name: 'Diskon 30% April Mop',
-                  code: 'edot10',
-                  platform: 'FOOD',
-                  periode: '1 Nov 2022 - 31 Des 2022',
-                  total_quota: 50,
-                  quota_user: 1,
-                  total_used: 0,
-                  transaction_type: 'All Transaction',
-                  status: 2,
-                } as Voucher,
-                {
-                  id: 1,
-                  campaign_name: 'Diskon 30% April Mop',
-                  code: 'edot10',
-                  platform: 'FOOD',
-                  periode: '1 Nov 2022 - 31 Des 2022',
-                  total_quota: 50,
-                  quota_user: 1,
-                  total_used: 0,
-                  transaction_type: 'All Transaction',
-                  status: 1,
-                } as Voucher,
-                {
-                  id: 1,
-                  campaign_name: 'Diskon 30% April Mop',
-                  code: 'edot10',
-                  platform: 'FOOD',
-                  periode: '1 Nov 2022 - 31 Des 2022',
-                  total_quota: 50,
-                  quota_user: 1,
-                  total_used: 0,
-                  transaction_type: 'All Transaction',
-                  status: 2,
-                } as Voucher,
-                {
-                  id: 1,
-                  campaign_name: 'Diskon 30% April Mop',
-                  code: 'edot10',
-                  platform: 'FOOD',
-                  periode: '1 Nov 2022 - 31 Des 2022',
-                  total_quota: 50,
-                  quota_user: 1,
-                  total_used: 0,
-                  transaction_type: 'All Transaction',
-                  status: 1,
-                } as Voucher,
-                {
-                  id: 1,
-                  campaign_name: 'Diskon 30% April Mop',
-                  code: 'edot10',
-                  platform: 'FOOD',
-                  periode: '1 Nov 2022 - 31 Des 2022',
-                  total_quota: 50,
-                  quota_user: 1,
-                  total_used: 0,
-                  transaction_type: 'All Transaction',
-                  status: 3,
-                } as Voucher,
-                {
-                  id: 1,
-                  campaign_name: 'Diskon 30% April Mop',
-                  code: 'edot10',
-                  platform: 'FOOD',
-                  periode: '1 Nov 2022 - 31 Des 2022',
-                  total_quota: 50,
-                  quota_user: 1,
-                  total_used: 0,
-                  transaction_type: 'All Transaction',
-                  status: 4,
-                } as Voucher,
-              ],
-              total_item: 5,
-            },
-          },
+        try {
+          const statuses: string[] = []
+          if (state.query.status) {
+            statuses.push(state.query.status)
+          } else {
+            statuses.push('ACTIVE')
+            statuses.push('INACTIVE')
+          }
+          const role = await getVoucherList({
+            search: state.query.search,
+            // role_id: state.query.role_id !== '' ? state.query.role_id : undefined,
+            statuses,
+            // cancelToken,
+          })
+          // if (isActive()) {
+            //@ts-ignore
+            setState((prev) => ({
+              ...prev,
+              loading: false,
+              refreshing: false,
+              error: false,
+              data: role?.data?.data ?? [],
+            }))
+            console.log("RES LIST ", role);
+            
+          // }
+        } catch (e) {
+          // if (isActive()) {
+            setState((prev) => ({
+              ...prev,
+              loading: false,
+              error: true,
+              data: [],
+            }))
+          // }
         }
-        //   const admin = await getVerifiedMemberList({
-        //     page: state.page,
-        //     limit: state.limit,
-        //     search: state.query.search,
-        //     role_id: state.query.role_id !== '' ? state.query.role_id : undefined,
-        //     statuses,
-        //     cancelToken,
-        //   })
-        //   if (isActive()) {
-        setState((prev) => ({
-          ...prev,
-          loading: false,
-          refreshing: false,
-          error: false,
-          page: User.data.data?.current_page,
-          data: User.data.data?.items,
-          total: User.data.data?.total_item,
-        }))
-        //   }
-        // } catch (e) {
-        //   if (isActive()) {
-        //     setState((prev) => ({
-        //       ...prev,
-        //       loading: false,
-        //       error: true,
-        //       data: [],
-        //     }))
-        //   }
-        // }
       }
-      // try {
-      //   const statuses: string[] = []
-      //   if (state.query.status) {
-      //     statuses.push(state.query.status)
-      //   } else {
-      //     statuses.push('ACTIVE')
-      //     statuses.push('INACTIVE')
-      //   }
-      //   const gender = await getGenderList({
-      //     search: state.query.search,
-      //     // role_id: state.query.role_id !== '' ? state.query.role_id : undefined,
-      //     statuses,
-      //     // cancelToken,
-      //   })
-      //   if (isActive()) {
-      //     setState((prev) => ({
-      //       ...prev,
-      //       loading: false,
-      //       refreshing: false,
-      //       error: false,
-      //       data: gender.data.data ?? [],
-      //     }))
-      //   }
-      // } catch (e) {
-      //   if (isActive()) {
-      //     setState((prev) => ({
-      //       ...prev,
-      //       loading: false,
-      //       error: true,
-      //       data: [],
-      //     }))
-      //   }
-      // }
 
       fetchCall()
     }, []),
@@ -230,6 +284,9 @@ const VoucherList: FC = (props: any) => {
     setPage(1)
   }, [setPage])
 
+
+  console.log("State ",state);
+  
   return (
     <>
       <PageTitle>Manage Voucher</PageTitle>
@@ -359,28 +416,29 @@ const VoucherList: FC = (props: any) => {
                     </tr>
                   ) : (
                     state.data.map((value, index) => (
-                      value.status === 1 && activeId === 1 ||
-                        value.status === 2 && activeId === 2 ||
-                        value.status === 3 && activeId === 3 ||
-                        value.status === 4 && activeId === 4
+                      //@ts-ignore
+                      value.status === 'active' && activeId === 1 ||
+                        value.status === '2' && activeId === 2 ||
+                        value.status === '3' && activeId === 3 ||
+                        value.status === '4' && activeId === 4
                         ?
                         <tr key={index}>
                           <td className='align-middle'>
                             {(state.page - 1) * state.limit + index + 1}
                           </td>
-                          <td className='align-middle'>{value.campaign_name}</td>
-                          <td className='align-middle'>{value.code}</td>
-                          <td className='align-middle'>{value.platform}</td>
-                          <td className='align-middle'>{value.periode}</td>
-                          <td className='align-middle'>{value.total_quota}</td>
-                          <td className='align-middle'>{value.quota_user}</td>
-                          <td className='align-middle'>{value.total_used}</td>
-                          <td className='align-middle'>{value.transaction_type}</td>
+                          <td className='align-middle'>{value?.voucher_name ?? '-'}</td>
+                          <td className='align-middle'>{value?.voucher_code ?? '-'}</td>
+                          <td className='align-middle'>{'-'}</td>
+                          <td className='align-middle'>test</td>
+                          <td className='align-middle'>{'-'}</td>
+                          <td className='align-middle'>{'-'}</td>
+                          <td className='align-middle'>{value?.total_used ?? '-'}</td>
+                          <td className='align-middle'>{value?.transaction_type ?? '-'}</td>
                           <td className='align-middle'>
                             {' '}
-                            <div className='d-flex p-1 status-badge' style={{ width: value.status === 3 || value.status === 2 ? 100 : 50, backgroundColor: value.status === 1 ? '#DCFCE7' : value.status === 2 ? '#FFFBDF' : value.status === 3 ? '#FFE4E5' : '#DDDDDD', alignItems: 'center', justifyContent: 'center' }}>
-                              <span style={{ color: value.status === 1 ? '#22C55E' : value.status === 2 ? '#B78101' : value.status === 3 ? '#ED1C24' : '#666666', textAlign: 'center', fontSize: 10, flexDirection: 'row' }}>
-                                {value.status === 1 ? 'Active' : value.status === 2 ? 'Need Approval' : value.status === 3 ? 'Revision Required' : 'Inactive'}
+                            <div className='d-flex p-1 status-badge' style={{ width: value.status === '3' || value.status === '2' ? 100 : 50, backgroundColor: value.status === 'active' ? '#DCFCE7' : value.status === '2' ? '#FFFBDF' : value.status === '3' ? '#FFE4E5' : '#DDDDDD', alignItems: 'center', justifyContent: 'center' }}>
+                              <span style={{ color: value.status === 'active' ? '#22C55E' : value.status === '2' ? '#B78101' : value.status === '3' ? '#ED1C24' : '#666666', textAlign: 'center', fontSize: 10, flexDirection: 'row' }}>
+                                {value.status === 'active' ? 'Active' : value.status === '2' ? 'Need Approval' : value.status === '3' ? 'Revision Required' : 'Inactive'}
                               </span>
                             </div>
                           </td>
@@ -396,7 +454,7 @@ const VoucherList: FC = (props: any) => {
                             </div>&nbsp;&nbsp;
 
                             {
-                              value.status === 2 ?
+                              value.status === '2' ?
                                 <div
                                   className='d-inline'
                                   onClick={() => {
@@ -420,7 +478,7 @@ const VoucherList: FC = (props: any) => {
                                 </button>
                             }
 
-                            {value.status === 2 ?
+                            {value.status === '2' ?
                               <div
                                 className='d-inline'
                                 onClick={() => {
@@ -443,7 +501,7 @@ const VoucherList: FC = (props: any) => {
                                 <InlineSVG src='/media/icons/trash.svg' />
                               </div>}
                             &nbsp;&nbsp;
-                            {value.status === 3 ?
+                            {value.status === '3' ?
                               <div
                                 className='d-inline'
                                 onClick={() => {
