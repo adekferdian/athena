@@ -6,7 +6,7 @@ interface ApexChartProps {
   value1: any,
   value2: any,
   filter: any
-}
+};
 
 const ApexRadiarChart:React.FC<ApexChartProps>= ({title, value1, value2, filter}) => {
   const donutColors = {
