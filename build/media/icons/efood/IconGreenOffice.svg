@@ -1,0 +1,12 @@
+<svg width="27" height="24" viewBox="0 0 27 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path opacity="0.6" d="M0.300781 8.4C0.300781 7.07452 1.3753 6 2.70078 6H24.3008C25.6263 6 26.7008 7.07452 26.7008 8.4V22.8C26.7008 23.4627 26.1635 24 25.5008 24H1.50078C0.83804 24 0.300781 23.4627 0.300781 22.8V8.4Z" fill="#27C0CD"/>
+<path d="M7.5 2.4C7.5 1.07452 8.57452 0 9.9 0H17.1C18.4255 0 19.5 1.07452 19.5 2.4V24H7.5V2.4Z" fill="#27C0CD"/>
+<rect x="9.90234" y="3.59961" width="2.4" height="2.4" rx="1.2" fill="white"/>
+<rect x="14.6992" y="3.59961" width="2.4" height="2.4" rx="1.2" fill="white"/>
+<rect x="9.90234" y="8.40039" width="2.4" height="2.4" rx="1.2" fill="white"/>
+<rect x="5.10156" y="8.40039" width="2.4" height="2.4" rx="1.2" transform="rotate(90 5.10156 8.40039)" fill="white"/>
+<rect x="5.10156" y="13.2002" width="2.4" height="2.4" rx="1.2" transform="rotate(90 5.10156 13.2002)" fill="white"/>
+<rect x="24.3008" y="8.40039" width="2.4" height="2.4" rx="1.2" transform="rotate(90 24.3008 8.40039)" fill="white"/>
+<rect x="24.3008" y="13.2002" width="2.4" height="2.4" rx="1.2" transform="rotate(90 24.3008 13.2002)" fill="white"/>
+<path d="M11.1016 20.4C11.1016 19.0745 12.1761 18 13.5016 18C14.827 18 15.9016 19.0745 15.9016 20.4V24H11.1016V20.4Z" fill="#F6F7F8"/>
+</svg>

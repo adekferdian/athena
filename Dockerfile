@@ -1,32 +1,24 @@
-# stage0
-FROM node:14.15.1-alpine AS build-stage
-USER root
-RUN npm -g install serve
-RUN rm -rf /home/node/app
-RUN mkdir /home/node/app
-WORKDIR /home/node/app
-COPY . /home/node/app
+# Base image
+FROM node:14-alpine
 
-RUN cd /home/node/app
-RUN npm install
-RUN npm run build
-RUN chown -R root:root /home/node/app/build
-RUN ls -la /home/node/app/build
+# Set the working directory
+WORKDIR /app
 
-# stage1
-FROM nginx:alpine AS RUN-stage
-USER root
+ENV NODE_ENV staging
+# Copy package.json and yarn.lock to the working directory
+COPY package.json yarn.lock ./
 
-## Remove default nginx index page
-RUN rm -rf /usr/share/nginx/html
+# Install dependencies
+RUN yarn install --frozen-lockfile
 
-# Copy from the stage 1
-COPY --from=build-stage /home/node/app/build /usr/share/nginx/html
-COPY --from=build-stage` /home/node/app/.nginx/nginx.conf /etc/nginx/conf.d/default.conf
+# Copy the rest of the application code
+COPY . .
 
-# COPY nginx/nginx.conf /etc/nginx/conf.d
-EXPOSE 80
-ENTRYPOINT ["nginx", "-g", "daemon off;"]
+# Build the application
+RUN yarn build
 
-# start app 
-# CMD ["npm", "start"]
+# Expose port 3000
+EXPOSE 3000
+
+# Start the application
+CMD ["yarn", "start"]

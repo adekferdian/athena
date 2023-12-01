@@ -1,0 +1,25 @@
+@media (max-width: 767.98px) {
+  .card .card-header {
+    > h1,
+    > h2,
+    > h3,
+    > h4,
+    > h5,
+    > div {
+      &:first-child {
+        margin: 16px 0px 4px 0px;
+        width: 100%;
+      }
+    }
+  }
+
+  .cardfooter-btns {
+    .btn {
+      flex-grow: 1;
+    }
+
+    .cardfooter-spacer {
+      flex: 0 0 0%;
+    }
+  }
+}

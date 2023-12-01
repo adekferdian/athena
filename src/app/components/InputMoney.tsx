@@ -1,0 +1,63 @@
+import clsx from 'clsx'
+import React, {ChangeEvent, useCallback, useEffect} from 'react'
+import {addThousandSeparator, isNumeric, trimNonNumeric} from '../utils/input-utils'
+
+interface Props
+  extends React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
+  containerClass?: string
+  prefixClass?: string
+  onChangeValue: (value: string, first?: boolean) => void
+  value: string
+}
+
+const InputMoney: React.FC<Props> = ({
+  containerClass,
+  prefixClass,
+  value,
+  className,
+  onChangeValue,
+  onChange,
+  ...props
+}) => {
+  const setValue = useCallback(
+    (trimmed: string, first?: boolean) => {
+      if (onChangeValue) onChangeValue(trimmed, first)
+    },
+    [onChangeValue]
+  )
+
+  const onChangeWrapper = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      setValue(trimNonNumeric(e.currentTarget.value))
+    },
+    [setValue]
+  )
+
+  useEffect(() => {
+    if (!isNumeric(value)) setValue(trimNonNumeric(value), true)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+  return (
+    <div className={clsx('position-relative d-flex align-items-center w-100', containerClass)}>
+      <div
+        className={clsx(
+          'position-absolute ms-4 pe-none fs-5',
+          props.disabled ? 'text-gray-500' : 'text-gray-700',
+          prefixClass
+        )}
+        style={{fontWeight: 500}}
+      >
+        Rp
+      </div>
+      <input
+        value={addThousandSeparator(value)}
+        className={className}
+        style={{paddingLeft: '35px'}}
+        {...props}
+        onChange={onChangeWrapper}
+      />
+    </div>
+  )
+}
+
+export default InputMoney

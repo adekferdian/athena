@@ -1,0 +1,33 @@
+// Secondary
+$secondary: #ec008c;
+$secondary-active: darken($secondary, 5%);
+$secondary-light: #ffe0f3;
+$secondary-inverse: #ffffff;
+
+$gray-800: #3f4254;
+$gray-200: #ebedef;
+$gray-300: #e3e6ef;
+$gray-600: #7f8299;
+$teal: #27c0cd;
+
+// Delete these line in _variables.custom.css if there's update
+// Info
+$info: #27c0cd;
+$info-active: darken($info, 5%);
+$info-light: #cdf6fa;
+$info-inverse: #ffffff;
+
+// Danger
+$danger: #f0426c;
+$danger-active: darken($danger, 5%);
+$danger-light: #ffe0f3;
+$danger-inverse: #ffffff;
+
+$primary: #019ef7;
+$primary-active: if(isDarkMode(), #187de4, #0095e8);
+$primary-light: #ccebfd;
+$primary-inverse: #ffffff;
+
+// Table
+$table-hover-bg-factor: .010;
+$table-hover-bg: rgba(black, $table-hover-bg-factor);

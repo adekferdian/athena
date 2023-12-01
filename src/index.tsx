@@ -1,38 +1,61 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
+import React from 'react'
+import ReactDOM from 'react-dom'
+// Redux
+// https://github.com/rt2zz/redux-persist
+import {PersistGate} from 'redux-persist/integration/react'
+import {Provider} from 'react-redux'
+import * as _redux from './setup'
+import store, {persistor} from './setup/redux/Store'
+// Axios
+import axios from 'axios'
+import {Chart, registerables} from 'chart.js'
 
-// context
-import { GlobalProvider } from 'context/GlobalContext';
+// Apps
+import {App} from './app/App'
+import {MetronicI18nProvider} from './_metronic/i18n/Metronici18n'
+/**
+ * TIP: Replace this style import with dark styles to enable dark mode
+ *
+ * import './_metronic/assets/sass/style.dark.scss'
+ *
+ * TIP: Replace this style import with rtl styles to enable rtl mode
+ *
+ * import './_metronic/assets/css/style.rtl.css'
+ **/
+import './scss/style.scss'
+import './_metronic/assets/sass/style.react.scss'
+import Zoom from 'chartjs-plugin-zoom'
+/**
+ * Base URL of the website.
+ *
+ * @see https://facebook.github.io/create-react-app/docs/using-the-public-folder
+ */
+const {PUBLIC_URL} = process.env
+/**
+ * Creates `axios-mock-adapter` instance for provided `axios` instance, add
+ * basic Metronic mocks and returns it.
+ *
+ * @see https://github.com/ctimmerm/axios-mock-adapter
+ */
 
-// stores
-import store from 'stores';
+/* const mock = */ //_redux.mockAxios(axios)
+/**
+ * Inject Metronic interceptors for axios.
+ *
+ * @see https://github.com/axios/axios#interceptors
+ */
+_redux.setupAxios(axios, store)
 
-// i18n
-import 'locales/i18n';
-
-// services
-import initRequest from 'services/initRequest';
-
-// components
-import App from './App';
-
-// styles
-import './index.css';
-import reportWebVitals from './reportWebVitals';
-
-initRequest(store);
+Chart.register(...registerables, Zoom)
 
 ReactDOM.render(
-  <Provider store={store}>
-    <GlobalProvider>
-      <App />
-    </GlobalProvider>
-  </Provider>,
-  document.getElementById('root'),
-);
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+  <MetronicI18nProvider>
+    <Provider store={store}>
+      {/* Asynchronously persist redux stores and show `SplashScreen` while it's loading. */}
+      <PersistGate persistor={persistor} loading={<div>Loading...</div>}>
+        <App basename={PUBLIC_URL} />
+      </PersistGate>
+    </Provider>
+  </MetronicI18nProvider>,
+  document.getElementById('root')
+)

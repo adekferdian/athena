@@ -1,0 +1,92 @@
+{
+    "family": "dating-fe-zeus",
+    "containerDefinitions": [
+        {
+            "name": "dating-fe-zeus",
+            "image": "261622543538.dkr.ecr.ap-southeast-1.amazonaws.com/dating-apps:dating-fe-zeus-prod",
+            "cpu": 0,
+            "memoryReservation": 512,
+            "portMappings": [
+                {
+                    "hostPort": 3000,
+                    "protocol": "tcp",
+                    "containerPort": 3000
+                  }
+             ],
+            "essential": true,
+            "environment": [
+                {
+                    "name": "PORT",
+                    "value": "3000"
+                },
+                {
+                    "name": "REACT_APP_BASE_LAYOUT_CONFIG_KEY",
+                    "value": "metronic-react-demo100"
+                },
+                {
+                    "name": "REACT_APP_API_URL",
+                    "value": "https://eminglecmsbe.edot.id/"
+                },
+                {
+                    "name": "REACT_APP_STORAGE_KEY",
+                    "value": "ebiz-auth"
+                },
+                {
+                    "name": "REACT_APP_VERSION",
+                    "value": "v8.0.23"
+                },
+                {
+                    "name": "REACT_APP_THEME_NAME",
+                    "value": "Zeus"
+                },
+                {
+                    "name": "REACT_APP_BOOTSTRAP_DOCS_LINK",
+                    "value": "https://getbootstrap.com/docs/5.0"
+                },
+                {
+                    "name": "REACT_APP_SASS_PATH",
+                    "value": "src/_metronic/assets/sass/core/components"
+                },
+                {
+                    "name": "REACT_APP_SASS_VARIABLES_PATH",
+                    "value": "src/_metronic/assets/sass/core/components/_variables.scss"
+                },
+                {
+                    "name": "REACT_APP_PURCHASE_URL",
+                    "value": "https://themeforest.net/item/metronic-responsive-admin-dashboard-template/4021469"
+                },
+                {
+                    "name": "REACT_APP_PREVIEW_URL",
+                    "value": "https://preview.keenthemes.com/metronic8/react/demo1/"
+                },
+                {
+                    "name": "REACT_APP_PREVIEW_REACT_URL",
+                    "value": "https://preview.keenthemes.com/metronic8/react"
+                },
+                {
+                    "name": "REACT_APP_MAP_KEY",
+                    "value": ""
+                }
+            ],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "logConfiguration":{
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/dating-fe-zeus",
+                    "awslogs-region": "ap-southeast-1",
+                    "awslogs-stream-prefix": "ecs"
+                  }
+            }
+        }
+    ],
+    "taskRoleArn": "arn:aws:iam::261622543538:role/ecsTaskExecutionRole",
+    "executionRoleArn": "arn:aws:iam::261622543538:role/ecsTaskExecutionRole",
+    "networkMode": "awsvpc",
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "cpu": "1024",
+    "memory": "2048"
+  }
+  

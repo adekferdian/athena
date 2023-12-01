@@ -1,0 +1,57 @@
+.aside.aside-dark {
+  background-color: $teal;
+  .aside-logo {
+    background-color: transparent;
+  }
+  .menu .menu-item {
+    .menu-section {
+      color: $white !important;
+    }
+
+    .menu-link {
+      margin-left: 14px;
+      margin-right: 14px;
+      border-radius: 6px;
+
+      &.active .menu-title {
+        font-weight: bold;
+      }
+    }
+
+    $white_inactive: rgba($white, 0.8);
+    //$title-color, $icon-color, $bullet-color, $arrow-color, $bg-color
+    @include menu-link-default-state($white, $white_inactive, $white_inactive, $white, transparent);
+    @include menu-link-hover-state(
+      $white,
+      $white_inactive,
+      $white_inactive,
+      $white,
+      rgba($white, 0.1)
+    );
+    @include menu-link-show-state($white, $white_inactive, $white_inactive, $white, transparent);
+    @include menu-link-active-state($white, $white, $white, $white, $secondary);
+  }
+
+  .aside-toggle {
+    @include svg-icon-color($white, true);
+    &:hover {
+      @include svg-icon-color($white, true);
+    }
+  }
+}
+
+.docs-aside-menu {
+  .menu {
+    // Link padding x
+    @include menu-link-padding-x(11px);
+  }
+}
+
+@media (max-width: 991.98px) {
+  .aside .aside-logo {
+    display: block;
+    .aside-toggle {
+      display: none;
+    }
+  }
+}

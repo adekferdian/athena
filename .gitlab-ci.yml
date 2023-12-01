@@ -1,0 +1,63 @@
+stages:
+    - build-migrate
+    - migrate
+    - build-container
+    - deploy
+
+docker-build-prod:
+  stage: build-container
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin 261622543538.dkr.ecr.ap-southeast-1.amazonaws.com
+  script:
+    - echo "Disini Build Docker"
+    - docker build -t dating-apps .
+    - docker tag dating-apps:latest 261622543538.dkr.ecr.ap-southeast-1.amazonaws.com/dating-apps:dating-fe-zeus-prod
+    - docker push 261622543538.dkr.ecr.ap-southeast-1.amazonaws.com/dating-apps:dating-fe-zeus-prod
+    - echo "Build successfully!"
+  only:
+    - prod
+
+docker-build-staging:
+  stage: build-container
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin 261622543538.dkr.ecr.ap-southeast-1.amazonaws.com
+  script:
+    - echo "Disini Build Docker"
+    - docker build -t dating-apps .
+    - docker tag dating-apps:latest 261622543538.dkr.ecr.ap-southeast-1.amazonaws.com/dating-apps:dating-fe-zeus-stg
+    - docker push 261622543538.dkr.ecr.ap-southeast-1.amazonaws.com/dating-apps:dating-fe-zeus-stg
+    - echo "Build successfully!"
+  only:
+    - stg
+
+deploy-to-ECS-staging:
+  stage: deploy
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+  script:
+    - echo "mulai deploy ke server"
+    - aws ecs register-task-definition --family dating-fe-zeus-stg --cli-input-json file://.json/stg.json
+    - aws ecs update-service --cluster DatingApps-stg --service dating-fe-zeus-stg --task-definition dating-fe-zeus-stg
+  only:
+    - stg
+
+deploy-to-ECS-prod:
+  stage: deploy
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+  script:
+    - echo "mulai deploy ke server"
+    - aws ecs register-task-definition --family dating-fe-zeus --cli-input-json file://.json/prod.json
+    - aws ecs update-service --cluster DatingApps --service dating-fe-zeus --task-definition dating-fe-zeus
+  only:
+    - prod
